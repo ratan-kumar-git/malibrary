@@ -15,3 +15,22 @@ export const ROLE = {
 } as const
 
 export type ROLE = (typeof ROLE)[keyof typeof ROLE]
+
+
+export const ShiftType = {
+  MORNING: 'MORNING',
+  AFTERNOON: 'AFTERNOON',
+  EVENING: 'EVENING',
+  FULL_DAY: 'FULL_DAY'
+} as const
+
+export type ShiftType = (typeof ShiftType)[keyof typeof ShiftType]
+
+
+export const SubscriptionStatus = {
+  ACTIVE: 'ACTIVE',
+  EXPIRED: 'EXPIRED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type SubscriptionStatus = (typeof SubscriptionStatus)[keyof typeof SubscriptionStatus]

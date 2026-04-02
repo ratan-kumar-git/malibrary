@@ -13,6 +13,7 @@ import {
   Home,
   MessageCircleDashed,
   LayoutGrid,
+  Settings
 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
@@ -303,7 +304,14 @@ export default function Navbar() {
                     >
                       <Link href="/profile" className="w-full">
                         <User className="mr-2 size-4 text-gray-500" /> Profile
-                        Settings
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      asChild
+                      className="cursor-pointer rounded-xl p-3 focus:bg-gray-100"
+                    >
+                      <Link href="/settings" className="w-full">
+                        <Settings className="mr-2 size-4 text-gray-500" /> Settings
                       </Link>
                     </DropdownMenuItem>
                   </DropdownMenuGroup>

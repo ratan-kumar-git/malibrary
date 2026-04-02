@@ -61,3 +61,28 @@ export type Account = Prisma.AccountModel
  * 
  */
 export type Verification = Prisma.VerificationModel
+/**
+ * Model Library
+ * 
+ */
+export type Library = Prisma.LibraryModel
+/**
+ * Model Floor
+ * 
+ */
+export type Floor = Prisma.FloorModel
+/**
+ * Model Shift
+ * 
+ */
+export type Shift = Prisma.ShiftModel
+/**
+ * Model Student
+ * 
+ */
+export type Student = Prisma.StudentModel
+/**
+ * Model Subscription
+ * 
+ */
+export type Subscription = Prisma.SubscriptionModel
