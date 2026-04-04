@@ -263,13 +263,13 @@ export type LibraryOrderByWithRelationInput = {
 
 export type LibraryWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  userId?: string
   AND?: Prisma.LibraryWhereInput | Prisma.LibraryWhereInput[]
   OR?: Prisma.LibraryWhereInput[]
   NOT?: Prisma.LibraryWhereInput | Prisma.LibraryWhereInput[]
   name?: Prisma.StringFilter<"Library"> | string
   email?: Prisma.StringFilter<"Library"> | string
   contactNumber?: Prisma.StringFilter<"Library"> | string
-  userId?: Prisma.StringFilter<"Library"> | string
   address?: Prisma.StringFilter<"Library"> | string
   district?: Prisma.StringFilter<"Library"> | string
   state?: Prisma.StringFilter<"Library"> | string
@@ -282,7 +282,7 @@ export type LibraryWhereUniqueInput = Prisma.AtLeast<{
   shifts?: Prisma.ShiftListRelationFilter
   students?: Prisma.StudentListRelationFilter
   subscriptions?: Prisma.SubscriptionListRelationFilter
-}, "id">
+}, "id" | "userId">
 
 export type LibraryOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

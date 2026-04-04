@@ -19,7 +19,7 @@ const floorArraySchema = z.object({
     z.object({
       id: z.string(), 
       name: z.string().min(1, 'Floor name is required'),
-      totalSeats: z.number().min(1, 'At least 1 seat required'),
+      totalSeats: z.number("Required").min(1, 'At least 1 seat required'),
     })
   ),
 });
@@ -131,14 +131,21 @@ export const FloorsSection = ({
                           <p className="text-destructive text-xs mt-1">{errors.floors[index]?.name?.message}</p>
                         )}
                       </div>
-                      <div className="w-20">
+                      <div className="w-30">
                         <input
-                          {...register(`floors.${index}.totalSeats`, { valueAsNumber: true })}
+                          {...register(`floors.${index}.totalSeats`, { 
+                            valueAsNumber: true
+                          })}
                           type="number"
                           className="w-full px-2 py-1 border border-border rounded text-sm focus:ring-2 focus:ring-primary outline-none bg-background"
-                          placeholder="Seats"
+                          placeholder="0"
                           disabled={isLoading}
-                          onKeyDown={(e) => e.key === 'Enter' && handleInlineSave(index)}
+                          min={1}
+                          onKeyDown={(e) => {
+                            if (["e", "E", "+", "-", "."].includes(e.key)) {
+                              e.preventDefault();
+                            }
+                          }}
                         />
                         {errors.floors?.[index]?.totalSeats && (
                           <p className="text-destructive text-xs mt-1">{errors.floors[index]?.totalSeats?.message}</p>
@@ -160,7 +167,7 @@ export const FloorsSection = ({
                       </div>
                       
                       {isEditing && (
-                        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="flex gap-1">
                           <button type="button" onClick={() => setEditingFloorId(field.id)} disabled={isLoading} className="p-1.5 text-primary hover:text-primary hover:bg-primary/10 rounded disabled:opacity-50 transition-colors">
                             <Edit size={16} />
                           </button>

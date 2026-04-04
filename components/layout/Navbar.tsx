@@ -12,8 +12,8 @@ import {
   ChevronRight,
   Home,
   MessageCircleDashed,
-  LayoutGrid,
-  Settings
+  Settings,
+  BookMarkedIcon
 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
@@ -29,6 +29,7 @@ import {
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -90,9 +91,9 @@ export default function Navbar() {
           className="flex items-center gap-2.5 font-bold tracking-tight transition-transform hover:scale-105"
         >
           <div className="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-md">
-            <LayoutGrid className="size-5" />
+            <BookMarkedIcon className="size-5" />
           </div>
-          <span className="text-xl md:text-2xl text-gray-950">SchoolOS</span>
+          <span className="text-xl md:text-2xl text-gray-950">MaLibrary</span>
         </Link>
 
         {/* --- MIDDLE: DESKTOP NAVIGATION --- */}
@@ -138,10 +139,13 @@ export default function Navbar() {
                 <SheetHeader className="p-6 bg-white border-b border-gray-100">
                   <SheetTitle className="flex items-center gap-3 text-xl font-bold text-gray-950">
                     <div className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
-                      <LayoutGrid className="size-4" />
+                      <BookMarkedIcon className="size-4" />
                     </div>
-                    SchoolOS
+                    MaLibrary
                   </SheetTitle>
+                  <SheetDescription className="sr-only">
+                    Navigation menu and user settings
+                  </SheetDescription>
                 </SheetHeader>
 
                 {/* Mobile Nav Links */}
@@ -211,6 +215,14 @@ export default function Navbar() {
                               {session.user.email}
                             </p>
                           </div>
+                        </Link>
+                        <Link
+                          href="/settings"
+                          onClick={() => setMobileOpen(false)}
+                          className="flex items-center gap-3 p-2 rounded-2xl hover:bg-secondary transition-colors"
+                        >
+                          <Settings className="size-5 text-primary" />
+                          Settings
                         </Link>
                         <Button
                           variant="destructive"

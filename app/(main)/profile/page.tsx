@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import ProfileClient from "./ProfileClient";
 
 export const metadata: Metadata = {
-  title: "Profile | SchoolOS",
+  title: "Profile | MaLibrary",
   description: "Manage your profile, password, and active sessions",
 };
 

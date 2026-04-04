@@ -4,7 +4,7 @@ import * as React from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { Loader2, Mail, Lock, User, Eye, EyeOff, LayoutGrid } from "lucide-react"
+import { Loader2, Mail, Lock, User, Eye, EyeOff, BookMarkedIcon } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { authClient } from "@/lib/auth-client"
 
@@ -81,7 +81,7 @@ export default function SignUpForm() {
             className="flex items-center gap-3 group transition-transform hover:scale-105"
           >
             <div className="flex size-12 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg">
-              <LayoutGrid className="size-6" />
+              <BookMarkedIcon className="size-6" />
             </div>
             <div className="text-left leading-tight">
               <span className="text-2xl font-extrabold tracking-tight text-gray-950">

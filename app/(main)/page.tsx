@@ -68,7 +68,7 @@ export default function Home() {
                 <div className="size-3 rounded-full bg-emerald-400/90" />
               </div>
               <div className="mx-auto px-4 py-1.5 rounded-lg bg-white/60 inset-ring-1 inset-ring-gray-200/50 text-xs text-gray-500 font-medium flex items-center gap-2">
-                <Lock className="size-3.5" /> app.schoolos.com
+                <Lock className="size-3.5" /> app.MaLibrary.com
               </div>
             </div>
 
