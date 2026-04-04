@@ -10,10 +10,12 @@ export default async function proxy(req: NextRequest) {
   const user = session?.user;
   const pathname = req.nextUrl.pathname.replace(/\/$/, "");
 
-  /* ---------- Route Definitions ---------- */
+  // ---------- Route Definitions ---------- 
   const publicRoutes = ["/login", "/signup"];
 
   const privateRoutePrefixes = [
+    "/setup",
+    "/settings",
     "/profile",
     "/dashboard",
   ];
@@ -22,14 +24,14 @@ export default async function proxy(req: NextRequest) {
     pathname.startsWith(route)
   );
 
-  /* ---------- Auth Guards ---------- */
+  // ---------- Auth Guards ---------- 
 
-  // 🔒 Block unauthenticated users
+  // Block unauthenticated users
   if (!user && isPrivateRoute) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  // 🚫 Prevent authenticated users from visiting auth pages
+  // Prevent authenticated users from visiting auth pages
   if (user && publicRoutes.includes(pathname)) {
     return NextResponse.redirect(new URL("/dashboard", req.url));
   }
@@ -37,7 +39,7 @@ export default async function proxy(req: NextRequest) {
   return NextResponse.next();
 }
 
-/* ---------- Matcher ---------- */
+// ---------- Matcher ----------
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
 };

@@ -175,6 +175,7 @@ export const ShiftScalarFieldEnum = {
   startTime: 'startTime',
   endTime: 'endTime',
   price: 'price',
+  isActive: 'isActive',
   libraryId: 'libraryId'
 } as const
 

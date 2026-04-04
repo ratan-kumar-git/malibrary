@@ -1,76 +1,20 @@
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { floorSchema } from "@/lib/validations";
-import { ZodError } from "zod";
 import { headers } from "next/headers";
 
-export async function GET(req: NextRequest) {
-  try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
-
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const libraryId = req.nextUrl.searchParams.get("libraryId");
-    if (!libraryId) {
-      return NextResponse.json({ error: "Library ID required" }, { status: 400 });
-    }
-
-    const floors = await prisma.floor.findMany({
-      where: { libraryId },
-    });
-
-    return NextResponse.json(floors);
-  } catch (error) {
-    console.error("Failed to fetch floors:", error);
-    return NextResponse.json({ error: "Failed to fetch floors" }, { status: 500 });
-  }
+interface FloorPayload {
+  id: string;
+  name: string;
+  totalSeats: number;
 }
 
-export async function POST(req: NextRequest) {
-  try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
-
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const body = await req.json();
-    const { libraryId, name, totalSeats } = body;
-
-    if (!libraryId) {
-      return NextResponse.json({ error: "Library ID required" }, { status: 400 });
-    }
-
-    // Validate floor data
-    const validatedData = floorSchema.parse({ name, totalSeats });
-
-    const floor = await prisma.floor.create({
-      data: {
-        libraryId,
-        ...validatedData,
-      },
-    });
-
-    return NextResponse.json(floor, { status: 201 });
-  } catch (error) {
-    if (error instanceof ZodError) {
-      return NextResponse.json(
-        { error: "Validation failed", details: error.issues },
-        { status: 400 }
-      );
-    }
-    console.error("Failed to create floor:", error);
-    return NextResponse.json({ error: "Failed to create floor" }, { status: 500 });
-  }
+interface SyncFloorsRequest {
+  libraryId: string;
+  floors: FloorPayload[];
 }
 
+// create, update, delete floors in one transaction
 export async function PUT(req: NextRequest) {
   try {
     const session = await auth.api.getSession({
@@ -81,56 +25,59 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const body = await req.json();
-    const { floorId, name, totalSeats } = body;
+    const body = (await req.json()) as SyncFloorsRequest;
+    const { libraryId, floors } = body;
 
-    if (!floorId) {
-      return NextResponse.json({ error: "Floor ID required" }, { status: 400 });
+    if (!libraryId) {
+      return NextResponse.json({ error: "Library ID required" }, { status: 400 });
     }
 
-    // Validate floor data
-    const validatedData = floorSchema.parse({ name, totalSeats });
+    const incomingIds: string[] = floors
+      .filter((f) => !f.id.startsWith("temp-"))
+      .map((f) => f.id);
 
-    const floor = await prisma.floor.update({
-      where: { id: floorId },
-      data: validatedData,
-    });
+    const floorsToCreate: FloorPayload[] = floors.filter((f) => f.id.startsWith("temp-"));
+    const floorsToUpdate: FloorPayload[] = floors.filter((f) => !f.id.startsWith("temp-"));
 
-    return NextResponse.json(floor);
-  } catch (error) {
-    if (error instanceof ZodError) {
-      return NextResponse.json(
-        { error: "Validation failed", details: error.issues },
-        { status: 400 }
-      );
-    }
-    console.error("Failed to update floor:", error);
-    return NextResponse.json({ error: "Failed to update floor" }, { status: 500 });
-  }
-}
+    // Run all operations in one atomic transaction
+    await prisma.$transaction([
+      prisma.floor.deleteMany({
+        where: {
+          libraryId,
+          id: { notIn: incomingIds },
+        },
+      }),
 
-export async function DELETE(req: NextRequest) {
-  try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+      // Create new floors
+      ...floorsToCreate.map((f) =>
+        prisma.floor.create({
+          data: {
+            name: f.name,
+            totalSeats: f.totalSeats,
+            libraryId,
+          },
+        })
+      ),
 
-    const floorId = req.nextUrl.searchParams.get("floorId");
-    if (!floorId) {
-      return NextResponse.json({ error: "Floor ID required" }, { status: 400 });
-    }
-
-    await prisma.floor.delete({
-      where: { id: floorId },
-    });
+      // Update existing floors
+      ...floorsToUpdate.map((f) =>
+        prisma.floor.update({
+          where: { id: f.id },
+          data: {
+            name: f.name,
+            totalSeats: f.totalSeats,
+          },
+        })
+      ),
+    ]);
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Failed to delete floor:", error);
-    return NextResponse.json({ error: "Failed to delete floor" }, { status: 500 });
+    console.error("Failed to sync floors:", error);
+    return NextResponse.json(
+      { error: "Failed to synchronize floors" },
+      { status: 500 }
+    );
   }
 }
 

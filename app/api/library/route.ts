@@ -5,6 +5,7 @@ import { librarySchema } from "@/lib/validations";
 import { ZodError } from "zod";
 import { headers } from "next/headers";
 
+// get library details, floors and shifts for the logged in user
 export async function GET() {
   try {
     const session = await auth.api.getSession({
@@ -37,6 +38,7 @@ export async function GET() {
   }
 }
 
+// update library details
 export async function PUT(req: NextRequest) {
   try {
     const session = await auth.api.getSession({
@@ -86,47 +88,6 @@ export async function PUT(req: NextRequest) {
   }
 }
 
-export async function POST(req: NextRequest) {
-  try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
-    
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const body = await req.json();
-
-    // Validate request body
-    const validatedData = librarySchema.parse(body);
-
-    const library = await prisma.library.create({
-      data: {
-        ...validatedData,
-        userId: session.user.id,
-      },
-      include: {
-        floors: true,
-        shifts: true,
-      },
-    });
-
-    return NextResponse.json(library, { status: 201 });
-  } catch (error) {
-    if (error instanceof ZodError) {
-      return NextResponse.json(
-        { error: "Validation failed", details: error.issues },
-        { status: 400 }
-      );
-    }
-    console.error("Failed to create library:", error);
-    return NextResponse.json(
-      { error: "Failed to create library" },
-      { status: 500 }
-    );
-  }
-}
 
 
 

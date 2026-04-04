@@ -2,43 +2,68 @@
 
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import type { Library, Floor, Shift, LibraryFormState } from '@/lib/validations';
+import type { Library, Floor, Shift, LibraryFormState, LibrarySetupPayload } from '@/lib/validations';
 
-// Library Store
-interface LibraryStore {
-  // The current library details. Null if not loaded or if creating a new library.
-  library: Library | null;
+type LibrarywithDetails = Library & {
+  floors: Floor[];
+  shifts: Shift[];
+};
+
+interface UnifiedLibraryStore {
+  data: LibrarywithDetails | null;
   isLoading: boolean;
   error: string | null;
-
-  // State setters
-  setLibrary: (library: Library) => void;
   setError: (error: string | null) => void;
-  setLoading: (loading: boolean) => void;
-
-  // API actions
-  fetchLibrary: () => Promise<void>;
-  updateLibrary: (updates: Partial<LibraryFormState>) => Promise<void>;
-  createLibrary: (data: LibraryFormState) => Promise<void>;
+  isSetupComplete: () => boolean;
+  setupLibrary: (payload: LibrarySetupPayload) => Promise<void>;
+  fetchAll: () => Promise<void>;
+  updateLibraryInfo: (updates: Partial<LibraryFormState>) => Promise<void>;
+  syncFloors: (libraryId: string, floors: Omit<Floor, 'id'>[]) => Promise<void>;
+  syncShifts: (shiftId: string, updates: Omit<Shift, 'id'>[]) => Promise<void>;
 }
 
-export const useLibraryStore = create<LibraryStore>()(
-  devtools((set) => ({
-    library: null,
+export const useLibraryStore = create<UnifiedLibraryStore>()(
+  devtools((set, get) => ({
+    data: null,
     isLoading: false,
     error: null,
 
-    setLibrary: (library) => set({ library }),
     setError: (error) => set({ error }),
-    setLoading: (loading) => set({ isLoading: loading }),
+    
+    isSetupComplete: () => {
+      const current = get().data;
+      return !!current && !!current.name && !!current.email;
+    },
+    
+    // Setup library with basic details, floors and shifts in one go
+    setupLibrary: async (payload) => {
+      set({ isLoading: true, error: null });
+      try {
+        const response = await fetch('/api/library/setup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!response.ok) throw new Error('Failed to set up library');
+        const data = await response.json();
+        set({ data });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Unknown error';
+        set({ error: message });
+        throw error;
+      } finally {
+        set({ isLoading: false });
+      }
+    },
 
-    fetchLibrary: async () => {
+    // get all library details including floors and shifts
+    fetchAll: async () => {
       set({ isLoading: true, error: null });
       try {
         const response = await fetch('/api/library');
         if (!response.ok) throw new Error('Failed to fetch library');
         const data = await response.json();
-        set({ library: data });
+        set({ data });
       } catch (error) {
         const message = error instanceof Error ? error.message : 'Unknown error';
         set({ error: message });
@@ -47,7 +72,8 @@ export const useLibraryStore = create<LibraryStore>()(
       }
     },
 
-    updateLibrary: async (updates) => {
+    // update library basic details and facilities
+    updateLibraryInfo: async (updates) => {
       set({ isLoading: true, error: null });
       try {
         const response = await fetch('/api/library', {
@@ -57,7 +83,7 @@ export const useLibraryStore = create<LibraryStore>()(
         });
         if (!response.ok) throw new Error('Failed to update library');
         const data = await response.json();
-        set({ library: data });
+        set({ data });
       } catch (error) {
         const message = error instanceof Error ? error.message : 'Unknown error';
         set({ error: message });
@@ -67,117 +93,19 @@ export const useLibraryStore = create<LibraryStore>()(
       }
     },
 
-    createLibrary: async (data) => {
-      set({ isLoading: true, error: null });
-      try {
-        const response = await fetch('/api/library', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-        });
-        if (!response.ok) throw new Error('Failed to create library');
-        const library = await response.json();
-        set({ library });
-      } catch (error) {
-        const message = error instanceof Error ? error.message : 'Unknown error';
-        set({ error: message });
-        throw error;
-      } finally {
-        set({ isLoading: false });
-      }
-    },
-  }))
-);
-
-// Floors Store
-interface FloorsStore {
-  floors: Floor[];
-  isLoading: boolean;
-  error: string | null;
-  setFloors: (floors: Floor[]) => void;
-  addFloor: (floor: Floor) => void;
-  updateFloor: (floorId: string, floor: Floor) => void;
-  removeFloor: (floorId: string) => void;
-  fetchFloors: (libraryId: string) => Promise<void>;
-  createFloor: (libraryId: string, floor: Omit<Floor, 'id'>) => Promise<Floor>;
-  updateFloorServer: (floorId: string, updates: Partial<Floor>) => Promise<void>;
-  deleteFloorServer: (floorId: string) => Promise<void>;
-  setError: (error: string | null) => void;
-  setLoading: (loading: boolean) => void;
-}
-
-export const useFloorsStore = create<FloorsStore>()(
-  devtools((set) => ({
-    floors: [],
-    isLoading: false,
-    error: null,
-
-    setFloors: (floors) => set({ floors }),
-    setError: (error) => set({ error }),
-    setLoading: (loading) => set({ isLoading: loading }),
-
-    addFloor: (floor) =>
-      set((state) => ({ floors: [...state.floors, floor] })),
-
-    updateFloor: (floorId, floor) =>
-      set((state) => ({
-        floors: state.floors.map((f) => (f.id === floorId ? floor : f)),
-      })),
-
-    removeFloor: (floorId) =>
-      set((state) => ({
-        floors: state.floors.filter((f) => f.id !== floorId),
-      })),
-
-    fetchFloors: async (libraryId) => {
-      set({ isLoading: true, error: null });
-      try {
-        const response = await fetch(`/api/library/floors?libraryId=${libraryId}`);
-        if (!response.ok) throw new Error('Failed to fetch floors');
-        const data = await response.json();
-        set({ floors: data });
-      } catch (error) {
-        const message = error instanceof Error ? error.message : 'Unknown error';
-        set({ error: message });
-      } finally {
-        set({ isLoading: false });
-      }
-    },
-
-    createFloor: async (libraryId, floor) => {
-      set({ isLoading: true, error: null });
-      try {
-        const response = await fetch('/api/library/floors', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ libraryId, ...floor }),
-        });
-        if (!response.ok) throw new Error('Failed to create floor');
-        const newFloor = await response.json();
-        set((state) => ({ floors: [...state.floors, newFloor] }));
-        return newFloor;
-      } catch (error) {
-        const message = error instanceof Error ? error.message : 'Unknown error';
-        set({ error: message });
-        throw error;
-      } finally {
-        set({ isLoading: false });
-      }
-    },
-
-    updateFloorServer: async (floorId, updates) => {
+    // create, update, delete floor details 
+    syncFloors: async (libraryId, floors) => {
       set({ isLoading: true, error: null });
       try {
         const response = await fetch('/api/library/floors', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ floorId, ...updates }),
+          body: JSON.stringify({ libraryId, floors }),
         });
-        if (!response.ok) throw new Error('Failed to update floor');
-        const updated = await response.json();
-        set((state) => ({
-          floors: state.floors.map((f) => (f.id === floorId ? updated : f)),
-        }));
+        
+        if (!response.ok) throw new Error('Failed to sync floors');
+        
+        await get().fetchAll();
       } catch (error) {
         const message = error instanceof Error ? error.message : 'Unknown error';
         set({ error: message });
@@ -187,78 +115,19 @@ export const useFloorsStore = create<FloorsStore>()(
       }
     },
 
-    deleteFloorServer: async (floorId) => {
-      set({ isLoading: true, error: null });
-      try {
-        const response = await fetch(`/api/library/floors?floorId=${floorId}`, {
-          method: 'DELETE',
-        });
-        if (!response.ok) throw new Error('Failed to delete floor');
-        set((state) => ({
-          floors: state.floors.filter((f) => f.id !== floorId),
-        }));
-      } catch (error) {
-        const message = error instanceof Error ? error.message : 'Unknown error';
-        set({ error: message });
-        throw error;
-      } finally {
-        set({ isLoading: false });
-      }
-    },
-  }))
-);
-
-// Shifts Store
-interface ShiftsStore {
-  shifts: Shift[];
-  isLoading: boolean;
-  error: string | null;
-  setShifts: (shifts: Shift[]) => void;
-  fetchShifts: (libraryId: string) => Promise<void>;
-  updateShiftServer: (shiftId: string, updates: Partial<Shift>) => Promise<void>;
-  toggleShift: (shiftId: string) => void;
-  setError: (error: string | null) => void;
-  setLoading: (loading: boolean) => void;
-}
-
-export const useShiftsStore = create<ShiftsStore>()(
-  devtools((set) => ({
-    shifts: [],
-    isLoading: false,
-    error: null,
-
-    setShifts: (shifts) => set({ shifts }),
-    setError: (error) => set({ error }),
-    setLoading: (loading) => set({ isLoading: loading }),
-
-    fetchShifts: async (libraryId) => {
-      set({ isLoading: true, error: null });
-      try {
-        const response = await fetch(`/api/library/shifts?libraryId=${libraryId}`);
-        if (!response.ok) throw new Error('Failed to fetch shifts');
-        const data = await response.json();
-        set({ shifts: data });
-      } catch (error) {
-        const message = error instanceof Error ? error.message : 'Unknown error';
-        set({ error: message });
-      } finally {
-        set({ isLoading: false });
-      }
-    },
-
-    updateShiftServer: async (shiftId, updates) => {
+    // update shift details like timings, price and active status
+    syncShifts: async (libraryId, shifts) => {
       set({ isLoading: true, error: null });
       try {
         const response = await fetch('/api/library/shifts', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ shiftId, ...updates }),
+          body: JSON.stringify({ libraryId, shifts }),
         });
-        if (!response.ok) throw new Error('Failed to update shift');
-        const updated = await response.json();
-        set((state) => ({
-          shifts: state.shifts.map((s) => (s.id === shiftId ? updated : s)),
-        }));
+        
+        if (!response.ok) throw new Error('Failed to sync shifts');
+        
+        await get().fetchAll();
       } catch (error) {
         const message = error instanceof Error ? error.message : 'Unknown error';
         set({ error: message });
@@ -267,47 +136,5 @@ export const useShiftsStore = create<ShiftsStore>()(
         set({ isLoading: false });
       }
     },
-
-    toggleShift: (shiftId) =>
-      set((state) => ({
-        shifts: state.shifts.map((s) =>
-          s.id === shiftId ? { ...s, active: !s.active } : s
-        ),
-      })),
-  }))
-);
-
-// Facilities Store
-interface FacilitiesStore {
-  facilities: string[];
-  isLoading: boolean;
-  error: string | null;
-  setFacilities: (facilities: string[]) => void;
-  addFacility: (facility: string) => void;
-  removeFacility: (facility: string) => void;
-  setError: (error: string | null) => void;
-  setLoading: (loading: boolean) => void;
-}
-
-export const useFacilitiesStore = create<FacilitiesStore>()(
-  devtools((set) => ({
-    facilities: [],
-    isLoading: false,
-    error: null,
-
-    setFacilities: (facilities) => set({ facilities }),
-    setError: (error) => set({ error }),
-    setLoading: (loading) => set({ isLoading: loading }),
-
-    addFacility: (facility) =>
-      set((state) => {
-        if (state.facilities.includes(facility)) return state;
-        return { facilities: [...state.facilities, facility] };
-      }),
-
-    removeFacility: (facility) =>
-      set((state) => ({
-        facilities: state.facilities.filter((f) => f !== facility),
-      })),
   }))
 );

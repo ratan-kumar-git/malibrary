@@ -1,125 +1,110 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { Save, ChevronRight, Home } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link"; // Added Next.js Link
 import { LibraryBasicDetails } from "@/components/settings/LibraryBasicDetails";
 import { ShiftDetails } from "@/components/settings/ShiftDetails";
-import InfrastructureSection from "@/components/settings/InfrastructureSection";
-import { useLibraryStore, useFloorsStore, useShiftsStore, useFacilitiesStore } from "@/lib/store";
+import { FloorsSection } from "@/components/settings/FloorsSection";
+import { SettingsSkeleton } from "@/components/skelton/SettingsSkeleton";
+import { useLibraryStore } from "@/lib/store";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { Home } from "lucide-react";
 
-const LibrarySettingsMain = () => {
-  const [isMounted, setIsMounted] = useState(false);
+const LibrarySettingsPage = () => {
+  const router = useRouter();
+  const [isReady, setIsReady] = useState(false);
+  const {
+    data,
+    isLoading,
+    fetchAll,
+    updateLibraryInfo,
+    syncFloors,
+    syncShifts,
+  } = useLibraryStore();
 
-  // Zustand stores
-  const { library, isLoading: libraryLoading, fetchLibrary, error: libraryError } = useLibraryStore();
-  const { floors, isLoading: floorsLoading, fetchFloors, createFloor, updateFloorServer, deleteFloorServer } = useFloorsStore();
-  const { shifts, isLoading: shiftsLoading, fetchShifts, updateShiftServer, toggleShift } = useShiftsStore();
-  const { facilities, addFacility, removeFacility } = useFacilitiesStore();
-
-  const isLoading = libraryLoading || floorsLoading || shiftsLoading;
-
-  // Initial load
+  // Unified initialization logic
   useEffect(() => {
     const initializeData = async () => {
-      try {
-        await fetchLibrary();
-      } catch (error) {
-        console.error("Failed to initialize library:", error);
+      if (!data) {
+        try {
+          await fetchAll();
+        } catch (err) {
+          console.error("No library found or failed to fetch:", err);
+        }
       }
+      setIsReady(true);
     };
 
     initializeData();
-    setIsMounted(true);
-  }, [fetchLibrary]);
+  }, [data, fetchAll]);
 
-  // Fetch related data when library is loaded
+  // Safely redirect if no data exists after loading
   useEffect(() => {
-    if (library?.id) {
-      fetchFloors(library.id);
-      fetchShifts(library.id);
-      if (library.facilities) {
-        useFacilitiesStore.setState({ facilities: library.facilities });
-      }
+    if (isReady && !isLoading && !data) {
+      router.replace("/setup");
     }
-  }, [library?.id, fetchFloors, fetchShifts]);
+  }, [isReady, isLoading, data, router]);
 
-  if (!isMounted) {
-    return (
-      <div className="w-full h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-slate-600 font-medium">Loading...</p>
-        </div>
-      </div>
-    );
+  // Prevent rendering anything until client-side is ready to avoid hydration mismatch
+  if (!isReady || (isLoading && !data)) {
+    return <SettingsSkeleton />;
   }
 
-  if (libraryError && !library) {
-    return (
-      <div className="w-full max-w-6xl mt-20 mx-auto p-4">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
-          Error loading library: {libraryError}
-        </div>
-      </div>
-    );
-  }
+  if (!data) return null;
 
   return (
-    <div className="w-full max-w-6xl mt-20 mx-auto p-4 md:p-6 lg:p-8 space-y-8">
-      <div className="flex items-center gap-2 text-slate-400">
-        <Home size={14} />
-        <ChevronRight size={14} />
-        <span>Dashboard</span>
-        <ChevronRight size={14} />
-        <span className="text-indigo-600 font-medium">Settings</span>
-      </div>
+    <main className="w-full min-h-screen bg-background">
+      <div className="max-w-6xl mt-20 mx-auto p-4 md:p-6 lg:p-8">
+        {/* Breadcrumb Navigation */}
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href="/">
+                  <Home className="w-4 h-4" />
+                </Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage className="text-primary">Settings</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
 
-      {/* Section 1: Basic Information */}
-      {library && (
-        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+        {/* Settings Cards */}
+        <div className="space-y-8">
+          {/* Library Basic Information */}
           <LibraryBasicDetails
-            data={library}
-            isLoading={libraryLoading}
+            data={data}
+            isLoading={isLoading}
+            onSave={updateLibraryInfo}
+          />
+
+          {/* Infrastructure: Floors */}
+          <FloorsSection
+            floors={data.floors || []}
+            onSyncFloors={(floors) => syncFloors(data.id, floors)}
+            isLoading={isLoading}
+          />
+
+          {/* Shift Configuration */}
+          <ShiftDetails
+            shifts={data.shifts || []}
+            onSyncShifts={(shifts) => syncShifts(data.id, shifts)}
+            isLoading={isLoading}
           />
         </div>
-      )}
-
-      {/* Section 2: Infrastructure (Facilities & Floors) */}
-      <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-        <InfrastructureSection
-          floors={floors}
-          facilities={facilities}
-          onAddFloor={(name, totalSeats) => library ? createFloor(library.id, { name, totalSeats } as any) : Promise.reject('No library')}
-          onUpdateFloor={(floorId, name, totalSeats) => updateFloorServer(floorId, { name, totalSeats })}
-          onDeleteFloor={deleteFloorServer}
-          onAddFacility={addFacility}
-          onRemoveFacility={removeFacility}
-          isLoading={isLoading}
-        />
       </div>
-
-      {/* Section 3: Shift & Pricing Details */}
-      <div className="animate-in fade-in slide-in-from-bottom-4 duration-1000">
-        <ShiftDetails
-          shifts={shifts}
-          onUpdateShift={(shiftId, startTime, endTime, price) =>
-            updateShiftServer(shiftId, { startTime, endTime, price })
-          }
-          onToggleShift={toggleShift}
-          isLoading={isLoading}
-        />
-      </div>
-
-      {/* Footer Save Button */}
-      <div className="md:hidden pt-8">
-        <button
-          disabled={isLoading}
-          className="w-full flex items-center justify-center gap-2 bg-indigo-600 text-white p-4 rounded-xl font-bold hover:bg-indigo-700 disabled:opacity-50"
-        >
-          <Save size={20} />
-          {isLoading ? 'Saving...' : 'Save Changes'}
-        </button>
-      </div>
-    </div>
+    </main>
   );
 };
 
-export default LibrarySettingsMain;
+export default LibrarySettingsPage;

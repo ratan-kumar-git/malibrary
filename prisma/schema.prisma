@@ -128,9 +128,10 @@ model Floor {
 model Shift {
   id         String  @id @default(cuid())
   name       ShiftType
-  startTime  String  
-  endTime    String 
+  startTime  Int  
+  endTime    Int 
   price      Float
+  isActive   Boolean @default(true)
 
   libraryId  String
   library    Library @relation(fields: [libraryId], references: [id], onDelete: Cascade)

@@ -61,7 +61,7 @@ export default function SignUpForm() {
 
       toast.success("Account created successfully!")
       form.reset()
-      router.push("/dashboard")
+      router.push("/setup")
       router.refresh()
     } catch (error) {
       console.error(error)
