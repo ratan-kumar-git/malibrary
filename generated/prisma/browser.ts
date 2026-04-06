@@ -48,6 +48,11 @@ export type Library = Prisma.LibraryModel
  */
 export type Floor = Prisma.FloorModel
 /**
+ * Model Seat
+ * 
+ */
+export type Seat = Prisma.SeatModel
+/**
  * Model Shift
  * 
  */
@@ -62,3 +67,8 @@ export type Student = Prisma.StudentModel
  * 
  */
 export type Subscription = Prisma.SubscriptionModel
+/**
+ * Model SubscriptionShift
+ * 
+ */
+export type SubscriptionShift = Prisma.SubscriptionShiftModel

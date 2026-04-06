@@ -17,20 +17,21 @@ export const ROLE = {
 export type ROLE = (typeof ROLE)[keyof typeof ROLE]
 
 
+export const Status = {
+  ACTIVE: 'ACTIVE',
+  EXPIRED: 'EXPIRED',
+  UPCOMING: 'UPCOMING'
+} as const
+
+export type Status = (typeof Status)[keyof typeof Status]
+
+
 export const ShiftType = {
   MORNING: 'MORNING',
   AFTERNOON: 'AFTERNOON',
   EVENING: 'EVENING',
+  NIGHT: 'NIGHT',
   FULL_DAY: 'FULL_DAY'
 } as const
 
 export type ShiftType = (typeof ShiftType)[keyof typeof ShiftType]
-
-
-export const SubscriptionStatus = {
-  ACTIVE: 'ACTIVE',
-  EXPIRED: 'EXPIRED',
-  CANCELLED: 'CANCELLED'
-} as const
-
-export type SubscriptionStatus = (typeof SubscriptionStatus)[keyof typeof SubscriptionStatus]

@@ -3,7 +3,6 @@ import Link from "next/link";
 import {
   Armchair,
   Wifi,
-  Users,
   Clock,
   ArrowRight,
   CheckCircle2,
@@ -11,7 +10,14 @@ import {
   MapPin,
   BookOpen,
   Zap,
-  Coffee,
+  Car,
+  Lightbulb,
+  Newspaper,
+  BatteryCharging,
+  Video,
+  Wind,
+  Droplets,
+  Lock,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -45,34 +51,64 @@ export default function Home() {
 
   const facilities = [
     {
-      icon: Wifi,
-      title: "High-Speed WiFi",
-      desc: "Complete coverage across all floors",
-    },
-    {
-      icon: Coffee,
-      title: "Cafe & Refreshments",
-      desc: "Coffee & snacks available",
+      icon: BookOpen,
+      title: "Peaceful Environment",
+      desc: "Quiet and distraction-free self-study centre",
     },
     {
       icon: Armchair,
-      title: "Comfortable Seating",
-      desc: "Modern furniture & ergonomic design",
+      title: "Comfortable Furniture",
+      desc: "Ergonomic seating for long study hours",
+    },
+    {
+      icon: Wind,
+      title: "Fully Air Conditioned",
+      desc: "Fully AC campus for a comfortable environment",
+    },
+    {
+      icon: Droplets,
+      title: "RO Drinking Water",
+      desc: "Clean and safe purified drinking water",
+    },
+    {
+      icon: Wifi,
+      title: "High Speed Wi-Fi",
+      desc: "Seamless internet connectivity for online resources",
+    },
+    {
+      icon: Video,
+      title: "CCTV Camera",
+      desc: "24/7 surveillance for student safety",
     },
     {
       icon: Zap,
-      title: "Power Outlets",
-      desc: "Charging stations at every seat",
+      title: "Individual Power Socket",
+      desc: "Dedicated charging ports at every desk",
     },
     {
-      icon: Users,
-      title: "Quiet Study Areas",
-      desc: "Dedicated silence zones",
+      icon: Lightbulb,
+      title: "Individual Light",
+      desc: "Personalized desk lighting for focused reading",
     },
     {
-      icon: BookOpen,
-      title: "Book Collection",
-      desc: "10,000+ titles & resources",
+      icon: BatteryCharging,
+      title: "24 Hours Power Backup",
+      desc: "Uninterrupted study sessions without power cuts",
+    },
+    {
+      icon: Newspaper,
+      title: "Newspapers & Magazines",
+      desc: "Daily newspapers and monthly magazines available",
+    },
+    {
+      icon: Lock,
+      title: "Locker Facility",
+      desc: "Secure storage for your books and personal belongings",
+    },
+    {
+      icon: Car,
+      title: "Parking",
+      desc: "Dedicated parking space for vehicles",
     },
   ];
 
@@ -115,8 +151,8 @@ export default function Home() {
               size="lg"
               className="h-14 px-8 rounded-full w-full sm:w-auto group text-base shadow-xl shadow-primary/20"
             >
-              <Link href="/signup">
-                Book Your Seat Now
+              <Link href="/register">
+                Register Now
                 <ArrowRight className="ml-2 size-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </Button>
@@ -126,14 +162,14 @@ export default function Home() {
               size="lg"
               className="h-14 px-8 rounded-full w-full sm:w-auto bg-white hover:bg-gray-50 text-base inset-ring-1 inset-ring-gray-200 border-0"
             >
-              <Link href="/about">Visit Us</Link>
+              <Link href="/seat-map">View Seat Map</Link>
             </Button>
           </div>
         </div>
 
         {/* HERO IMAGE PLACEHOLDER */}
         <div className="max-w-5xl mx-auto px-4 mt-20 relative z-10 perspective-[2000px]">
-          <div className="rounded-4xl bg-linear-to-br from-primary/20 to-primary/5 backdrop-blur-2xl inset-ring-1 inset-ring-gray-200/50 shadow-2xl shadow-gray-200/50 overflow-hidden transform-gpu transition-transform duration-700 hover:rotate-x-4 h-96">
+          <div className="rounded-4xl bg-linear-to-br from-primary/20 to-primary/5 backdrop-blur-2xl inset-ring-1 inset-ring-gray-200/50 shadow-2xl shadow-gray-200/50 overflow-hidden transform-gpu transition-transform duration-700 hover:rotate-x-4 h-130">
             <div className="w-full h-full flex items-center justify-center">
               <Image
                 src="/MALibrary/seat2.jpeg"
@@ -148,7 +184,7 @@ export default function Home() {
       </section>
 
       {/* STATS BAR */}
-      <section className="bg-white inset-ring-y-1 inset-ring-gray-100">
+      {/* <section className="bg-white inset-ring-y-1 inset-ring-gray-100">
         <div className="max-w-6xl mx-auto px-6 py-12">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-gray-100">
             <div className="space-y-2">
@@ -171,10 +207,10 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* STATS / TRUST BAR */}
-      <section className="bg-white inset-ring-y-1 inset-ring-gray-100">
+      {/* <section className="bg-white inset-ring-y-1 inset-ring-gray-100">
         <div className="max-w-6xl mx-auto px-6 py-12">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-gray-100">
             <div className="space-y-2">
@@ -203,7 +239,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* SHIFT TIMINGS SECTION */}
       <section className="max-w-6xl mx-auto px-6 py-20">
@@ -248,7 +284,7 @@ export default function Home() {
                 </div>
               </div>
               <Button asChild size="sm" className="w-full mt-4 rounded-lg">
-                <Link href="/signup">Book Seat</Link>
+                <Link href="/register">Book Seat</Link>
               </Button>
             </div>
           ))}
@@ -342,12 +378,16 @@ export default function Home() {
               size="lg"
               className="h-14 px-8 rounded-full text-base w-full sm:w-auto hover:scale-105 transition-transform bg-primary text-primary-foreground hover:bg-primary/90"
             >
-              <Link href="/signup">Register & Book Now</Link>
+              <Link href="/register">Register & Book Now</Link>
             </Button>
-            <p className="text-sm text-gray-400 flex items-center justify-center gap-2 mt-2 sm:mt-0 sm:ml-4">
-              <CheckCircle2 className="size-4" /> Online registration available
-              24/7
-            </p>
+            <Button
+              asChild
+              variant="outline"
+              size="lg"
+              className="h-14 px-8 rounded-full text-base w-full sm:w-auto hover:scale-105 transition-transform"
+            >
+              <Link href="/seat-map">View Seat Map</Link>
+            </Button>
           </div>
         </div>
       </section>

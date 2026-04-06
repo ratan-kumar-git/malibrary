@@ -20,8 +20,18 @@ export type StudentModel = runtime.Types.Result.DefaultSelection<Prisma.$Student
 
 export type AggregateStudent = {
   _count: StudentCountAggregateOutputType | null
+  _avg: StudentAvgAggregateOutputType | null
+  _sum: StudentSumAggregateOutputType | null
   _min: StudentMinAggregateOutputType | null
   _max: StudentMaxAggregateOutputType | null
+}
+
+export type StudentAvgAggregateOutputType = {
+  lockerNumber: number | null
+}
+
+export type StudentSumAggregateOutputType = {
+  lockerNumber: number | null
 }
 
 export type StudentMinAggregateOutputType = {
@@ -31,6 +41,7 @@ export type StudentMinAggregateOutputType = {
   gender: string | null
   phoneNumber: string | null
   address: string | null
+  lockerNumber: number | null
   libraryId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -43,6 +54,7 @@ export type StudentMaxAggregateOutputType = {
   gender: string | null
   phoneNumber: string | null
   address: string | null
+  lockerNumber: number | null
   libraryId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -55,12 +67,21 @@ export type StudentCountAggregateOutputType = {
   gender: number
   phoneNumber: number
   address: number
+  lockerNumber: number
   libraryId: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
+
+export type StudentAvgAggregateInputType = {
+  lockerNumber?: true
+}
+
+export type StudentSumAggregateInputType = {
+  lockerNumber?: true
+}
 
 export type StudentMinAggregateInputType = {
   id?: true
@@ -69,6 +90,7 @@ export type StudentMinAggregateInputType = {
   gender?: true
   phoneNumber?: true
   address?: true
+  lockerNumber?: true
   libraryId?: true
   createdAt?: true
   updatedAt?: true
@@ -81,6 +103,7 @@ export type StudentMaxAggregateInputType = {
   gender?: true
   phoneNumber?: true
   address?: true
+  lockerNumber?: true
   libraryId?: true
   createdAt?: true
   updatedAt?: true
@@ -93,6 +116,7 @@ export type StudentCountAggregateInputType = {
   gender?: true
   phoneNumber?: true
   address?: true
+  lockerNumber?: true
   libraryId?: true
   createdAt?: true
   updatedAt?: true
@@ -137,6 +161,18 @@ export type StudentAggregateArgs<ExtArgs extends runtime.Types.Extensions.Intern
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: StudentAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: StudentSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: StudentMinAggregateInputType
@@ -167,6 +203,8 @@ export type StudentGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   _count?: StudentCountAggregateInputType | true
+  _avg?: StudentAvgAggregateInputType
+  _sum?: StudentSumAggregateInputType
   _min?: StudentMinAggregateInputType
   _max?: StudentMaxAggregateInputType
 }
@@ -178,10 +216,13 @@ export type StudentGroupByOutputType = {
   gender: string
   phoneNumber: string
   address: string | null
+  lockerNumber: number | null
   libraryId: string
   createdAt: Date
   updatedAt: Date
   _count: StudentCountAggregateOutputType | null
+  _avg: StudentAvgAggregateOutputType | null
+  _sum: StudentSumAggregateOutputType | null
   _min: StudentMinAggregateOutputType | null
   _max: StudentMaxAggregateOutputType | null
 }
@@ -211,6 +252,7 @@ export type StudentWhereInput = {
   gender?: Prisma.StringFilter<"Student"> | string
   phoneNumber?: Prisma.StringFilter<"Student"> | string
   address?: Prisma.StringNullableFilter<"Student"> | string | null
+  lockerNumber?: Prisma.IntNullableFilter<"Student"> | number | null
   libraryId?: Prisma.StringFilter<"Student"> | string
   createdAt?: Prisma.DateTimeFilter<"Student"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Student"> | Date | string
@@ -225,6 +267,7 @@ export type StudentOrderByWithRelationInput = {
   gender?: Prisma.SortOrder
   phoneNumber?: Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
+  lockerNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   libraryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -235,6 +278,8 @@ export type StudentOrderByWithRelationInput = {
 export type StudentWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   memberId?: string
+  lockerNumber?: number
+  libraryId_phoneNumber?: Prisma.StudentLibraryIdPhoneNumberCompoundUniqueInput
   AND?: Prisma.StudentWhereInput | Prisma.StudentWhereInput[]
   OR?: Prisma.StudentWhereInput[]
   NOT?: Prisma.StudentWhereInput | Prisma.StudentWhereInput[]
@@ -247,7 +292,7 @@ export type StudentWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Student"> | Date | string
   library?: Prisma.XOR<Prisma.LibraryScalarRelationFilter, Prisma.LibraryWhereInput>
   subscriptions?: Prisma.SubscriptionListRelationFilter
-}, "id" | "memberId">
+}, "id" | "memberId" | "lockerNumber" | "libraryId_phoneNumber">
 
 export type StudentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -256,12 +301,15 @@ export type StudentOrderByWithAggregationInput = {
   gender?: Prisma.SortOrder
   phoneNumber?: Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
+  lockerNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   libraryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.StudentCountOrderByAggregateInput
+  _avg?: Prisma.StudentAvgOrderByAggregateInput
   _max?: Prisma.StudentMaxOrderByAggregateInput
   _min?: Prisma.StudentMinOrderByAggregateInput
+  _sum?: Prisma.StudentSumOrderByAggregateInput
 }
 
 export type StudentScalarWhereWithAggregatesInput = {
@@ -274,6 +322,7 @@ export type StudentScalarWhereWithAggregatesInput = {
   gender?: Prisma.StringWithAggregatesFilter<"Student"> | string
   phoneNumber?: Prisma.StringWithAggregatesFilter<"Student"> | string
   address?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
+  lockerNumber?: Prisma.IntNullableWithAggregatesFilter<"Student"> | number | null
   libraryId?: Prisma.StringWithAggregatesFilter<"Student"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Student"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Student"> | Date | string
@@ -286,6 +335,7 @@ export type StudentCreateInput = {
   gender: string
   phoneNumber: string
   address?: string | null
+  lockerNumber?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   library: Prisma.LibraryCreateNestedOneWithoutStudentsInput
@@ -299,6 +349,7 @@ export type StudentUncheckedCreateInput = {
   gender: string
   phoneNumber: string
   address?: string | null
+  lockerNumber?: number | null
   libraryId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -312,6 +363,7 @@ export type StudentUpdateInput = {
   gender?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lockerNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   library?: Prisma.LibraryUpdateOneRequiredWithoutStudentsNestedInput
@@ -325,6 +377,7 @@ export type StudentUncheckedUpdateInput = {
   gender?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lockerNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   libraryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -338,6 +391,7 @@ export type StudentCreateManyInput = {
   gender: string
   phoneNumber: string
   address?: string | null
+  lockerNumber?: number | null
   libraryId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -350,6 +404,7 @@ export type StudentUpdateManyMutationInput = {
   gender?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lockerNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -361,6 +416,7 @@ export type StudentUncheckedUpdateManyInput = {
   gender?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lockerNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   libraryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -376,6 +432,11 @@ export type StudentOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type StudentLibraryIdPhoneNumberCompoundUniqueInput = {
+  libraryId: string
+  phoneNumber: string
+}
+
 export type StudentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   memberId?: Prisma.SortOrder
@@ -383,9 +444,14 @@ export type StudentCountOrderByAggregateInput = {
   gender?: Prisma.SortOrder
   phoneNumber?: Prisma.SortOrder
   address?: Prisma.SortOrder
+  lockerNumber?: Prisma.SortOrder
   libraryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type StudentAvgOrderByAggregateInput = {
+  lockerNumber?: Prisma.SortOrder
 }
 
 export type StudentMaxOrderByAggregateInput = {
@@ -395,6 +461,7 @@ export type StudentMaxOrderByAggregateInput = {
   gender?: Prisma.SortOrder
   phoneNumber?: Prisma.SortOrder
   address?: Prisma.SortOrder
+  lockerNumber?: Prisma.SortOrder
   libraryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -407,9 +474,14 @@ export type StudentMinOrderByAggregateInput = {
   gender?: Prisma.SortOrder
   phoneNumber?: Prisma.SortOrder
   address?: Prisma.SortOrder
+  lockerNumber?: Prisma.SortOrder
   libraryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type StudentSumOrderByAggregateInput = {
+  lockerNumber?: Prisma.SortOrder
 }
 
 export type StudentScalarRelationFilter = {
@@ -459,6 +531,14 @@ export type StudentUncheckedUpdateManyWithoutLibraryNestedInput = {
   deleteMany?: Prisma.StudentScalarWhereInput | Prisma.StudentScalarWhereInput[]
 }
 
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type StudentCreateNestedOneWithoutSubscriptionsInput = {
   create?: Prisma.XOR<Prisma.StudentCreateWithoutSubscriptionsInput, Prisma.StudentUncheckedCreateWithoutSubscriptionsInput>
   connectOrCreate?: Prisma.StudentCreateOrConnectWithoutSubscriptionsInput
@@ -480,6 +560,7 @@ export type StudentCreateWithoutLibraryInput = {
   gender: string
   phoneNumber: string
   address?: string | null
+  lockerNumber?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutStudentInput
@@ -492,6 +573,7 @@ export type StudentUncheckedCreateWithoutLibraryInput = {
   gender: string
   phoneNumber: string
   address?: string | null
+  lockerNumber?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutStudentInput
@@ -533,6 +615,7 @@ export type StudentScalarWhereInput = {
   gender?: Prisma.StringFilter<"Student"> | string
   phoneNumber?: Prisma.StringFilter<"Student"> | string
   address?: Prisma.StringNullableFilter<"Student"> | string | null
+  lockerNumber?: Prisma.IntNullableFilter<"Student"> | number | null
   libraryId?: Prisma.StringFilter<"Student"> | string
   createdAt?: Prisma.DateTimeFilter<"Student"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Student"> | Date | string
@@ -545,6 +628,7 @@ export type StudentCreateWithoutSubscriptionsInput = {
   gender: string
   phoneNumber: string
   address?: string | null
+  lockerNumber?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   library: Prisma.LibraryCreateNestedOneWithoutStudentsInput
@@ -557,6 +641,7 @@ export type StudentUncheckedCreateWithoutSubscriptionsInput = {
   gender: string
   phoneNumber: string
   address?: string | null
+  lockerNumber?: number | null
   libraryId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -585,6 +670,7 @@ export type StudentUpdateWithoutSubscriptionsInput = {
   gender?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lockerNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   library?: Prisma.LibraryUpdateOneRequiredWithoutStudentsNestedInput
@@ -597,6 +683,7 @@ export type StudentUncheckedUpdateWithoutSubscriptionsInput = {
   gender?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lockerNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   libraryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -609,6 +696,7 @@ export type StudentCreateManyLibraryInput = {
   gender: string
   phoneNumber: string
   address?: string | null
+  lockerNumber?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -620,6 +708,7 @@ export type StudentUpdateWithoutLibraryInput = {
   gender?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lockerNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutStudentNestedInput
@@ -632,6 +721,7 @@ export type StudentUncheckedUpdateWithoutLibraryInput = {
   gender?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lockerNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutStudentNestedInput
@@ -644,6 +734,7 @@ export type StudentUncheckedUpdateManyWithoutLibraryInput = {
   gender?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lockerNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -686,6 +777,7 @@ export type StudentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   gender?: boolean
   phoneNumber?: boolean
   address?: boolean
+  lockerNumber?: boolean
   libraryId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -701,6 +793,7 @@ export type StudentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   gender?: boolean
   phoneNumber?: boolean
   address?: boolean
+  lockerNumber?: boolean
   libraryId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -714,6 +807,7 @@ export type StudentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   gender?: boolean
   phoneNumber?: boolean
   address?: boolean
+  lockerNumber?: boolean
   libraryId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -727,12 +821,13 @@ export type StudentSelectScalar = {
   gender?: boolean
   phoneNumber?: boolean
   address?: boolean
+  lockerNumber?: boolean
   libraryId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type StudentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "memberId" | "name" | "gender" | "phoneNumber" | "address" | "libraryId" | "createdAt" | "updatedAt", ExtArgs["result"]["student"]>
+export type StudentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "memberId" | "name" | "gender" | "phoneNumber" | "address" | "lockerNumber" | "libraryId" | "createdAt" | "updatedAt", ExtArgs["result"]["student"]>
 export type StudentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   library?: boolean | Prisma.LibraryDefaultArgs<ExtArgs>
   subscriptions?: boolean | Prisma.Student$subscriptionsArgs<ExtArgs>
@@ -758,6 +853,7 @@ export type $StudentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     gender: string
     phoneNumber: string
     address: string | null
+    lockerNumber: number | null
     libraryId: string
     createdAt: Date
     updatedAt: Date
@@ -1192,6 +1288,7 @@ export interface StudentFieldRefs {
   readonly gender: Prisma.FieldRef<"Student", 'String'>
   readonly phoneNumber: Prisma.FieldRef<"Student", 'String'>
   readonly address: Prisma.FieldRef<"Student", 'String'>
+  readonly lockerNumber: Prisma.FieldRef<"Student", 'Int'>
   readonly libraryId: Prisma.FieldRef<"Student", 'String'>
   readonly createdAt: Prisma.FieldRef<"Student", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Student", 'DateTime'>

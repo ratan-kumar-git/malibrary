@@ -18,6 +18,8 @@ export default async function proxy(req: NextRequest) {
     "/settings",
     "/profile",
     "/dashboard",
+    "/register",
+    "/seat-map",
   ];
 
   const isPrivateRoute = privateRoutePrefixes.some((route) =>

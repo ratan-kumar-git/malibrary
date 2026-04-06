@@ -27,54 +27,48 @@ export type AggregateSubscription = {
 }
 
 export type SubscriptionAvgAggregateOutputType = {
-  seatNo: number | null
   totalAmount: number | null
   amountPaid: number | null
 }
 
 export type SubscriptionSumAggregateOutputType = {
-  seatNo: number | null
   totalAmount: number | null
   amountPaid: number | null
 }
 
 export type SubscriptionMinAggregateOutputType = {
   id: string | null
-  studentId: string | null
   libraryId: string | null
-  floorName: string | null
-  seatNo: number | null
+  seatId: string | null
+  studentId: string | null
   startDate: Date | null
   endDate: Date | null
   totalAmount: number | null
   amountPaid: number | null
-  status: $Enums.SubscriptionStatus | null
+  status: $Enums.Status | null
   createdAt: Date | null
   updatedAt: Date | null
 }
 
 export type SubscriptionMaxAggregateOutputType = {
   id: string | null
-  studentId: string | null
   libraryId: string | null
-  floorName: string | null
-  seatNo: number | null
+  seatId: string | null
+  studentId: string | null
   startDate: Date | null
   endDate: Date | null
   totalAmount: number | null
   amountPaid: number | null
-  status: $Enums.SubscriptionStatus | null
+  status: $Enums.Status | null
   createdAt: Date | null
   updatedAt: Date | null
 }
 
 export type SubscriptionCountAggregateOutputType = {
   id: number
-  studentId: number
   libraryId: number
-  floorName: number
-  seatNo: number
-  shifts: number
+  seatId: number
+  studentId: number
   startDate: number
   endDate: number
   totalAmount: number
@@ -87,23 +81,20 @@ export type SubscriptionCountAggregateOutputType = {
 
 
 export type SubscriptionAvgAggregateInputType = {
-  seatNo?: true
   totalAmount?: true
   amountPaid?: true
 }
 
 export type SubscriptionSumAggregateInputType = {
-  seatNo?: true
   totalAmount?: true
   amountPaid?: true
 }
 
 export type SubscriptionMinAggregateInputType = {
   id?: true
-  studentId?: true
   libraryId?: true
-  floorName?: true
-  seatNo?: true
+  seatId?: true
+  studentId?: true
   startDate?: true
   endDate?: true
   totalAmount?: true
@@ -115,10 +106,9 @@ export type SubscriptionMinAggregateInputType = {
 
 export type SubscriptionMaxAggregateInputType = {
   id?: true
-  studentId?: true
   libraryId?: true
-  floorName?: true
-  seatNo?: true
+  seatId?: true
+  studentId?: true
   startDate?: true
   endDate?: true
   totalAmount?: true
@@ -130,11 +120,9 @@ export type SubscriptionMaxAggregateInputType = {
 
 export type SubscriptionCountAggregateInputType = {
   id?: true
-  studentId?: true
   libraryId?: true
-  floorName?: true
-  seatNo?: true
-  shifts?: true
+  seatId?: true
+  studentId?: true
   startDate?: true
   endDate?: true
   totalAmount?: true
@@ -233,16 +221,14 @@ export type SubscriptionGroupByArgs<ExtArgs extends runtime.Types.Extensions.Int
 
 export type SubscriptionGroupByOutputType = {
   id: string
-  studentId: string
   libraryId: string
-  floorName: string
-  seatNo: number
-  shifts: string[]
+  seatId: string
+  studentId: string
   startDate: Date
   endDate: Date
   totalAmount: number
   amountPaid: number
-  status: $Enums.SubscriptionStatus
+  status: $Enums.Status
   createdAt: Date
   updatedAt: Date
   _count: SubscriptionCountAggregateOutputType | null
@@ -272,29 +258,27 @@ export type SubscriptionWhereInput = {
   OR?: Prisma.SubscriptionWhereInput[]
   NOT?: Prisma.SubscriptionWhereInput | Prisma.SubscriptionWhereInput[]
   id?: Prisma.StringFilter<"Subscription"> | string
-  studentId?: Prisma.StringFilter<"Subscription"> | string
   libraryId?: Prisma.StringFilter<"Subscription"> | string
-  floorName?: Prisma.StringFilter<"Subscription"> | string
-  seatNo?: Prisma.IntFilter<"Subscription"> | number
-  shifts?: Prisma.StringNullableListFilter<"Subscription">
+  seatId?: Prisma.StringFilter<"Subscription"> | string
+  studentId?: Prisma.StringFilter<"Subscription"> | string
   startDate?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   endDate?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   totalAmount?: Prisma.FloatFilter<"Subscription"> | number
   amountPaid?: Prisma.FloatFilter<"Subscription"> | number
-  status?: Prisma.EnumSubscriptionStatusFilter<"Subscription"> | $Enums.SubscriptionStatus
+  status?: Prisma.EnumStatusFilter<"Subscription"> | $Enums.Status
   createdAt?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Subscription"> | Date | string
-  student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
   library?: Prisma.XOR<Prisma.LibraryScalarRelationFilter, Prisma.LibraryWhereInput>
+  seat?: Prisma.XOR<Prisma.SeatScalarRelationFilter, Prisma.SeatWhereInput>
+  student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
+  subscriptionShifts?: Prisma.SubscriptionShiftListRelationFilter
 }
 
 export type SubscriptionOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  studentId?: Prisma.SortOrder
   libraryId?: Prisma.SortOrder
-  floorName?: Prisma.SortOrder
-  seatNo?: Prisma.SortOrder
-  shifts?: Prisma.SortOrder
+  seatId?: Prisma.SortOrder
+  studentId?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
@@ -302,8 +286,10 @@ export type SubscriptionOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  student?: Prisma.StudentOrderByWithRelationInput
   library?: Prisma.LibraryOrderByWithRelationInput
+  seat?: Prisma.SeatOrderByWithRelationInput
+  student?: Prisma.StudentOrderByWithRelationInput
+  subscriptionShifts?: Prisma.SubscriptionShiftOrderByRelationAggregateInput
 }
 
 export type SubscriptionWhereUniqueInput = Prisma.AtLeast<{
@@ -311,29 +297,27 @@ export type SubscriptionWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.SubscriptionWhereInput | Prisma.SubscriptionWhereInput[]
   OR?: Prisma.SubscriptionWhereInput[]
   NOT?: Prisma.SubscriptionWhereInput | Prisma.SubscriptionWhereInput[]
-  studentId?: Prisma.StringFilter<"Subscription"> | string
   libraryId?: Prisma.StringFilter<"Subscription"> | string
-  floorName?: Prisma.StringFilter<"Subscription"> | string
-  seatNo?: Prisma.IntFilter<"Subscription"> | number
-  shifts?: Prisma.StringNullableListFilter<"Subscription">
+  seatId?: Prisma.StringFilter<"Subscription"> | string
+  studentId?: Prisma.StringFilter<"Subscription"> | string
   startDate?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   endDate?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   totalAmount?: Prisma.FloatFilter<"Subscription"> | number
   amountPaid?: Prisma.FloatFilter<"Subscription"> | number
-  status?: Prisma.EnumSubscriptionStatusFilter<"Subscription"> | $Enums.SubscriptionStatus
+  status?: Prisma.EnumStatusFilter<"Subscription"> | $Enums.Status
   createdAt?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Subscription"> | Date | string
-  student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
   library?: Prisma.XOR<Prisma.LibraryScalarRelationFilter, Prisma.LibraryWhereInput>
+  seat?: Prisma.XOR<Prisma.SeatScalarRelationFilter, Prisma.SeatWhereInput>
+  student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
+  subscriptionShifts?: Prisma.SubscriptionShiftListRelationFilter
 }, "id">
 
 export type SubscriptionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  studentId?: Prisma.SortOrder
   libraryId?: Prisma.SortOrder
-  floorName?: Prisma.SortOrder
-  seatNo?: Prisma.SortOrder
-  shifts?: Prisma.SortOrder
+  seatId?: Prisma.SortOrder
+  studentId?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
@@ -353,126 +337,113 @@ export type SubscriptionScalarWhereWithAggregatesInput = {
   OR?: Prisma.SubscriptionScalarWhereWithAggregatesInput[]
   NOT?: Prisma.SubscriptionScalarWhereWithAggregatesInput | Prisma.SubscriptionScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Subscription"> | string
-  studentId?: Prisma.StringWithAggregatesFilter<"Subscription"> | string
   libraryId?: Prisma.StringWithAggregatesFilter<"Subscription"> | string
-  floorName?: Prisma.StringWithAggregatesFilter<"Subscription"> | string
-  seatNo?: Prisma.IntWithAggregatesFilter<"Subscription"> | number
-  shifts?: Prisma.StringNullableListFilter<"Subscription">
+  seatId?: Prisma.StringWithAggregatesFilter<"Subscription"> | string
+  studentId?: Prisma.StringWithAggregatesFilter<"Subscription"> | string
   startDate?: Prisma.DateTimeWithAggregatesFilter<"Subscription"> | Date | string
   endDate?: Prisma.DateTimeWithAggregatesFilter<"Subscription"> | Date | string
   totalAmount?: Prisma.FloatWithAggregatesFilter<"Subscription"> | number
   amountPaid?: Prisma.FloatWithAggregatesFilter<"Subscription"> | number
-  status?: Prisma.EnumSubscriptionStatusWithAggregatesFilter<"Subscription"> | $Enums.SubscriptionStatus
+  status?: Prisma.EnumStatusWithAggregatesFilter<"Subscription"> | $Enums.Status
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Subscription"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Subscription"> | Date | string
 }
 
 export type SubscriptionCreateInput = {
   id?: string
-  floorName: string
-  seatNo: number
-  shifts?: Prisma.SubscriptionCreateshiftsInput | string[]
   startDate: Date | string
   endDate: Date | string
   totalAmount: number
   amountPaid?: number
-  status: $Enums.SubscriptionStatus
+  status?: $Enums.Status
   createdAt?: Date | string
   updatedAt?: Date | string
-  student: Prisma.StudentCreateNestedOneWithoutSubscriptionsInput
   library: Prisma.LibraryCreateNestedOneWithoutSubscriptionsInput
+  seat: Prisma.SeatCreateNestedOneWithoutSubscriptionsInput
+  student: Prisma.StudentCreateNestedOneWithoutSubscriptionsInput
+  subscriptionShifts?: Prisma.SubscriptionShiftCreateNestedManyWithoutSubscriptionInput
 }
 
 export type SubscriptionUncheckedCreateInput = {
   id?: string
-  studentId: string
   libraryId: string
-  floorName: string
-  seatNo: number
-  shifts?: Prisma.SubscriptionCreateshiftsInput | string[]
+  seatId: string
+  studentId: string
   startDate: Date | string
   endDate: Date | string
   totalAmount: number
   amountPaid?: number
-  status: $Enums.SubscriptionStatus
+  status?: $Enums.Status
   createdAt?: Date | string
   updatedAt?: Date | string
+  subscriptionShifts?: Prisma.SubscriptionShiftUncheckedCreateNestedManyWithoutSubscriptionInput
 }
 
 export type SubscriptionUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  floorName?: Prisma.StringFieldUpdateOperationsInput | string
-  seatNo?: Prisma.IntFieldUpdateOperationsInput | number
-  shifts?: Prisma.SubscriptionUpdateshiftsInput | string[]
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   amountPaid?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  student?: Prisma.StudentUpdateOneRequiredWithoutSubscriptionsNestedInput
   library?: Prisma.LibraryUpdateOneRequiredWithoutSubscriptionsNestedInput
+  seat?: Prisma.SeatUpdateOneRequiredWithoutSubscriptionsNestedInput
+  student?: Prisma.StudentUpdateOneRequiredWithoutSubscriptionsNestedInput
+  subscriptionShifts?: Prisma.SubscriptionShiftUpdateManyWithoutSubscriptionNestedInput
 }
 
 export type SubscriptionUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
   libraryId?: Prisma.StringFieldUpdateOperationsInput | string
-  floorName?: Prisma.StringFieldUpdateOperationsInput | string
-  seatNo?: Prisma.IntFieldUpdateOperationsInput | number
-  shifts?: Prisma.SubscriptionUpdateshiftsInput | string[]
+  seatId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   amountPaid?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  subscriptionShifts?: Prisma.SubscriptionShiftUncheckedUpdateManyWithoutSubscriptionNestedInput
 }
 
 export type SubscriptionCreateManyInput = {
   id?: string
-  studentId: string
   libraryId: string
-  floorName: string
-  seatNo: number
-  shifts?: Prisma.SubscriptionCreateshiftsInput | string[]
+  seatId: string
+  studentId: string
   startDate: Date | string
   endDate: Date | string
   totalAmount: number
   amountPaid?: number
-  status: $Enums.SubscriptionStatus
+  status?: $Enums.Status
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type SubscriptionUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  floorName?: Prisma.StringFieldUpdateOperationsInput | string
-  seatNo?: Prisma.IntFieldUpdateOperationsInput | number
-  shifts?: Prisma.SubscriptionUpdateshiftsInput | string[]
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   amountPaid?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SubscriptionUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
   libraryId?: Prisma.StringFieldUpdateOperationsInput | string
-  floorName?: Prisma.StringFieldUpdateOperationsInput | string
-  seatNo?: Prisma.IntFieldUpdateOperationsInput | number
-  shifts?: Prisma.SubscriptionUpdateshiftsInput | string[]
+  seatId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   amountPaid?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -489,11 +460,9 @@ export type SubscriptionOrderByRelationAggregateInput = {
 
 export type SubscriptionCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  studentId?: Prisma.SortOrder
   libraryId?: Prisma.SortOrder
-  floorName?: Prisma.SortOrder
-  seatNo?: Prisma.SortOrder
-  shifts?: Prisma.SortOrder
+  seatId?: Prisma.SortOrder
+  studentId?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
@@ -504,17 +473,15 @@ export type SubscriptionCountOrderByAggregateInput = {
 }
 
 export type SubscriptionAvgOrderByAggregateInput = {
-  seatNo?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
   amountPaid?: Prisma.SortOrder
 }
 
 export type SubscriptionMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  studentId?: Prisma.SortOrder
   libraryId?: Prisma.SortOrder
-  floorName?: Prisma.SortOrder
-  seatNo?: Prisma.SortOrder
+  seatId?: Prisma.SortOrder
+  studentId?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
@@ -526,10 +493,9 @@ export type SubscriptionMaxOrderByAggregateInput = {
 
 export type SubscriptionMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  studentId?: Prisma.SortOrder
   libraryId?: Prisma.SortOrder
-  floorName?: Prisma.SortOrder
-  seatNo?: Prisma.SortOrder
+  seatId?: Prisma.SortOrder
+  studentId?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
@@ -540,9 +506,13 @@ export type SubscriptionMinOrderByAggregateInput = {
 }
 
 export type SubscriptionSumOrderByAggregateInput = {
-  seatNo?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
   amountPaid?: Prisma.SortOrder
+}
+
+export type SubscriptionScalarRelationFilter = {
+  is?: Prisma.SubscriptionWhereInput
+  isNot?: Prisma.SubscriptionWhereInput
 }
 
 export type SubscriptionCreateNestedManyWithoutLibraryInput = {
@@ -584,6 +554,48 @@ export type SubscriptionUncheckedUpdateManyWithoutLibraryNestedInput = {
   connect?: Prisma.SubscriptionWhereUniqueInput | Prisma.SubscriptionWhereUniqueInput[]
   update?: Prisma.SubscriptionUpdateWithWhereUniqueWithoutLibraryInput | Prisma.SubscriptionUpdateWithWhereUniqueWithoutLibraryInput[]
   updateMany?: Prisma.SubscriptionUpdateManyWithWhereWithoutLibraryInput | Prisma.SubscriptionUpdateManyWithWhereWithoutLibraryInput[]
+  deleteMany?: Prisma.SubscriptionScalarWhereInput | Prisma.SubscriptionScalarWhereInput[]
+}
+
+export type SubscriptionCreateNestedManyWithoutSeatInput = {
+  create?: Prisma.XOR<Prisma.SubscriptionCreateWithoutSeatInput, Prisma.SubscriptionUncheckedCreateWithoutSeatInput> | Prisma.SubscriptionCreateWithoutSeatInput[] | Prisma.SubscriptionUncheckedCreateWithoutSeatInput[]
+  connectOrCreate?: Prisma.SubscriptionCreateOrConnectWithoutSeatInput | Prisma.SubscriptionCreateOrConnectWithoutSeatInput[]
+  createMany?: Prisma.SubscriptionCreateManySeatInputEnvelope
+  connect?: Prisma.SubscriptionWhereUniqueInput | Prisma.SubscriptionWhereUniqueInput[]
+}
+
+export type SubscriptionUncheckedCreateNestedManyWithoutSeatInput = {
+  create?: Prisma.XOR<Prisma.SubscriptionCreateWithoutSeatInput, Prisma.SubscriptionUncheckedCreateWithoutSeatInput> | Prisma.SubscriptionCreateWithoutSeatInput[] | Prisma.SubscriptionUncheckedCreateWithoutSeatInput[]
+  connectOrCreate?: Prisma.SubscriptionCreateOrConnectWithoutSeatInput | Prisma.SubscriptionCreateOrConnectWithoutSeatInput[]
+  createMany?: Prisma.SubscriptionCreateManySeatInputEnvelope
+  connect?: Prisma.SubscriptionWhereUniqueInput | Prisma.SubscriptionWhereUniqueInput[]
+}
+
+export type SubscriptionUpdateManyWithoutSeatNestedInput = {
+  create?: Prisma.XOR<Prisma.SubscriptionCreateWithoutSeatInput, Prisma.SubscriptionUncheckedCreateWithoutSeatInput> | Prisma.SubscriptionCreateWithoutSeatInput[] | Prisma.SubscriptionUncheckedCreateWithoutSeatInput[]
+  connectOrCreate?: Prisma.SubscriptionCreateOrConnectWithoutSeatInput | Prisma.SubscriptionCreateOrConnectWithoutSeatInput[]
+  upsert?: Prisma.SubscriptionUpsertWithWhereUniqueWithoutSeatInput | Prisma.SubscriptionUpsertWithWhereUniqueWithoutSeatInput[]
+  createMany?: Prisma.SubscriptionCreateManySeatInputEnvelope
+  set?: Prisma.SubscriptionWhereUniqueInput | Prisma.SubscriptionWhereUniqueInput[]
+  disconnect?: Prisma.SubscriptionWhereUniqueInput | Prisma.SubscriptionWhereUniqueInput[]
+  delete?: Prisma.SubscriptionWhereUniqueInput | Prisma.SubscriptionWhereUniqueInput[]
+  connect?: Prisma.SubscriptionWhereUniqueInput | Prisma.SubscriptionWhereUniqueInput[]
+  update?: Prisma.SubscriptionUpdateWithWhereUniqueWithoutSeatInput | Prisma.SubscriptionUpdateWithWhereUniqueWithoutSeatInput[]
+  updateMany?: Prisma.SubscriptionUpdateManyWithWhereWithoutSeatInput | Prisma.SubscriptionUpdateManyWithWhereWithoutSeatInput[]
+  deleteMany?: Prisma.SubscriptionScalarWhereInput | Prisma.SubscriptionScalarWhereInput[]
+}
+
+export type SubscriptionUncheckedUpdateManyWithoutSeatNestedInput = {
+  create?: Prisma.XOR<Prisma.SubscriptionCreateWithoutSeatInput, Prisma.SubscriptionUncheckedCreateWithoutSeatInput> | Prisma.SubscriptionCreateWithoutSeatInput[] | Prisma.SubscriptionUncheckedCreateWithoutSeatInput[]
+  connectOrCreate?: Prisma.SubscriptionCreateOrConnectWithoutSeatInput | Prisma.SubscriptionCreateOrConnectWithoutSeatInput[]
+  upsert?: Prisma.SubscriptionUpsertWithWhereUniqueWithoutSeatInput | Prisma.SubscriptionUpsertWithWhereUniqueWithoutSeatInput[]
+  createMany?: Prisma.SubscriptionCreateManySeatInputEnvelope
+  set?: Prisma.SubscriptionWhereUniqueInput | Prisma.SubscriptionWhereUniqueInput[]
+  disconnect?: Prisma.SubscriptionWhereUniqueInput | Prisma.SubscriptionWhereUniqueInput[]
+  delete?: Prisma.SubscriptionWhereUniqueInput | Prisma.SubscriptionWhereUniqueInput[]
+  connect?: Prisma.SubscriptionWhereUniqueInput | Prisma.SubscriptionWhereUniqueInput[]
+  update?: Prisma.SubscriptionUpdateWithWhereUniqueWithoutSeatInput | Prisma.SubscriptionUpdateWithWhereUniqueWithoutSeatInput[]
+  updateMany?: Prisma.SubscriptionUpdateManyWithWhereWithoutSeatInput | Prisma.SubscriptionUpdateManyWithWhereWithoutSeatInput[]
   deleteMany?: Prisma.SubscriptionScalarWhereInput | Prisma.SubscriptionScalarWhereInput[]
 }
 
@@ -629,47 +641,50 @@ export type SubscriptionUncheckedUpdateManyWithoutStudentNestedInput = {
   deleteMany?: Prisma.SubscriptionScalarWhereInput | Prisma.SubscriptionScalarWhereInput[]
 }
 
-export type SubscriptionCreateshiftsInput = {
-  set: string[]
+export type EnumStatusFieldUpdateOperationsInput = {
+  set?: $Enums.Status
 }
 
-export type SubscriptionUpdateshiftsInput = {
-  set?: string[]
-  push?: string | string[]
+export type SubscriptionCreateNestedOneWithoutSubscriptionShiftsInput = {
+  create?: Prisma.XOR<Prisma.SubscriptionCreateWithoutSubscriptionShiftsInput, Prisma.SubscriptionUncheckedCreateWithoutSubscriptionShiftsInput>
+  connectOrCreate?: Prisma.SubscriptionCreateOrConnectWithoutSubscriptionShiftsInput
+  connect?: Prisma.SubscriptionWhereUniqueInput
 }
 
-export type EnumSubscriptionStatusFieldUpdateOperationsInput = {
-  set?: $Enums.SubscriptionStatus
+export type SubscriptionUpdateOneRequiredWithoutSubscriptionShiftsNestedInput = {
+  create?: Prisma.XOR<Prisma.SubscriptionCreateWithoutSubscriptionShiftsInput, Prisma.SubscriptionUncheckedCreateWithoutSubscriptionShiftsInput>
+  connectOrCreate?: Prisma.SubscriptionCreateOrConnectWithoutSubscriptionShiftsInput
+  upsert?: Prisma.SubscriptionUpsertWithoutSubscriptionShiftsInput
+  connect?: Prisma.SubscriptionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SubscriptionUpdateToOneWithWhereWithoutSubscriptionShiftsInput, Prisma.SubscriptionUpdateWithoutSubscriptionShiftsInput>, Prisma.SubscriptionUncheckedUpdateWithoutSubscriptionShiftsInput>
 }
 
 export type SubscriptionCreateWithoutLibraryInput = {
   id?: string
-  floorName: string
-  seatNo: number
-  shifts?: Prisma.SubscriptionCreateshiftsInput | string[]
   startDate: Date | string
   endDate: Date | string
   totalAmount: number
   amountPaid?: number
-  status: $Enums.SubscriptionStatus
+  status?: $Enums.Status
   createdAt?: Date | string
   updatedAt?: Date | string
+  seat: Prisma.SeatCreateNestedOneWithoutSubscriptionsInput
   student: Prisma.StudentCreateNestedOneWithoutSubscriptionsInput
+  subscriptionShifts?: Prisma.SubscriptionShiftCreateNestedManyWithoutSubscriptionInput
 }
 
 export type SubscriptionUncheckedCreateWithoutLibraryInput = {
   id?: string
+  seatId: string
   studentId: string
-  floorName: string
-  seatNo: number
-  shifts?: Prisma.SubscriptionCreateshiftsInput | string[]
   startDate: Date | string
   endDate: Date | string
   totalAmount: number
   amountPaid?: number
-  status: $Enums.SubscriptionStatus
+  status?: $Enums.Status
   createdAt?: Date | string
   updatedAt?: Date | string
+  subscriptionShifts?: Prisma.SubscriptionShiftUncheckedCreateNestedManyWithoutSubscriptionInput
 }
 
 export type SubscriptionCreateOrConnectWithoutLibraryInput = {
@@ -703,48 +718,98 @@ export type SubscriptionScalarWhereInput = {
   OR?: Prisma.SubscriptionScalarWhereInput[]
   NOT?: Prisma.SubscriptionScalarWhereInput | Prisma.SubscriptionScalarWhereInput[]
   id?: Prisma.StringFilter<"Subscription"> | string
-  studentId?: Prisma.StringFilter<"Subscription"> | string
   libraryId?: Prisma.StringFilter<"Subscription"> | string
-  floorName?: Prisma.StringFilter<"Subscription"> | string
-  seatNo?: Prisma.IntFilter<"Subscription"> | number
-  shifts?: Prisma.StringNullableListFilter<"Subscription">
+  seatId?: Prisma.StringFilter<"Subscription"> | string
+  studentId?: Prisma.StringFilter<"Subscription"> | string
   startDate?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   endDate?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   totalAmount?: Prisma.FloatFilter<"Subscription"> | number
   amountPaid?: Prisma.FloatFilter<"Subscription"> | number
-  status?: Prisma.EnumSubscriptionStatusFilter<"Subscription"> | $Enums.SubscriptionStatus
+  status?: Prisma.EnumStatusFilter<"Subscription"> | $Enums.Status
   createdAt?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Subscription"> | Date | string
 }
 
-export type SubscriptionCreateWithoutStudentInput = {
+export type SubscriptionCreateWithoutSeatInput = {
   id?: string
-  floorName: string
-  seatNo: number
-  shifts?: Prisma.SubscriptionCreateshiftsInput | string[]
   startDate: Date | string
   endDate: Date | string
   totalAmount: number
   amountPaid?: number
-  status: $Enums.SubscriptionStatus
+  status?: $Enums.Status
   createdAt?: Date | string
   updatedAt?: Date | string
   library: Prisma.LibraryCreateNestedOneWithoutSubscriptionsInput
+  student: Prisma.StudentCreateNestedOneWithoutSubscriptionsInput
+  subscriptionShifts?: Prisma.SubscriptionShiftCreateNestedManyWithoutSubscriptionInput
+}
+
+export type SubscriptionUncheckedCreateWithoutSeatInput = {
+  id?: string
+  libraryId: string
+  studentId: string
+  startDate: Date | string
+  endDate: Date | string
+  totalAmount: number
+  amountPaid?: number
+  status?: $Enums.Status
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  subscriptionShifts?: Prisma.SubscriptionShiftUncheckedCreateNestedManyWithoutSubscriptionInput
+}
+
+export type SubscriptionCreateOrConnectWithoutSeatInput = {
+  where: Prisma.SubscriptionWhereUniqueInput
+  create: Prisma.XOR<Prisma.SubscriptionCreateWithoutSeatInput, Prisma.SubscriptionUncheckedCreateWithoutSeatInput>
+}
+
+export type SubscriptionCreateManySeatInputEnvelope = {
+  data: Prisma.SubscriptionCreateManySeatInput | Prisma.SubscriptionCreateManySeatInput[]
+  skipDuplicates?: boolean
+}
+
+export type SubscriptionUpsertWithWhereUniqueWithoutSeatInput = {
+  where: Prisma.SubscriptionWhereUniqueInput
+  update: Prisma.XOR<Prisma.SubscriptionUpdateWithoutSeatInput, Prisma.SubscriptionUncheckedUpdateWithoutSeatInput>
+  create: Prisma.XOR<Prisma.SubscriptionCreateWithoutSeatInput, Prisma.SubscriptionUncheckedCreateWithoutSeatInput>
+}
+
+export type SubscriptionUpdateWithWhereUniqueWithoutSeatInput = {
+  where: Prisma.SubscriptionWhereUniqueInput
+  data: Prisma.XOR<Prisma.SubscriptionUpdateWithoutSeatInput, Prisma.SubscriptionUncheckedUpdateWithoutSeatInput>
+}
+
+export type SubscriptionUpdateManyWithWhereWithoutSeatInput = {
+  where: Prisma.SubscriptionScalarWhereInput
+  data: Prisma.XOR<Prisma.SubscriptionUpdateManyMutationInput, Prisma.SubscriptionUncheckedUpdateManyWithoutSeatInput>
+}
+
+export type SubscriptionCreateWithoutStudentInput = {
+  id?: string
+  startDate: Date | string
+  endDate: Date | string
+  totalAmount: number
+  amountPaid?: number
+  status?: $Enums.Status
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  library: Prisma.LibraryCreateNestedOneWithoutSubscriptionsInput
+  seat: Prisma.SeatCreateNestedOneWithoutSubscriptionsInput
+  subscriptionShifts?: Prisma.SubscriptionShiftCreateNestedManyWithoutSubscriptionInput
 }
 
 export type SubscriptionUncheckedCreateWithoutStudentInput = {
   id?: string
   libraryId: string
-  floorName: string
-  seatNo: number
-  shifts?: Prisma.SubscriptionCreateshiftsInput | string[]
+  seatId: string
   startDate: Date | string
   endDate: Date | string
   totalAmount: number
   amountPaid?: number
-  status: $Enums.SubscriptionStatus
+  status?: $Enums.Status
   createdAt?: Date | string
   updatedAt?: Date | string
+  subscriptionShifts?: Prisma.SubscriptionShiftUncheckedCreateNestedManyWithoutSubscriptionInput
 }
 
 export type SubscriptionCreateOrConnectWithoutStudentInput = {
@@ -773,62 +838,182 @@ export type SubscriptionUpdateManyWithWhereWithoutStudentInput = {
   data: Prisma.XOR<Prisma.SubscriptionUpdateManyMutationInput, Prisma.SubscriptionUncheckedUpdateManyWithoutStudentInput>
 }
 
-export type SubscriptionCreateManyLibraryInput = {
+export type SubscriptionCreateWithoutSubscriptionShiftsInput = {
   id?: string
-  studentId: string
-  floorName: string
-  seatNo: number
-  shifts?: Prisma.SubscriptionCreateshiftsInput | string[]
   startDate: Date | string
   endDate: Date | string
   totalAmount: number
   amountPaid?: number
-  status: $Enums.SubscriptionStatus
+  status?: $Enums.Status
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  library: Prisma.LibraryCreateNestedOneWithoutSubscriptionsInput
+  seat: Prisma.SeatCreateNestedOneWithoutSubscriptionsInput
+  student: Prisma.StudentCreateNestedOneWithoutSubscriptionsInput
+}
+
+export type SubscriptionUncheckedCreateWithoutSubscriptionShiftsInput = {
+  id?: string
+  libraryId: string
+  seatId: string
+  studentId: string
+  startDate: Date | string
+  endDate: Date | string
+  totalAmount: number
+  amountPaid?: number
+  status?: $Enums.Status
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type SubscriptionCreateOrConnectWithoutSubscriptionShiftsInput = {
+  where: Prisma.SubscriptionWhereUniqueInput
+  create: Prisma.XOR<Prisma.SubscriptionCreateWithoutSubscriptionShiftsInput, Prisma.SubscriptionUncheckedCreateWithoutSubscriptionShiftsInput>
+}
+
+export type SubscriptionUpsertWithoutSubscriptionShiftsInput = {
+  update: Prisma.XOR<Prisma.SubscriptionUpdateWithoutSubscriptionShiftsInput, Prisma.SubscriptionUncheckedUpdateWithoutSubscriptionShiftsInput>
+  create: Prisma.XOR<Prisma.SubscriptionCreateWithoutSubscriptionShiftsInput, Prisma.SubscriptionUncheckedCreateWithoutSubscriptionShiftsInput>
+  where?: Prisma.SubscriptionWhereInput
+}
+
+export type SubscriptionUpdateToOneWithWhereWithoutSubscriptionShiftsInput = {
+  where?: Prisma.SubscriptionWhereInput
+  data: Prisma.XOR<Prisma.SubscriptionUpdateWithoutSubscriptionShiftsInput, Prisma.SubscriptionUncheckedUpdateWithoutSubscriptionShiftsInput>
+}
+
+export type SubscriptionUpdateWithoutSubscriptionShiftsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amountPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  library?: Prisma.LibraryUpdateOneRequiredWithoutSubscriptionsNestedInput
+  seat?: Prisma.SeatUpdateOneRequiredWithoutSubscriptionsNestedInput
+  student?: Prisma.StudentUpdateOneRequiredWithoutSubscriptionsNestedInput
+}
+
+export type SubscriptionUncheckedUpdateWithoutSubscriptionShiftsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  libraryId?: Prisma.StringFieldUpdateOperationsInput | string
+  seatId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amountPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type SubscriptionCreateManyLibraryInput = {
+  id?: string
+  seatId: string
+  studentId: string
+  startDate: Date | string
+  endDate: Date | string
+  totalAmount: number
+  amountPaid?: number
+  status?: $Enums.Status
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type SubscriptionUpdateWithoutLibraryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  floorName?: Prisma.StringFieldUpdateOperationsInput | string
-  seatNo?: Prisma.IntFieldUpdateOperationsInput | number
-  shifts?: Prisma.SubscriptionUpdateshiftsInput | string[]
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   amountPaid?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  seat?: Prisma.SeatUpdateOneRequiredWithoutSubscriptionsNestedInput
   student?: Prisma.StudentUpdateOneRequiredWithoutSubscriptionsNestedInput
+  subscriptionShifts?: Prisma.SubscriptionShiftUpdateManyWithoutSubscriptionNestedInput
 }
 
 export type SubscriptionUncheckedUpdateWithoutLibraryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  seatId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
-  floorName?: Prisma.StringFieldUpdateOperationsInput | string
-  seatNo?: Prisma.IntFieldUpdateOperationsInput | number
-  shifts?: Prisma.SubscriptionUpdateshiftsInput | string[]
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   amountPaid?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  subscriptionShifts?: Prisma.SubscriptionShiftUncheckedUpdateManyWithoutSubscriptionNestedInput
 }
 
 export type SubscriptionUncheckedUpdateManyWithoutLibraryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  seatId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
-  floorName?: Prisma.StringFieldUpdateOperationsInput | string
-  seatNo?: Prisma.IntFieldUpdateOperationsInput | number
-  shifts?: Prisma.SubscriptionUpdateshiftsInput | string[]
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   amountPaid?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type SubscriptionCreateManySeatInput = {
+  id?: string
+  libraryId: string
+  studentId: string
+  startDate: Date | string
+  endDate: Date | string
+  totalAmount: number
+  amountPaid?: number
+  status?: $Enums.Status
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type SubscriptionUpdateWithoutSeatInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amountPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  library?: Prisma.LibraryUpdateOneRequiredWithoutSubscriptionsNestedInput
+  student?: Prisma.StudentUpdateOneRequiredWithoutSubscriptionsNestedInput
+  subscriptionShifts?: Prisma.SubscriptionShiftUpdateManyWithoutSubscriptionNestedInput
+}
+
+export type SubscriptionUncheckedUpdateWithoutSeatInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  libraryId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amountPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  subscriptionShifts?: Prisma.SubscriptionShiftUncheckedUpdateManyWithoutSubscriptionNestedInput
+}
+
+export type SubscriptionUncheckedUpdateManyWithoutSeatInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  libraryId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amountPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -836,72 +1021,93 @@ export type SubscriptionUncheckedUpdateManyWithoutLibraryInput = {
 export type SubscriptionCreateManyStudentInput = {
   id?: string
   libraryId: string
-  floorName: string
-  seatNo: number
-  shifts?: Prisma.SubscriptionCreateshiftsInput | string[]
+  seatId: string
   startDate: Date | string
   endDate: Date | string
   totalAmount: number
   amountPaid?: number
-  status: $Enums.SubscriptionStatus
+  status?: $Enums.Status
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type SubscriptionUpdateWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  floorName?: Prisma.StringFieldUpdateOperationsInput | string
-  seatNo?: Prisma.IntFieldUpdateOperationsInput | number
-  shifts?: Prisma.SubscriptionUpdateshiftsInput | string[]
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   amountPaid?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   library?: Prisma.LibraryUpdateOneRequiredWithoutSubscriptionsNestedInput
+  seat?: Prisma.SeatUpdateOneRequiredWithoutSubscriptionsNestedInput
+  subscriptionShifts?: Prisma.SubscriptionShiftUpdateManyWithoutSubscriptionNestedInput
 }
 
 export type SubscriptionUncheckedUpdateWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   libraryId?: Prisma.StringFieldUpdateOperationsInput | string
-  floorName?: Prisma.StringFieldUpdateOperationsInput | string
-  seatNo?: Prisma.IntFieldUpdateOperationsInput | number
-  shifts?: Prisma.SubscriptionUpdateshiftsInput | string[]
+  seatId?: Prisma.StringFieldUpdateOperationsInput | string
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   amountPaid?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  subscriptionShifts?: Prisma.SubscriptionShiftUncheckedUpdateManyWithoutSubscriptionNestedInput
 }
 
 export type SubscriptionUncheckedUpdateManyWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   libraryId?: Prisma.StringFieldUpdateOperationsInput | string
-  floorName?: Prisma.StringFieldUpdateOperationsInput | string
-  seatNo?: Prisma.IntFieldUpdateOperationsInput | number
-  shifts?: Prisma.SubscriptionUpdateshiftsInput | string[]
+  seatId?: Prisma.StringFieldUpdateOperationsInput | string
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   amountPaid?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
+/**
+ * Count Type SubscriptionCountOutputType
+ */
+
+export type SubscriptionCountOutputType = {
+  subscriptionShifts: number
+}
+
+export type SubscriptionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  subscriptionShifts?: boolean | SubscriptionCountOutputTypeCountSubscriptionShiftsArgs
+}
+
+/**
+ * SubscriptionCountOutputType without action
+ */
+export type SubscriptionCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SubscriptionCountOutputType
+   */
+  select?: Prisma.SubscriptionCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * SubscriptionCountOutputType without action
+ */
+export type SubscriptionCountOutputTypeCountSubscriptionShiftsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SubscriptionShiftWhereInput
+}
+
 
 export type SubscriptionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  studentId?: boolean
   libraryId?: boolean
-  floorName?: boolean
-  seatNo?: boolean
-  shifts?: boolean
+  seatId?: boolean
+  studentId?: boolean
   startDate?: boolean
   endDate?: boolean
   totalAmount?: boolean
@@ -909,17 +1115,18 @@ export type SubscriptionSelect<ExtArgs extends runtime.Types.Extensions.Internal
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   library?: boolean | Prisma.LibraryDefaultArgs<ExtArgs>
+  seat?: boolean | Prisma.SeatDefaultArgs<ExtArgs>
+  student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
+  subscriptionShifts?: boolean | Prisma.Subscription$subscriptionShiftsArgs<ExtArgs>
+  _count?: boolean | Prisma.SubscriptionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["subscription"]>
 
 export type SubscriptionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  studentId?: boolean
   libraryId?: boolean
-  floorName?: boolean
-  seatNo?: boolean
-  shifts?: boolean
+  seatId?: boolean
+  studentId?: boolean
   startDate?: boolean
   endDate?: boolean
   totalAmount?: boolean
@@ -927,17 +1134,16 @@ export type SubscriptionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   library?: boolean | Prisma.LibraryDefaultArgs<ExtArgs>
+  seat?: boolean | Prisma.SeatDefaultArgs<ExtArgs>
+  student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["subscription"]>
 
 export type SubscriptionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  studentId?: boolean
   libraryId?: boolean
-  floorName?: boolean
-  seatNo?: boolean
-  shifts?: boolean
+  seatId?: boolean
+  studentId?: boolean
   startDate?: boolean
   endDate?: boolean
   totalAmount?: boolean
@@ -945,17 +1151,16 @@ export type SubscriptionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   library?: boolean | Prisma.LibraryDefaultArgs<ExtArgs>
+  seat?: boolean | Prisma.SeatDefaultArgs<ExtArgs>
+  student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["subscription"]>
 
 export type SubscriptionSelectScalar = {
   id?: boolean
-  studentId?: boolean
   libraryId?: boolean
-  floorName?: boolean
-  seatNo?: boolean
-  shifts?: boolean
+  seatId?: boolean
+  studentId?: boolean
   startDate?: boolean
   endDate?: boolean
   totalAmount?: boolean
@@ -965,38 +1170,43 @@ export type SubscriptionSelectScalar = {
   updatedAt?: boolean
 }
 
-export type SubscriptionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "libraryId" | "floorName" | "seatNo" | "shifts" | "startDate" | "endDate" | "totalAmount" | "amountPaid" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["subscription"]>
+export type SubscriptionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "libraryId" | "seatId" | "studentId" | "startDate" | "endDate" | "totalAmount" | "amountPaid" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["subscription"]>
 export type SubscriptionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   library?: boolean | Prisma.LibraryDefaultArgs<ExtArgs>
+  seat?: boolean | Prisma.SeatDefaultArgs<ExtArgs>
+  student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
+  subscriptionShifts?: boolean | Prisma.Subscription$subscriptionShiftsArgs<ExtArgs>
+  _count?: boolean | Prisma.SubscriptionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type SubscriptionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   library?: boolean | Prisma.LibraryDefaultArgs<ExtArgs>
+  seat?: boolean | Prisma.SeatDefaultArgs<ExtArgs>
+  student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
 }
 export type SubscriptionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   library?: boolean | Prisma.LibraryDefaultArgs<ExtArgs>
+  seat?: boolean | Prisma.SeatDefaultArgs<ExtArgs>
+  student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
 }
 
 export type $SubscriptionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Subscription"
   objects: {
-    student: Prisma.$StudentPayload<ExtArgs>
     library: Prisma.$LibraryPayload<ExtArgs>
+    seat: Prisma.$SeatPayload<ExtArgs>
+    student: Prisma.$StudentPayload<ExtArgs>
+    subscriptionShifts: Prisma.$SubscriptionShiftPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    studentId: string
     libraryId: string
-    floorName: string
-    seatNo: number
-    shifts: string[]
+    seatId: string
+    studentId: string
     startDate: Date
     endDate: Date
     totalAmount: number
     amountPaid: number
-    status: $Enums.SubscriptionStatus
+    status: $Enums.Status
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["subscription"]>
@@ -1393,8 +1603,10 @@ readonly fields: SubscriptionFieldRefs;
  */
 export interface Prisma__SubscriptionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  student<T extends Prisma.StudentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentDefaultArgs<ExtArgs>>): Prisma.Prisma__StudentClient<runtime.Types.Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   library<T extends Prisma.LibraryDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LibraryDefaultArgs<ExtArgs>>): Prisma.Prisma__LibraryClient<runtime.Types.Result.GetResult<Prisma.$LibraryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  seat<T extends Prisma.SeatDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SeatDefaultArgs<ExtArgs>>): Prisma.Prisma__SeatClient<runtime.Types.Result.GetResult<Prisma.$SeatPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  student<T extends Prisma.StudentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentDefaultArgs<ExtArgs>>): Prisma.Prisma__StudentClient<runtime.Types.Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  subscriptionShifts<T extends Prisma.Subscription$subscriptionShiftsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Subscription$subscriptionShiftsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SubscriptionShiftPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1425,16 +1637,14 @@ export interface Prisma__SubscriptionClient<T, Null = never, ExtArgs extends run
  */
 export interface SubscriptionFieldRefs {
   readonly id: Prisma.FieldRef<"Subscription", 'String'>
-  readonly studentId: Prisma.FieldRef<"Subscription", 'String'>
   readonly libraryId: Prisma.FieldRef<"Subscription", 'String'>
-  readonly floorName: Prisma.FieldRef<"Subscription", 'String'>
-  readonly seatNo: Prisma.FieldRef<"Subscription", 'Int'>
-  readonly shifts: Prisma.FieldRef<"Subscription", 'String[]'>
+  readonly seatId: Prisma.FieldRef<"Subscription", 'String'>
+  readonly studentId: Prisma.FieldRef<"Subscription", 'String'>
   readonly startDate: Prisma.FieldRef<"Subscription", 'DateTime'>
   readonly endDate: Prisma.FieldRef<"Subscription", 'DateTime'>
   readonly totalAmount: Prisma.FieldRef<"Subscription", 'Float'>
   readonly amountPaid: Prisma.FieldRef<"Subscription", 'Float'>
-  readonly status: Prisma.FieldRef<"Subscription", 'SubscriptionStatus'>
+  readonly status: Prisma.FieldRef<"Subscription", 'Status'>
   readonly createdAt: Prisma.FieldRef<"Subscription", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Subscription", 'DateTime'>
 }
@@ -1835,6 +2045,30 @@ export type SubscriptionDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.
    * Limit how many Subscriptions to delete.
    */
   limit?: number
+}
+
+/**
+ * Subscription.subscriptionShifts
+ */
+export type Subscription$subscriptionShiftsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SubscriptionShift
+   */
+  select?: Prisma.SubscriptionShiftSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SubscriptionShift
+   */
+  omit?: Prisma.SubscriptionShiftOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubscriptionShiftInclude<ExtArgs> | null
+  where?: Prisma.SubscriptionShiftWhereInput
+  orderBy?: Prisma.SubscriptionShiftOrderByWithRelationInput | Prisma.SubscriptionShiftOrderByWithRelationInput[]
+  cursor?: Prisma.SubscriptionShiftWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SubscriptionShiftScalarFieldEnum | Prisma.SubscriptionShiftScalarFieldEnum[]
 }
 
 /**

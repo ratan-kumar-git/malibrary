@@ -19,7 +19,11 @@ export async function GET() {
     const library = await prisma.library.findFirst({
       where: { userId: session.user.id },
       include: {
-        floors: true,
+        floors: {
+          include: {
+            seats: true,
+          },
+        },
         shifts: true,
       },
     });
@@ -67,7 +71,11 @@ export async function PUT(req: NextRequest) {
       where: { id: existingLibrary.id },
       data: validatedData,
       include: {
-        floors: true,
+        floors: {
+          include: {
+            seats: true,
+          },
+        },
         shifts: true,
       },
     });

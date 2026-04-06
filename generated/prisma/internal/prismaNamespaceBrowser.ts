@@ -57,9 +57,11 @@ export const ModelName = {
   Verification: 'Verification',
   Library: 'Library',
   Floor: 'Floor',
+  Seat: 'Seat',
   Shift: 'Shift',
   Student: 'Student',
-  Subscription: 'Subscription'
+  Subscription: 'Subscription',
+  SubscriptionShift: 'SubscriptionShift'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -162,11 +164,20 @@ export type LibraryScalarFieldEnum = (typeof LibraryScalarFieldEnum)[keyof typeo
 export const FloorScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  totalSeats: 'totalSeats',
   libraryId: 'libraryId'
 } as const
 
 export type FloorScalarFieldEnum = (typeof FloorScalarFieldEnum)[keyof typeof FloorScalarFieldEnum]
+
+
+export const SeatScalarFieldEnum = {
+  id: 'id',
+  number: 'number',
+  isActive: 'isActive',
+  floorId: 'floorId'
+} as const
+
+export type SeatScalarFieldEnum = (typeof SeatScalarFieldEnum)[keyof typeof SeatScalarFieldEnum]
 
 
 export const ShiftScalarFieldEnum = {
@@ -189,6 +200,7 @@ export const StudentScalarFieldEnum = {
   gender: 'gender',
   phoneNumber: 'phoneNumber',
   address: 'address',
+  lockerNumber: 'lockerNumber',
   libraryId: 'libraryId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -199,11 +211,9 @@ export type StudentScalarFieldEnum = (typeof StudentScalarFieldEnum)[keyof typeo
 
 export const SubscriptionScalarFieldEnum = {
   id: 'id',
-  studentId: 'studentId',
   libraryId: 'libraryId',
-  floorName: 'floorName',
-  seatNo: 'seatNo',
-  shifts: 'shifts',
+  seatId: 'seatId',
+  studentId: 'studentId',
   startDate: 'startDate',
   endDate: 'endDate',
   totalAmount: 'totalAmount',
@@ -214,6 +224,14 @@ export const SubscriptionScalarFieldEnum = {
 } as const
 
 export type SubscriptionScalarFieldEnum = (typeof SubscriptionScalarFieldEnum)[keyof typeof SubscriptionScalarFieldEnum]
+
+
+export const SubscriptionShiftScalarFieldEnum = {
+  subscriptionId: 'subscriptionId',
+  shiftId: 'shiftId'
+} as const
+
+export type SubscriptionShiftScalarFieldEnum = (typeof SubscriptionShiftScalarFieldEnum)[keyof typeof SubscriptionShiftScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -390,9 +390,11 @@ export const ModelName = {
   Verification: 'Verification',
   Library: 'Library',
   Floor: 'Floor',
+  Seat: 'Seat',
   Shift: 'Shift',
   Student: 'Student',
-  Subscription: 'Subscription'
+  Subscription: 'Subscription',
+  SubscriptionShift: 'SubscriptionShift'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -408,7 +410,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "library" | "floor" | "shift" | "student" | "subscription"
+    modelProps: "user" | "session" | "account" | "verification" | "library" | "floor" | "seat" | "shift" | "student" | "subscription" | "subscriptionShift"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -856,6 +858,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Seat: {
+      payload: Prisma.$SeatPayload<ExtArgs>
+      fields: Prisma.SeatFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SeatFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SeatPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SeatFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SeatPayload>
+        }
+        findFirst: {
+          args: Prisma.SeatFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SeatPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SeatFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SeatPayload>
+        }
+        findMany: {
+          args: Prisma.SeatFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SeatPayload>[]
+        }
+        create: {
+          args: Prisma.SeatCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SeatPayload>
+        }
+        createMany: {
+          args: Prisma.SeatCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SeatCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SeatPayload>[]
+        }
+        delete: {
+          args: Prisma.SeatDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SeatPayload>
+        }
+        update: {
+          args: Prisma.SeatUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SeatPayload>
+        }
+        deleteMany: {
+          args: Prisma.SeatDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SeatUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SeatUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SeatPayload>[]
+        }
+        upsert: {
+          args: Prisma.SeatUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SeatPayload>
+        }
+        aggregate: {
+          args: Prisma.SeatAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSeat>
+        }
+        groupBy: {
+          args: Prisma.SeatGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SeatGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SeatCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SeatCountAggregateOutputType> | number
+        }
+      }
+    }
     Shift: {
       payload: Prisma.$ShiftPayload<ExtArgs>
       fields: Prisma.ShiftFieldRefs
@@ -1078,6 +1154,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    SubscriptionShift: {
+      payload: Prisma.$SubscriptionShiftPayload<ExtArgs>
+      fields: Prisma.SubscriptionShiftFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SubscriptionShiftFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionShiftPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SubscriptionShiftFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionShiftPayload>
+        }
+        findFirst: {
+          args: Prisma.SubscriptionShiftFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionShiftPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SubscriptionShiftFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionShiftPayload>
+        }
+        findMany: {
+          args: Prisma.SubscriptionShiftFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionShiftPayload>[]
+        }
+        create: {
+          args: Prisma.SubscriptionShiftCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionShiftPayload>
+        }
+        createMany: {
+          args: Prisma.SubscriptionShiftCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SubscriptionShiftCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionShiftPayload>[]
+        }
+        delete: {
+          args: Prisma.SubscriptionShiftDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionShiftPayload>
+        }
+        update: {
+          args: Prisma.SubscriptionShiftUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionShiftPayload>
+        }
+        deleteMany: {
+          args: Prisma.SubscriptionShiftDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SubscriptionShiftUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SubscriptionShiftUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionShiftPayload>[]
+        }
+        upsert: {
+          args: Prisma.SubscriptionShiftUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionShiftPayload>
+        }
+        aggregate: {
+          args: Prisma.SubscriptionShiftAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSubscriptionShift>
+        }
+        groupBy: {
+          args: Prisma.SubscriptionShiftGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SubscriptionShiftGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SubscriptionShiftCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SubscriptionShiftCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1201,11 +1351,20 @@ export type LibraryScalarFieldEnum = (typeof LibraryScalarFieldEnum)[keyof typeo
 export const FloorScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  totalSeats: 'totalSeats',
   libraryId: 'libraryId'
 } as const
 
 export type FloorScalarFieldEnum = (typeof FloorScalarFieldEnum)[keyof typeof FloorScalarFieldEnum]
+
+
+export const SeatScalarFieldEnum = {
+  id: 'id',
+  number: 'number',
+  isActive: 'isActive',
+  floorId: 'floorId'
+} as const
+
+export type SeatScalarFieldEnum = (typeof SeatScalarFieldEnum)[keyof typeof SeatScalarFieldEnum]
 
 
 export const ShiftScalarFieldEnum = {
@@ -1228,6 +1387,7 @@ export const StudentScalarFieldEnum = {
   gender: 'gender',
   phoneNumber: 'phoneNumber',
   address: 'address',
+  lockerNumber: 'lockerNumber',
   libraryId: 'libraryId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1238,11 +1398,9 @@ export type StudentScalarFieldEnum = (typeof StudentScalarFieldEnum)[keyof typeo
 
 export const SubscriptionScalarFieldEnum = {
   id: 'id',
-  studentId: 'studentId',
   libraryId: 'libraryId',
-  floorName: 'floorName',
-  seatNo: 'seatNo',
-  shifts: 'shifts',
+  seatId: 'seatId',
+  studentId: 'studentId',
   startDate: 'startDate',
   endDate: 'endDate',
   totalAmount: 'totalAmount',
@@ -1253,6 +1411,14 @@ export const SubscriptionScalarFieldEnum = {
 } as const
 
 export type SubscriptionScalarFieldEnum = (typeof SubscriptionScalarFieldEnum)[keyof typeof SubscriptionScalarFieldEnum]
+
+
+export const SubscriptionShiftScalarFieldEnum = {
+  subscriptionId: 'subscriptionId',
+  shiftId: 'shiftId'
+} as const
+
+export type SubscriptionShiftScalarFieldEnum = (typeof SubscriptionShiftScalarFieldEnum)[keyof typeof SubscriptionShiftScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1377,16 +1543,16 @@ export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMode
 
 
 /**
- * Reference to a field of type 'SubscriptionStatus'
+ * Reference to a field of type 'Status'
  */
-export type EnumSubscriptionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SubscriptionStatus'>
+export type EnumStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Status'>
     
 
 
 /**
- * Reference to a field of type 'SubscriptionStatus[]'
+ * Reference to a field of type 'Status[]'
  */
-export type ListEnumSubscriptionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SubscriptionStatus[]'>
+export type ListEnumStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Status[]'>
     
 
 /**
@@ -1490,9 +1656,11 @@ export type GlobalOmitConfig = {
   verification?: Prisma.VerificationOmit
   library?: Prisma.LibraryOmit
   floor?: Prisma.FloorOmit
+  seat?: Prisma.SeatOmit
   shift?: Prisma.ShiftOmit
   student?: Prisma.StudentOmit
   subscription?: Prisma.SubscriptionOmit
+  subscriptionShift?: Prisma.SubscriptionShiftOmit
 }
 
 /* Types for Logging */

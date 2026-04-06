@@ -15,6 +15,16 @@ export const librarySchema = z.object({
 
 export type Library = z.infer<typeof librarySchema> & { id: string };
 
+// Seat Validation
+export const seatSchema = z.object({
+  id: z.string().cuid(),
+  number: z.number().int().min(1),
+  isActive: z.boolean(),
+  floorId: z.string(),
+});
+
+export type Seat = z.infer<typeof seatSchema>;
+
 // Floor Validation
 export const floorSchema = z.object({
   name: z.string().min(1, 'Floor name is required').max(100),
@@ -25,8 +35,17 @@ export const floorWithIdSchema = floorSchema.extend({
   id: z.cuid(),
 });
 
+// Floor with database seats (for API responses)
+export const floorWithSeatsSchema = z.object({
+  id: z.string().cuid(),
+  name: z.string(),
+  libraryId: z.string(),
+  seats: z.array(seatSchema),
+});
+
 export type Floor = z.infer<typeof floorWithIdSchema>;
 export type FloorInput = z.infer<typeof floorSchema>;
+export type FloorWithSeats = z.infer<typeof floorWithSeatsSchema>;
 
 // Shift Validation
 export const shiftSchema = z.object({
@@ -75,3 +94,38 @@ export const librarySetupSchema = librarySchema.extend({
 
 // payload type for library setup
 export type LibrarySetupPayload = z.input<typeof librarySetupSchema>;
+
+// Student Validation
+export const studentSchema = z.object({
+  name: z.string().min(1, 'Name is required').max(255),
+  gender: z.enum(['male', 'female', 'other']),
+  phoneNumber: z.string().regex(/^\d{10}$/, 'Phone number must be 10 digits'),
+  address: z.string().optional(),
+  lockerNumber: z.string().optional(),
+});
+
+export type Student = z.infer<typeof studentSchema> & { id: string; memberId: string };
+
+// Subscription Validation
+export const subscriptionSchema = z.object({
+  shifts: z.array(z.string()).min(1, 'At least one shift must be selected'),
+  startDate: z.string(),
+  endDate: z.string(),
+  seatNo: z.number().min(1),
+  totalAmount: z.number().min(0),
+  amountPaid: z.number().min(0),
+});
+
+export type SubscriptionInput = z.infer<typeof subscriptionSchema>;
+
+// Student Registration (Combined) Validation
+export const studentRegistrationSchema = studentSchema.extend({
+  shifts: z.array(z.string()).min(1, 'At least one shift must be selected'),
+  startDate: z.string(),
+  endDate: z.string(),
+  seatNo: z.number().min(1),
+  totalAmount: z.number().min(0),
+  amountPaid: z.number().min(0),
+});
+
+export type StudentRegistration = z.infer<typeof studentRegistrationSchema>;

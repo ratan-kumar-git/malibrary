@@ -241,6 +241,7 @@ export type ShiftWhereInput = {
   isActive?: Prisma.BoolFilter<"Shift"> | boolean
   libraryId?: Prisma.StringFilter<"Shift"> | string
   library?: Prisma.XOR<Prisma.LibraryScalarRelationFilter, Prisma.LibraryWhereInput>
+  assignments?: Prisma.SubscriptionShiftListRelationFilter
 }
 
 export type ShiftOrderByWithRelationInput = {
@@ -252,6 +253,7 @@ export type ShiftOrderByWithRelationInput = {
   isActive?: Prisma.SortOrder
   libraryId?: Prisma.SortOrder
   library?: Prisma.LibraryOrderByWithRelationInput
+  assignments?: Prisma.SubscriptionShiftOrderByRelationAggregateInput
 }
 
 export type ShiftWhereUniqueInput = Prisma.AtLeast<{
@@ -266,6 +268,7 @@ export type ShiftWhereUniqueInput = Prisma.AtLeast<{
   isActive?: Prisma.BoolFilter<"Shift"> | boolean
   libraryId?: Prisma.StringFilter<"Shift"> | string
   library?: Prisma.XOR<Prisma.LibraryScalarRelationFilter, Prisma.LibraryWhereInput>
+  assignments?: Prisma.SubscriptionShiftListRelationFilter
 }, "id">
 
 export type ShiftOrderByWithAggregationInput = {
@@ -304,6 +307,7 @@ export type ShiftCreateInput = {
   price: number
   isActive?: boolean
   library: Prisma.LibraryCreateNestedOneWithoutShiftsInput
+  assignments?: Prisma.SubscriptionShiftCreateNestedManyWithoutShiftInput
 }
 
 export type ShiftUncheckedCreateInput = {
@@ -314,6 +318,7 @@ export type ShiftUncheckedCreateInput = {
   price: number
   isActive?: boolean
   libraryId: string
+  assignments?: Prisma.SubscriptionShiftUncheckedCreateNestedManyWithoutShiftInput
 }
 
 export type ShiftUpdateInput = {
@@ -324,6 +329,7 @@ export type ShiftUpdateInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   library?: Prisma.LibraryUpdateOneRequiredWithoutShiftsNestedInput
+  assignments?: Prisma.SubscriptionShiftUpdateManyWithoutShiftNestedInput
 }
 
 export type ShiftUncheckedUpdateInput = {
@@ -334,6 +340,7 @@ export type ShiftUncheckedUpdateInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   libraryId?: Prisma.StringFieldUpdateOperationsInput | string
+  assignments?: Prisma.SubscriptionShiftUncheckedUpdateManyWithoutShiftNestedInput
 }
 
 export type ShiftCreateManyInput = {
@@ -417,6 +424,11 @@ export type ShiftSumOrderByAggregateInput = {
   price?: Prisma.SortOrder
 }
 
+export type ShiftScalarRelationFilter = {
+  is?: Prisma.ShiftWhereInput
+  isNot?: Prisma.ShiftWhereInput
+}
+
 export type ShiftCreateNestedManyWithoutLibraryInput = {
   create?: Prisma.XOR<Prisma.ShiftCreateWithoutLibraryInput, Prisma.ShiftUncheckedCreateWithoutLibraryInput> | Prisma.ShiftCreateWithoutLibraryInput[] | Prisma.ShiftUncheckedCreateWithoutLibraryInput[]
   connectOrCreate?: Prisma.ShiftCreateOrConnectWithoutLibraryInput | Prisma.ShiftCreateOrConnectWithoutLibraryInput[]
@@ -471,6 +483,20 @@ export type FloatFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type ShiftCreateNestedOneWithoutAssignmentsInput = {
+  create?: Prisma.XOR<Prisma.ShiftCreateWithoutAssignmentsInput, Prisma.ShiftUncheckedCreateWithoutAssignmentsInput>
+  connectOrCreate?: Prisma.ShiftCreateOrConnectWithoutAssignmentsInput
+  connect?: Prisma.ShiftWhereUniqueInput
+}
+
+export type ShiftUpdateOneRequiredWithoutAssignmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.ShiftCreateWithoutAssignmentsInput, Prisma.ShiftUncheckedCreateWithoutAssignmentsInput>
+  connectOrCreate?: Prisma.ShiftCreateOrConnectWithoutAssignmentsInput
+  upsert?: Prisma.ShiftUpsertWithoutAssignmentsInput
+  connect?: Prisma.ShiftWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ShiftUpdateToOneWithWhereWithoutAssignmentsInput, Prisma.ShiftUpdateWithoutAssignmentsInput>, Prisma.ShiftUncheckedUpdateWithoutAssignmentsInput>
+}
+
 export type ShiftCreateWithoutLibraryInput = {
   id?: string
   name: $Enums.ShiftType
@@ -478,6 +504,7 @@ export type ShiftCreateWithoutLibraryInput = {
   endTime: number
   price: number
   isActive?: boolean
+  assignments?: Prisma.SubscriptionShiftCreateNestedManyWithoutShiftInput
 }
 
 export type ShiftUncheckedCreateWithoutLibraryInput = {
@@ -487,6 +514,7 @@ export type ShiftUncheckedCreateWithoutLibraryInput = {
   endTime: number
   price: number
   isActive?: boolean
+  assignments?: Prisma.SubscriptionShiftUncheckedCreateNestedManyWithoutShiftInput
 }
 
 export type ShiftCreateOrConnectWithoutLibraryInput = {
@@ -528,6 +556,62 @@ export type ShiftScalarWhereInput = {
   libraryId?: Prisma.StringFilter<"Shift"> | string
 }
 
+export type ShiftCreateWithoutAssignmentsInput = {
+  id?: string
+  name: $Enums.ShiftType
+  startTime: number
+  endTime: number
+  price: number
+  isActive?: boolean
+  library: Prisma.LibraryCreateNestedOneWithoutShiftsInput
+}
+
+export type ShiftUncheckedCreateWithoutAssignmentsInput = {
+  id?: string
+  name: $Enums.ShiftType
+  startTime: number
+  endTime: number
+  price: number
+  isActive?: boolean
+  libraryId: string
+}
+
+export type ShiftCreateOrConnectWithoutAssignmentsInput = {
+  where: Prisma.ShiftWhereUniqueInput
+  create: Prisma.XOR<Prisma.ShiftCreateWithoutAssignmentsInput, Prisma.ShiftUncheckedCreateWithoutAssignmentsInput>
+}
+
+export type ShiftUpsertWithoutAssignmentsInput = {
+  update: Prisma.XOR<Prisma.ShiftUpdateWithoutAssignmentsInput, Prisma.ShiftUncheckedUpdateWithoutAssignmentsInput>
+  create: Prisma.XOR<Prisma.ShiftCreateWithoutAssignmentsInput, Prisma.ShiftUncheckedCreateWithoutAssignmentsInput>
+  where?: Prisma.ShiftWhereInput
+}
+
+export type ShiftUpdateToOneWithWhereWithoutAssignmentsInput = {
+  where?: Prisma.ShiftWhereInput
+  data: Prisma.XOR<Prisma.ShiftUpdateWithoutAssignmentsInput, Prisma.ShiftUncheckedUpdateWithoutAssignmentsInput>
+}
+
+export type ShiftUpdateWithoutAssignmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.EnumShiftTypeFieldUpdateOperationsInput | $Enums.ShiftType
+  startTime?: Prisma.IntFieldUpdateOperationsInput | number
+  endTime?: Prisma.IntFieldUpdateOperationsInput | number
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  library?: Prisma.LibraryUpdateOneRequiredWithoutShiftsNestedInput
+}
+
+export type ShiftUncheckedUpdateWithoutAssignmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.EnumShiftTypeFieldUpdateOperationsInput | $Enums.ShiftType
+  startTime?: Prisma.IntFieldUpdateOperationsInput | number
+  endTime?: Prisma.IntFieldUpdateOperationsInput | number
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  libraryId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
 export type ShiftCreateManyLibraryInput = {
   id?: string
   name: $Enums.ShiftType
@@ -544,6 +628,7 @@ export type ShiftUpdateWithoutLibraryInput = {
   endTime?: Prisma.IntFieldUpdateOperationsInput | number
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  assignments?: Prisma.SubscriptionShiftUpdateManyWithoutShiftNestedInput
 }
 
 export type ShiftUncheckedUpdateWithoutLibraryInput = {
@@ -553,6 +638,7 @@ export type ShiftUncheckedUpdateWithoutLibraryInput = {
   endTime?: Prisma.IntFieldUpdateOperationsInput | number
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  assignments?: Prisma.SubscriptionShiftUncheckedUpdateManyWithoutShiftNestedInput
 }
 
 export type ShiftUncheckedUpdateManyWithoutLibraryInput = {
@@ -565,6 +651,35 @@ export type ShiftUncheckedUpdateManyWithoutLibraryInput = {
 }
 
 
+/**
+ * Count Type ShiftCountOutputType
+ */
+
+export type ShiftCountOutputType = {
+  assignments: number
+}
+
+export type ShiftCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  assignments?: boolean | ShiftCountOutputTypeCountAssignmentsArgs
+}
+
+/**
+ * ShiftCountOutputType without action
+ */
+export type ShiftCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ShiftCountOutputType
+   */
+  select?: Prisma.ShiftCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * ShiftCountOutputType without action
+ */
+export type ShiftCountOutputTypeCountAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SubscriptionShiftWhereInput
+}
+
 
 export type ShiftSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -575,6 +690,8 @@ export type ShiftSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   isActive?: boolean
   libraryId?: boolean
   library?: boolean | Prisma.LibraryDefaultArgs<ExtArgs>
+  assignments?: boolean | Prisma.Shift$assignmentsArgs<ExtArgs>
+  _count?: boolean | Prisma.ShiftCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["shift"]>
 
 export type ShiftSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -612,6 +729,8 @@ export type ShiftSelectScalar = {
 export type ShiftOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "startTime" | "endTime" | "price" | "isActive" | "libraryId", ExtArgs["result"]["shift"]>
 export type ShiftInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   library?: boolean | Prisma.LibraryDefaultArgs<ExtArgs>
+  assignments?: boolean | Prisma.Shift$assignmentsArgs<ExtArgs>
+  _count?: boolean | Prisma.ShiftCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ShiftIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   library?: boolean | Prisma.LibraryDefaultArgs<ExtArgs>
@@ -624,6 +743,7 @@ export type $ShiftPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   name: "Shift"
   objects: {
     library: Prisma.$LibraryPayload<ExtArgs>
+    assignments: Prisma.$SubscriptionShiftPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1028,6 +1148,7 @@ readonly fields: ShiftFieldRefs;
 export interface Prisma__ShiftClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   library<T extends Prisma.LibraryDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LibraryDefaultArgs<ExtArgs>>): Prisma.Prisma__LibraryClient<runtime.Types.Result.GetResult<Prisma.$LibraryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  assignments<T extends Prisma.Shift$assignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Shift$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SubscriptionShiftPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1462,6 +1583,30 @@ export type ShiftDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Limit how many Shifts to delete.
    */
   limit?: number
+}
+
+/**
+ * Shift.assignments
+ */
+export type Shift$assignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SubscriptionShift
+   */
+  select?: Prisma.SubscriptionShiftSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SubscriptionShift
+   */
+  omit?: Prisma.SubscriptionShiftOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubscriptionShiftInclude<ExtArgs> | null
+  where?: Prisma.SubscriptionShiftWhereInput
+  orderBy?: Prisma.SubscriptionShiftOrderByWithRelationInput | Prisma.SubscriptionShiftOrderByWithRelationInput[]
+  cursor?: Prisma.SubscriptionShiftWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SubscriptionShiftScalarFieldEnum | Prisma.SubscriptionShiftScalarFieldEnum[]
 }
 
 /**
