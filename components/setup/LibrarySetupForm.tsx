@@ -15,7 +15,7 @@ import {
   AlertCircle,
   Clock,
 } from "lucide-react";
-import { useLibraryStore } from "@/lib/store";
+import { useLibraryStore } from "@/store/useLibraryStore";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { LibrarySetupPayload, librarySetupSchema } from "@/lib/validations";
 import { minutesToTime, timeToMinutes } from "@/lib/helper";
@@ -26,28 +26,28 @@ const initialShiftsForm = [
     startTime: 420,
     endTime: 720,
     price: 500,
-    active: true,
+    isActive: true,
   },
   {
     name: "AFTERNOON" as const,
     startTime: 720,
     endTime: 1020,
     price: 500,
-    active: true,
+    isActive: true,
   },
   {
     name: "EVENING" as const,
     startTime: 1020,
     endTime: 1320,
     price: 500,
-    active: true,
+    isActive: true,
   },
   {
     name: "FULL_DAY" as const,
     startTime: 420,
     endTime: 1320,
     price: 1500,
-    active: false,
+    isActive: false,
   },
 ];
 

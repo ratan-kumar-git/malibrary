@@ -27,63 +27,75 @@ export type AggregateSeat = {
 }
 
 export type SeatAvgAggregateOutputType = {
-  number: number | null
+  seatNo: number | null
 }
 
 export type SeatSumAggregateOutputType = {
-  number: number | null
+  seatNo: number | null
 }
 
 export type SeatMinAggregateOutputType = {
   id: string | null
-  number: number | null
-  isActive: boolean | null
   floorId: string | null
+  seatNo: number | null
+  isActive: boolean | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type SeatMaxAggregateOutputType = {
   id: string | null
-  number: number | null
-  isActive: boolean | null
   floorId: string | null
+  seatNo: number | null
+  isActive: boolean | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type SeatCountAggregateOutputType = {
   id: number
-  number: number
-  isActive: number
   floorId: number
+  seatNo: number
+  isActive: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
 
 export type SeatAvgAggregateInputType = {
-  number?: true
+  seatNo?: true
 }
 
 export type SeatSumAggregateInputType = {
-  number?: true
+  seatNo?: true
 }
 
 export type SeatMinAggregateInputType = {
   id?: true
-  number?: true
-  isActive?: true
   floorId?: true
+  seatNo?: true
+  isActive?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type SeatMaxAggregateInputType = {
   id?: true
-  number?: true
-  isActive?: true
   floorId?: true
+  seatNo?: true
+  isActive?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type SeatCountAggregateInputType = {
   id?: true
-  number?: true
-  isActive?: true
   floorId?: true
+  seatNo?: true
+  isActive?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -175,9 +187,11 @@ export type SeatGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 
 export type SeatGroupByOutputType = {
   id: string
-  number: number
-  isActive: boolean
   floorId: string
+  seatNo: number
+  isActive: boolean
+  createdAt: Date
+  updatedAt: Date
   _count: SeatCountAggregateOutputType | null
   _avg: SeatAvgAggregateOutputType | null
   _sum: SeatSumAggregateOutputType | null
@@ -205,40 +219,48 @@ export type SeatWhereInput = {
   OR?: Prisma.SeatWhereInput[]
   NOT?: Prisma.SeatWhereInput | Prisma.SeatWhereInput[]
   id?: Prisma.StringFilter<"Seat"> | string
-  number?: Prisma.IntFilter<"Seat"> | number
-  isActive?: Prisma.BoolFilter<"Seat"> | boolean
   floorId?: Prisma.StringFilter<"Seat"> | string
+  seatNo?: Prisma.IntFilter<"Seat"> | number
+  isActive?: Prisma.BoolFilter<"Seat"> | boolean
+  createdAt?: Prisma.DateTimeFilter<"Seat"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Seat"> | Date | string
   floor?: Prisma.XOR<Prisma.FloorScalarRelationFilter, Prisma.FloorWhereInput>
   subscriptions?: Prisma.SubscriptionListRelationFilter
 }
 
 export type SeatOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  number?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
   floorId?: Prisma.SortOrder
+  seatNo?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   floor?: Prisma.FloorOrderByWithRelationInput
   subscriptions?: Prisma.SubscriptionOrderByRelationAggregateInput
 }
 
 export type SeatWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  floorId_number?: Prisma.SeatFloorIdNumberCompoundUniqueInput
+  floorId_seatNo?: Prisma.SeatFloorIdSeatNoCompoundUniqueInput
   AND?: Prisma.SeatWhereInput | Prisma.SeatWhereInput[]
   OR?: Prisma.SeatWhereInput[]
   NOT?: Prisma.SeatWhereInput | Prisma.SeatWhereInput[]
-  number?: Prisma.IntFilter<"Seat"> | number
-  isActive?: Prisma.BoolFilter<"Seat"> | boolean
   floorId?: Prisma.StringFilter<"Seat"> | string
+  seatNo?: Prisma.IntFilter<"Seat"> | number
+  isActive?: Prisma.BoolFilter<"Seat"> | boolean
+  createdAt?: Prisma.DateTimeFilter<"Seat"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Seat"> | Date | string
   floor?: Prisma.XOR<Prisma.FloorScalarRelationFilter, Prisma.FloorWhereInput>
   subscriptions?: Prisma.SubscriptionListRelationFilter
-}, "id" | "floorId_number">
+}, "id" | "floorId_seatNo">
 
 export type SeatOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  number?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
   floorId?: Prisma.SortOrder
+  seatNo?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.SeatCountOrderByAggregateInput
   _avg?: Prisma.SeatAvgOrderByAggregateInput
   _max?: Prisma.SeatMaxOrderByAggregateInput
@@ -251,61 +273,77 @@ export type SeatScalarWhereWithAggregatesInput = {
   OR?: Prisma.SeatScalarWhereWithAggregatesInput[]
   NOT?: Prisma.SeatScalarWhereWithAggregatesInput | Prisma.SeatScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Seat"> | string
-  number?: Prisma.IntWithAggregatesFilter<"Seat"> | number
-  isActive?: Prisma.BoolWithAggregatesFilter<"Seat"> | boolean
   floorId?: Prisma.StringWithAggregatesFilter<"Seat"> | string
+  seatNo?: Prisma.IntWithAggregatesFilter<"Seat"> | number
+  isActive?: Prisma.BoolWithAggregatesFilter<"Seat"> | boolean
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Seat"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Seat"> | Date | string
 }
 
 export type SeatCreateInput = {
   id?: string
-  number: number
+  seatNo: number
   isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
   floor: Prisma.FloorCreateNestedOneWithoutSeatsInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutSeatInput
 }
 
 export type SeatUncheckedCreateInput = {
   id?: string
-  number: number
-  isActive?: boolean
   floorId: string
+  seatNo: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutSeatInput
 }
 
 export type SeatUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  number?: Prisma.IntFieldUpdateOperationsInput | number
+  seatNo?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   floor?: Prisma.FloorUpdateOneRequiredWithoutSeatsNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutSeatNestedInput
 }
 
 export type SeatUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  number?: Prisma.IntFieldUpdateOperationsInput | number
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   floorId?: Prisma.StringFieldUpdateOperationsInput | string
+  seatNo?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutSeatNestedInput
 }
 
 export type SeatCreateManyInput = {
   id?: string
-  number: number
-  isActive?: boolean
   floorId: string
+  seatNo: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type SeatUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  number?: Prisma.IntFieldUpdateOperationsInput | number
+  seatNo?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SeatUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  number?: Prisma.IntFieldUpdateOperationsInput | number
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   floorId?: Prisma.StringFieldUpdateOperationsInput | string
+  seatNo?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SeatListRelationFilter = {
@@ -318,38 +356,44 @@ export type SeatOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type SeatFloorIdNumberCompoundUniqueInput = {
+export type SeatFloorIdSeatNoCompoundUniqueInput = {
   floorId: string
-  number: number
+  seatNo: number
 }
 
 export type SeatCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  number?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
   floorId?: Prisma.SortOrder
+  seatNo?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type SeatAvgOrderByAggregateInput = {
-  number?: Prisma.SortOrder
+  seatNo?: Prisma.SortOrder
 }
 
 export type SeatMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  number?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
   floorId?: Prisma.SortOrder
+  seatNo?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type SeatMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  number?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
   floorId?: Prisma.SortOrder
+  seatNo?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type SeatSumOrderByAggregateInput = {
-  number?: Prisma.SortOrder
+  seatNo?: Prisma.SortOrder
 }
 
 export type SeatScalarRelationFilter = {
@@ -399,14 +443,6 @@ export type SeatUncheckedUpdateManyWithoutFloorNestedInput = {
   deleteMany?: Prisma.SeatScalarWhereInput | Prisma.SeatScalarWhereInput[]
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type SeatCreateNestedOneWithoutSubscriptionsInput = {
   create?: Prisma.XOR<Prisma.SeatCreateWithoutSubscriptionsInput, Prisma.SeatUncheckedCreateWithoutSubscriptionsInput>
   connectOrCreate?: Prisma.SeatCreateOrConnectWithoutSubscriptionsInput
@@ -423,15 +459,19 @@ export type SeatUpdateOneRequiredWithoutSubscriptionsNestedInput = {
 
 export type SeatCreateWithoutFloorInput = {
   id?: string
-  number: number
+  seatNo: number
   isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutSeatInput
 }
 
 export type SeatUncheckedCreateWithoutFloorInput = {
   id?: string
-  number: number
+  seatNo: number
   isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutSeatInput
 }
 
@@ -466,23 +506,29 @@ export type SeatScalarWhereInput = {
   OR?: Prisma.SeatScalarWhereInput[]
   NOT?: Prisma.SeatScalarWhereInput | Prisma.SeatScalarWhereInput[]
   id?: Prisma.StringFilter<"Seat"> | string
-  number?: Prisma.IntFilter<"Seat"> | number
-  isActive?: Prisma.BoolFilter<"Seat"> | boolean
   floorId?: Prisma.StringFilter<"Seat"> | string
+  seatNo?: Prisma.IntFilter<"Seat"> | number
+  isActive?: Prisma.BoolFilter<"Seat"> | boolean
+  createdAt?: Prisma.DateTimeFilter<"Seat"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Seat"> | Date | string
 }
 
 export type SeatCreateWithoutSubscriptionsInput = {
   id?: string
-  number: number
+  seatNo: number
   isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
   floor: Prisma.FloorCreateNestedOneWithoutSeatsInput
 }
 
 export type SeatUncheckedCreateWithoutSubscriptionsInput = {
   id?: string
-  number: number
-  isActive?: boolean
   floorId: string
+  seatNo: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type SeatCreateOrConnectWithoutSubscriptionsInput = {
@@ -503,42 +549,54 @@ export type SeatUpdateToOneWithWhereWithoutSubscriptionsInput = {
 
 export type SeatUpdateWithoutSubscriptionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  number?: Prisma.IntFieldUpdateOperationsInput | number
+  seatNo?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   floor?: Prisma.FloorUpdateOneRequiredWithoutSeatsNestedInput
 }
 
 export type SeatUncheckedUpdateWithoutSubscriptionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  number?: Prisma.IntFieldUpdateOperationsInput | number
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   floorId?: Prisma.StringFieldUpdateOperationsInput | string
+  seatNo?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SeatCreateManyFloorInput = {
   id?: string
-  number: number
+  seatNo: number
   isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type SeatUpdateWithoutFloorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  number?: Prisma.IntFieldUpdateOperationsInput | number
+  seatNo?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutSeatNestedInput
 }
 
 export type SeatUncheckedUpdateWithoutFloorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  number?: Prisma.IntFieldUpdateOperationsInput | number
+  seatNo?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutSeatNestedInput
 }
 
 export type SeatUncheckedUpdateManyWithoutFloorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  number?: Prisma.IntFieldUpdateOperationsInput | number
+  seatNo?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -574,9 +632,11 @@ export type SeatCountOutputTypeCountSubscriptionsArgs<ExtArgs extends runtime.Ty
 
 export type SeatSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  number?: boolean
-  isActive?: boolean
   floorId?: boolean
+  seatNo?: boolean
+  isActive?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   floor?: boolean | Prisma.FloorDefaultArgs<ExtArgs>
   subscriptions?: boolean | Prisma.Seat$subscriptionsArgs<ExtArgs>
   _count?: boolean | Prisma.SeatCountOutputTypeDefaultArgs<ExtArgs>
@@ -584,28 +644,34 @@ export type SeatSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 
 export type SeatSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  number?: boolean
-  isActive?: boolean
   floorId?: boolean
+  seatNo?: boolean
+  isActive?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   floor?: boolean | Prisma.FloorDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["seat"]>
 
 export type SeatSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  number?: boolean
-  isActive?: boolean
   floorId?: boolean
+  seatNo?: boolean
+  isActive?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   floor?: boolean | Prisma.FloorDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["seat"]>
 
 export type SeatSelectScalar = {
   id?: boolean
-  number?: boolean
-  isActive?: boolean
   floorId?: boolean
+  seatNo?: boolean
+  isActive?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type SeatOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "number" | "isActive" | "floorId", ExtArgs["result"]["seat"]>
+export type SeatOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "floorId" | "seatNo" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["seat"]>
 export type SeatInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   floor?: boolean | Prisma.FloorDefaultArgs<ExtArgs>
   subscriptions?: boolean | Prisma.Seat$subscriptionsArgs<ExtArgs>
@@ -626,9 +692,11 @@ export type $SeatPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    number: number
-    isActive: boolean
     floorId: string
+    seatNo: number
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["seat"]>
   composites: {}
 }
@@ -1055,9 +1123,11 @@ export interface Prisma__SeatClient<T, Null = never, ExtArgs extends runtime.Typ
  */
 export interface SeatFieldRefs {
   readonly id: Prisma.FieldRef<"Seat", 'String'>
-  readonly number: Prisma.FieldRef<"Seat", 'Int'>
-  readonly isActive: Prisma.FieldRef<"Seat", 'Boolean'>
   readonly floorId: Prisma.FieldRef<"Seat", 'String'>
+  readonly seatNo: Prisma.FieldRef<"Seat", 'Int'>
+  readonly isActive: Prisma.FieldRef<"Seat", 'Boolean'>
+  readonly createdAt: Prisma.FieldRef<"Seat", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Seat", 'DateTime'>
 }
     
 

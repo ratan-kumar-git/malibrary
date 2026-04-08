@@ -26,10 +26,10 @@ export type AggregateLibrary = {
 
 export type LibraryMinAggregateOutputType = {
   id: string | null
+  userId: string | null
   name: string | null
   email: string | null
   contactNumber: string | null
-  userId: string | null
   address: string | null
   district: string | null
   state: string | null
@@ -40,10 +40,10 @@ export type LibraryMinAggregateOutputType = {
 
 export type LibraryMaxAggregateOutputType = {
   id: string | null
+  userId: string | null
   name: string | null
   email: string | null
   contactNumber: string | null
-  userId: string | null
   address: string | null
   district: string | null
   state: string | null
@@ -54,10 +54,10 @@ export type LibraryMaxAggregateOutputType = {
 
 export type LibraryCountAggregateOutputType = {
   id: number
+  userId: number
   name: number
   email: number
   contactNumber: number
-  userId: number
   address: number
   district: number
   state: number
@@ -71,10 +71,10 @@ export type LibraryCountAggregateOutputType = {
 
 export type LibraryMinAggregateInputType = {
   id?: true
+  userId?: true
   name?: true
   email?: true
   contactNumber?: true
-  userId?: true
   address?: true
   district?: true
   state?: true
@@ -85,10 +85,10 @@ export type LibraryMinAggregateInputType = {
 
 export type LibraryMaxAggregateInputType = {
   id?: true
+  userId?: true
   name?: true
   email?: true
   contactNumber?: true
-  userId?: true
   address?: true
   district?: true
   state?: true
@@ -99,10 +99,10 @@ export type LibraryMaxAggregateInputType = {
 
 export type LibraryCountAggregateInputType = {
   id?: true
+  userId?: true
   name?: true
   email?: true
   contactNumber?: true
-  userId?: true
   address?: true
   district?: true
   state?: true
@@ -187,10 +187,10 @@ export type LibraryGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 
 export type LibraryGroupByOutputType = {
   id: string
-  name: string
-  email: string
-  contactNumber: string
   userId: string
+  name: string
+  email: string | null
+  contactNumber: string
   address: string
   district: string
   state: string
@@ -223,10 +223,10 @@ export type LibraryWhereInput = {
   OR?: Prisma.LibraryWhereInput[]
   NOT?: Prisma.LibraryWhereInput | Prisma.LibraryWhereInput[]
   id?: Prisma.StringFilter<"Library"> | string
-  name?: Prisma.StringFilter<"Library"> | string
-  email?: Prisma.StringFilter<"Library"> | string
-  contactNumber?: Prisma.StringFilter<"Library"> | string
   userId?: Prisma.StringFilter<"Library"> | string
+  name?: Prisma.StringFilter<"Library"> | string
+  email?: Prisma.StringNullableFilter<"Library"> | string | null
+  contactNumber?: Prisma.StringFilter<"Library"> | string
   address?: Prisma.StringFilter<"Library"> | string
   district?: Prisma.StringFilter<"Library"> | string
   state?: Prisma.StringFilter<"Library"> | string
@@ -243,10 +243,10 @@ export type LibraryWhereInput = {
 
 export type LibraryOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
-  email?: Prisma.SortOrder
-  contactNumber?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  name?: Prisma.SortOrder
+  email?: Prisma.SortOrderInput | Prisma.SortOrder
+  contactNumber?: Prisma.SortOrder
   address?: Prisma.SortOrder
   district?: Prisma.SortOrder
   state?: Prisma.SortOrder
@@ -264,11 +264,12 @@ export type LibraryOrderByWithRelationInput = {
 export type LibraryWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   userId?: string
+  userId_contactNumber?: Prisma.LibraryUserIdContactNumberCompoundUniqueInput
   AND?: Prisma.LibraryWhereInput | Prisma.LibraryWhereInput[]
   OR?: Prisma.LibraryWhereInput[]
   NOT?: Prisma.LibraryWhereInput | Prisma.LibraryWhereInput[]
   name?: Prisma.StringFilter<"Library"> | string
-  email?: Prisma.StringFilter<"Library"> | string
+  email?: Prisma.StringNullableFilter<"Library"> | string | null
   contactNumber?: Prisma.StringFilter<"Library"> | string
   address?: Prisma.StringFilter<"Library"> | string
   district?: Prisma.StringFilter<"Library"> | string
@@ -282,14 +283,14 @@ export type LibraryWhereUniqueInput = Prisma.AtLeast<{
   shifts?: Prisma.ShiftListRelationFilter
   students?: Prisma.StudentListRelationFilter
   subscriptions?: Prisma.SubscriptionListRelationFilter
-}, "id" | "userId">
+}, "id" | "userId" | "userId_contactNumber">
 
 export type LibraryOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
-  email?: Prisma.SortOrder
-  contactNumber?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  name?: Prisma.SortOrder
+  email?: Prisma.SortOrderInput | Prisma.SortOrder
+  contactNumber?: Prisma.SortOrder
   address?: Prisma.SortOrder
   district?: Prisma.SortOrder
   state?: Prisma.SortOrder
@@ -307,10 +308,10 @@ export type LibraryScalarWhereWithAggregatesInput = {
   OR?: Prisma.LibraryScalarWhereWithAggregatesInput[]
   NOT?: Prisma.LibraryScalarWhereWithAggregatesInput | Prisma.LibraryScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Library"> | string
-  name?: Prisma.StringWithAggregatesFilter<"Library"> | string
-  email?: Prisma.StringWithAggregatesFilter<"Library"> | string
-  contactNumber?: Prisma.StringWithAggregatesFilter<"Library"> | string
   userId?: Prisma.StringWithAggregatesFilter<"Library"> | string
+  name?: Prisma.StringWithAggregatesFilter<"Library"> | string
+  email?: Prisma.StringNullableWithAggregatesFilter<"Library"> | string | null
+  contactNumber?: Prisma.StringWithAggregatesFilter<"Library"> | string
   address?: Prisma.StringWithAggregatesFilter<"Library"> | string
   district?: Prisma.StringWithAggregatesFilter<"Library"> | string
   state?: Prisma.StringWithAggregatesFilter<"Library"> | string
@@ -323,7 +324,7 @@ export type LibraryScalarWhereWithAggregatesInput = {
 export type LibraryCreateInput = {
   id?: string
   name: string
-  email: string
+  email?: string | null
   contactNumber: string
   address: string
   district: string
@@ -341,10 +342,10 @@ export type LibraryCreateInput = {
 
 export type LibraryUncheckedCreateInput = {
   id?: string
-  name: string
-  email: string
-  contactNumber: string
   userId: string
+  name: string
+  email?: string | null
+  contactNumber: string
   address: string
   district: string
   state: string
@@ -361,7 +362,7 @@ export type LibraryUncheckedCreateInput = {
 export type LibraryUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   district?: Prisma.StringFieldUpdateOperationsInput | string
@@ -379,10 +380,10 @@ export type LibraryUpdateInput = {
 
 export type LibraryUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   district?: Prisma.StringFieldUpdateOperationsInput | string
   state?: Prisma.StringFieldUpdateOperationsInput | string
@@ -398,10 +399,10 @@ export type LibraryUncheckedUpdateInput = {
 
 export type LibraryCreateManyInput = {
   id?: string
-  name: string
-  email: string
-  contactNumber: string
   userId: string
+  name: string
+  email?: string | null
+  contactNumber: string
   address: string
   district: string
   state: string
@@ -414,7 +415,7 @@ export type LibraryCreateManyInput = {
 export type LibraryUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   district?: Prisma.StringFieldUpdateOperationsInput | string
@@ -427,10 +428,10 @@ export type LibraryUpdateManyMutationInput = {
 
 export type LibraryUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   district?: Prisma.StringFieldUpdateOperationsInput | string
   state?: Prisma.StringFieldUpdateOperationsInput | string
@@ -458,12 +459,17 @@ export type StringNullableListFilter<$PrismaModel = never> = {
   isEmpty?: boolean
 }
 
+export type LibraryUserIdContactNumberCompoundUniqueInput = {
+  userId: string
+  contactNumber: string
+}
+
 export type LibraryCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
   address?: Prisma.SortOrder
   district?: Prisma.SortOrder
   state?: Prisma.SortOrder
@@ -475,10 +481,10 @@ export type LibraryCountOrderByAggregateInput = {
 
 export type LibraryMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
   address?: Prisma.SortOrder
   district?: Prisma.SortOrder
   state?: Prisma.SortOrder
@@ -489,10 +495,10 @@ export type LibraryMaxOrderByAggregateInput = {
 
 export type LibraryMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
   address?: Prisma.SortOrder
   district?: Prisma.SortOrder
   state?: Prisma.SortOrder
@@ -616,7 +622,7 @@ export type LibraryUpdateOneRequiredWithoutSubscriptionsNestedInput = {
 export type LibraryCreateWithoutUserInput = {
   id?: string
   name: string
-  email: string
+  email?: string | null
   contactNumber: string
   address: string
   district: string
@@ -634,7 +640,7 @@ export type LibraryCreateWithoutUserInput = {
 export type LibraryUncheckedCreateWithoutUserInput = {
   id?: string
   name: string
-  email: string
+  email?: string | null
   contactNumber: string
   address: string
   district: string
@@ -680,10 +686,10 @@ export type LibraryScalarWhereInput = {
   OR?: Prisma.LibraryScalarWhereInput[]
   NOT?: Prisma.LibraryScalarWhereInput | Prisma.LibraryScalarWhereInput[]
   id?: Prisma.StringFilter<"Library"> | string
-  name?: Prisma.StringFilter<"Library"> | string
-  email?: Prisma.StringFilter<"Library"> | string
-  contactNumber?: Prisma.StringFilter<"Library"> | string
   userId?: Prisma.StringFilter<"Library"> | string
+  name?: Prisma.StringFilter<"Library"> | string
+  email?: Prisma.StringNullableFilter<"Library"> | string | null
+  contactNumber?: Prisma.StringFilter<"Library"> | string
   address?: Prisma.StringFilter<"Library"> | string
   district?: Prisma.StringFilter<"Library"> | string
   state?: Prisma.StringFilter<"Library"> | string
@@ -696,7 +702,7 @@ export type LibraryScalarWhereInput = {
 export type LibraryCreateWithoutFloorsInput = {
   id?: string
   name: string
-  email: string
+  email?: string | null
   contactNumber: string
   address: string
   district: string
@@ -713,10 +719,10 @@ export type LibraryCreateWithoutFloorsInput = {
 
 export type LibraryUncheckedCreateWithoutFloorsInput = {
   id?: string
-  name: string
-  email: string
-  contactNumber: string
   userId: string
+  name: string
+  email?: string | null
+  contactNumber: string
   address: string
   district: string
   state: string
@@ -748,7 +754,7 @@ export type LibraryUpdateToOneWithWhereWithoutFloorsInput = {
 export type LibraryUpdateWithoutFloorsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   district?: Prisma.StringFieldUpdateOperationsInput | string
@@ -765,10 +771,10 @@ export type LibraryUpdateWithoutFloorsInput = {
 
 export type LibraryUncheckedUpdateWithoutFloorsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   district?: Prisma.StringFieldUpdateOperationsInput | string
   state?: Prisma.StringFieldUpdateOperationsInput | string
@@ -784,7 +790,7 @@ export type LibraryUncheckedUpdateWithoutFloorsInput = {
 export type LibraryCreateWithoutShiftsInput = {
   id?: string
   name: string
-  email: string
+  email?: string | null
   contactNumber: string
   address: string
   district: string
@@ -801,10 +807,10 @@ export type LibraryCreateWithoutShiftsInput = {
 
 export type LibraryUncheckedCreateWithoutShiftsInput = {
   id?: string
-  name: string
-  email: string
-  contactNumber: string
   userId: string
+  name: string
+  email?: string | null
+  contactNumber: string
   address: string
   district: string
   state: string
@@ -836,7 +842,7 @@ export type LibraryUpdateToOneWithWhereWithoutShiftsInput = {
 export type LibraryUpdateWithoutShiftsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   district?: Prisma.StringFieldUpdateOperationsInput | string
@@ -853,10 +859,10 @@ export type LibraryUpdateWithoutShiftsInput = {
 
 export type LibraryUncheckedUpdateWithoutShiftsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   district?: Prisma.StringFieldUpdateOperationsInput | string
   state?: Prisma.StringFieldUpdateOperationsInput | string
@@ -872,7 +878,7 @@ export type LibraryUncheckedUpdateWithoutShiftsInput = {
 export type LibraryCreateWithoutStudentsInput = {
   id?: string
   name: string
-  email: string
+  email?: string | null
   contactNumber: string
   address: string
   district: string
@@ -889,10 +895,10 @@ export type LibraryCreateWithoutStudentsInput = {
 
 export type LibraryUncheckedCreateWithoutStudentsInput = {
   id?: string
-  name: string
-  email: string
-  contactNumber: string
   userId: string
+  name: string
+  email?: string | null
+  contactNumber: string
   address: string
   district: string
   state: string
@@ -924,7 +930,7 @@ export type LibraryUpdateToOneWithWhereWithoutStudentsInput = {
 export type LibraryUpdateWithoutStudentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   district?: Prisma.StringFieldUpdateOperationsInput | string
@@ -941,10 +947,10 @@ export type LibraryUpdateWithoutStudentsInput = {
 
 export type LibraryUncheckedUpdateWithoutStudentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   district?: Prisma.StringFieldUpdateOperationsInput | string
   state?: Prisma.StringFieldUpdateOperationsInput | string
@@ -960,7 +966,7 @@ export type LibraryUncheckedUpdateWithoutStudentsInput = {
 export type LibraryCreateWithoutSubscriptionsInput = {
   id?: string
   name: string
-  email: string
+  email?: string | null
   contactNumber: string
   address: string
   district: string
@@ -977,10 +983,10 @@ export type LibraryCreateWithoutSubscriptionsInput = {
 
 export type LibraryUncheckedCreateWithoutSubscriptionsInput = {
   id?: string
-  name: string
-  email: string
-  contactNumber: string
   userId: string
+  name: string
+  email?: string | null
+  contactNumber: string
   address: string
   district: string
   state: string
@@ -1012,7 +1018,7 @@ export type LibraryUpdateToOneWithWhereWithoutSubscriptionsInput = {
 export type LibraryUpdateWithoutSubscriptionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   district?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1029,10 +1035,10 @@ export type LibraryUpdateWithoutSubscriptionsInput = {
 
 export type LibraryUncheckedUpdateWithoutSubscriptionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   district?: Prisma.StringFieldUpdateOperationsInput | string
   state?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1048,7 +1054,7 @@ export type LibraryUncheckedUpdateWithoutSubscriptionsInput = {
 export type LibraryCreateManyUserInput = {
   id?: string
   name: string
-  email: string
+  email?: string | null
   contactNumber: string
   address: string
   district: string
@@ -1062,7 +1068,7 @@ export type LibraryCreateManyUserInput = {
 export type LibraryUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   district?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1080,7 +1086,7 @@ export type LibraryUpdateWithoutUserInput = {
 export type LibraryUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   district?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1098,7 +1104,7 @@ export type LibraryUncheckedUpdateWithoutUserInput = {
 export type LibraryUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   district?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1169,10 +1175,10 @@ export type LibraryCountOutputTypeCountSubscriptionsArgs<ExtArgs extends runtime
 
 export type LibrarySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  userId?: boolean
   name?: boolean
   email?: boolean
   contactNumber?: boolean
-  userId?: boolean
   address?: boolean
   district?: boolean
   state?: boolean
@@ -1190,10 +1196,10 @@ export type LibrarySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 
 export type LibrarySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  userId?: boolean
   name?: boolean
   email?: boolean
   contactNumber?: boolean
-  userId?: boolean
   address?: boolean
   district?: boolean
   state?: boolean
@@ -1206,10 +1212,10 @@ export type LibrarySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
 
 export type LibrarySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  userId?: boolean
   name?: boolean
   email?: boolean
   contactNumber?: boolean
-  userId?: boolean
   address?: boolean
   district?: boolean
   state?: boolean
@@ -1222,10 +1228,10 @@ export type LibrarySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
 
 export type LibrarySelectScalar = {
   id?: boolean
+  userId?: boolean
   name?: boolean
   email?: boolean
   contactNumber?: boolean
-  userId?: boolean
   address?: boolean
   district?: boolean
   state?: boolean
@@ -1235,7 +1241,7 @@ export type LibrarySelectScalar = {
   updatedAt?: boolean
 }
 
-export type LibraryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "contactNumber" | "userId" | "address" | "district" | "state" | "pincode" | "facilities" | "createdAt" | "updatedAt", ExtArgs["result"]["library"]>
+export type LibraryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "name" | "email" | "contactNumber" | "address" | "district" | "state" | "pincode" | "facilities" | "createdAt" | "updatedAt", ExtArgs["result"]["library"]>
 export type LibraryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   floors?: boolean | Prisma.Library$floorsArgs<ExtArgs>
@@ -1262,10 +1268,10 @@ export type $LibraryPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    name: string
-    email: string
-    contactNumber: string
     userId: string
+    name: string
+    email: string | null
+    contactNumber: string
     address: string
     district: string
     state: string
@@ -1702,10 +1708,10 @@ export interface Prisma__LibraryClient<T, Null = never, ExtArgs extends runtime.
  */
 export interface LibraryFieldRefs {
   readonly id: Prisma.FieldRef<"Library", 'String'>
+  readonly userId: Prisma.FieldRef<"Library", 'String'>
   readonly name: Prisma.FieldRef<"Library", 'String'>
   readonly email: Prisma.FieldRef<"Library", 'String'>
   readonly contactNumber: Prisma.FieldRef<"Library", 'String'>
-  readonly userId: Prisma.FieldRef<"Library", 'String'>
   readonly address: Prisma.FieldRef<"Library", 'String'>
   readonly district: Prisma.FieldRef<"Library", 'String'>
   readonly state: Prisma.FieldRef<"Library", 'String'>

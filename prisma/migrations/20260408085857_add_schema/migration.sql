@@ -14,12 +14,12 @@ CREATE TABLE "user" (
     "email" TEXT NOT NULL,
     "emailVerified" BOOLEAN NOT NULL DEFAULT false,
     "image" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
     "role" "ROLE" NOT NULL DEFAULT 'USER',
     "banned" BOOLEAN DEFAULT false,
     "banReason" TEXT,
     "banExpires" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "user_pkey" PRIMARY KEY ("id")
 );
@@ -73,10 +73,10 @@ CREATE TABLE "verification" (
 -- CreateTable
 CREATE TABLE "Library" (
     "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    "contactNumber" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "email" TEXT,
+    "contactNumber" TEXT NOT NULL,
     "address" TEXT NOT NULL,
     "district" TEXT NOT NULL,
     "state" TEXT NOT NULL,
@@ -91,8 +91,11 @@ CREATE TABLE "Library" (
 -- CreateTable
 CREATE TABLE "Floor" (
     "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
     "libraryId" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "totalSeats" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Floor_pkey" PRIMARY KEY ("id")
 );
@@ -100,9 +103,11 @@ CREATE TABLE "Floor" (
 -- CreateTable
 CREATE TABLE "Seat" (
     "id" TEXT NOT NULL,
-    "number" INTEGER NOT NULL,
-    "isActive" BOOLEAN NOT NULL DEFAULT true,
     "floorId" TEXT NOT NULL,
+    "seatNo" INTEGER NOT NULL,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Seat_pkey" PRIMARY KEY ("id")
 );
@@ -110,12 +115,14 @@ CREATE TABLE "Seat" (
 -- CreateTable
 CREATE TABLE "Shift" (
     "id" TEXT NOT NULL,
+    "libraryId" TEXT NOT NULL,
     "name" "ShiftType" NOT NULL,
     "startTime" INTEGER NOT NULL,
     "endTime" INTEGER NOT NULL,
     "price" DOUBLE PRECISION NOT NULL,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
-    "libraryId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Shift_pkey" PRIMARY KEY ("id")
 );
@@ -123,13 +130,13 @@ CREATE TABLE "Shift" (
 -- CreateTable
 CREATE TABLE "Student" (
     "id" TEXT NOT NULL,
+    "libraryId" TEXT NOT NULL,
     "memberId" TEXT,
     "name" TEXT NOT NULL,
     "gender" TEXT NOT NULL,
     "phoneNumber" TEXT NOT NULL,
     "address" TEXT,
     "lockerNumber" INTEGER,
-    "libraryId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -180,16 +187,37 @@ CREATE INDEX "verification_identifier_idx" ON "verification"("identifier");
 CREATE UNIQUE INDEX "Library_userId_key" ON "Library"("userId");
 
 -- CreateIndex
+CREATE INDEX "Library_userId_idx" ON "Library"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Library_userId_contactNumber_key" ON "Library"("userId", "contactNumber");
+
+-- CreateIndex
+CREATE INDEX "Floor_libraryId_idx" ON "Floor"("libraryId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Floor_libraryId_name_key" ON "Floor"("libraryId", "name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Seat_floorId_number_key" ON "Seat"("floorId", "number");
+CREATE INDEX "Seat_floorId_idx" ON "Seat"("floorId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Seat_floorId_seatNo_key" ON "Seat"("floorId", "seatNo");
+
+-- CreateIndex
+CREATE INDEX "Shift_libraryId_idx" ON "Shift"("libraryId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Shift_libraryId_name_key" ON "Shift"("libraryId", "name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Student_memberId_key" ON "Student"("memberId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Student_lockerNumber_key" ON "Student"("lockerNumber");
+
+-- CreateIndex
+CREATE INDEX "Student_libraryId_idx" ON "Student"("libraryId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Student_libraryId_phoneNumber_key" ON "Student"("libraryId", "phoneNumber");

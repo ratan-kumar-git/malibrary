@@ -1273,12 +1273,12 @@ export const UserScalarFieldEnum = {
   email: 'email',
   emailVerified: 'emailVerified',
   image: 'image',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
   role: 'role',
   banned: 'banned',
   banReason: 'banReason',
-  banExpires: 'banExpires'
+  banExpires: 'banExpires',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -1332,10 +1332,10 @@ export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[k
 
 export const LibraryScalarFieldEnum = {
   id: 'id',
+  userId: 'userId',
   name: 'name',
   email: 'email',
   contactNumber: 'contactNumber',
-  userId: 'userId',
   address: 'address',
   district: 'district',
   state: 'state',
@@ -1350,8 +1350,11 @@ export type LibraryScalarFieldEnum = (typeof LibraryScalarFieldEnum)[keyof typeo
 
 export const FloorScalarFieldEnum = {
   id: 'id',
+  libraryId: 'libraryId',
   name: 'name',
-  libraryId: 'libraryId'
+  totalSeats: 'totalSeats',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type FloorScalarFieldEnum = (typeof FloorScalarFieldEnum)[keyof typeof FloorScalarFieldEnum]
@@ -1359,9 +1362,11 @@ export type FloorScalarFieldEnum = (typeof FloorScalarFieldEnum)[keyof typeof Fl
 
 export const SeatScalarFieldEnum = {
   id: 'id',
-  number: 'number',
+  floorId: 'floorId',
+  seatNo: 'seatNo',
   isActive: 'isActive',
-  floorId: 'floorId'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type SeatScalarFieldEnum = (typeof SeatScalarFieldEnum)[keyof typeof SeatScalarFieldEnum]
@@ -1369,12 +1374,14 @@ export type SeatScalarFieldEnum = (typeof SeatScalarFieldEnum)[keyof typeof Seat
 
 export const ShiftScalarFieldEnum = {
   id: 'id',
+  libraryId: 'libraryId',
   name: 'name',
   startTime: 'startTime',
   endTime: 'endTime',
   price: 'price',
   isActive: 'isActive',
-  libraryId: 'libraryId'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type ShiftScalarFieldEnum = (typeof ShiftScalarFieldEnum)[keyof typeof ShiftScalarFieldEnum]
@@ -1382,13 +1389,13 @@ export type ShiftScalarFieldEnum = (typeof ShiftScalarFieldEnum)[keyof typeof Sh
 
 export const StudentScalarFieldEnum = {
   id: 'id',
+  libraryId: 'libraryId',
   memberId: 'memberId',
   name: 'name',
   gender: 'gender',
   phoneNumber: 'phoneNumber',
   address: 'address',
   lockerNumber: 'lockerNumber',
-  libraryId: 'libraryId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1473,20 +1480,6 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
- * Reference to a field of type 'DateTime'
- */
-export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
-    
-
-
-/**
- * Reference to a field of type 'DateTime[]'
- */
-export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
-    
-
-
-/**
  * Reference to a field of type 'ROLE'
  */
 export type EnumROLEFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ROLE'>
@@ -1497,6 +1490,20 @@ export type EnumROLEFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'ROLE[]'
  */
 export type ListEnumROLEFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ROLE[]'>
+    
+
+
+/**
+ * Reference to a field of type 'DateTime'
+ */
+export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+    
+
+
+/**
+ * Reference to a field of type 'DateTime[]'
+ */
+export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
     
 
 

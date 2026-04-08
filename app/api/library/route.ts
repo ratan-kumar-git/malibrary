@@ -5,7 +5,6 @@ import { librarySchema } from "@/lib/validations";
 import { ZodError } from "zod";
 import { headers } from "next/headers";
 
-// get library details, floors and shifts for the logged in user
 export async function GET() {
   try {
     const session = await auth.api.getSession({
@@ -18,13 +17,23 @@ export async function GET() {
 
     const library = await prisma.library.findFirst({
       where: { userId: session.user.id },
+      omit: { createdAt: true, updatedAt: true },
       include: {
         floors: {
-          include: {
-            seats: true,
-          },
+          select: { id: true, name: true, totalSeats: true },
+          orderBy: { name: "asc" },
         },
-        shifts: true,
+        shifts: {
+          select: {
+            id: true,
+            name: true,
+            startTime: true,
+            endTime: true,
+            isActive: true,
+            price: true,
+          },
+          orderBy: { name: "asc" },
+        },
       },
     });
 
@@ -37,7 +46,7 @@ export async function GET() {
     console.error("Failed to fetch library:", error);
     return NextResponse.json(
       { error: "Failed to fetch library" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -70,13 +79,23 @@ export async function PUT(req: NextRequest) {
     const library = await prisma.library.update({
       where: { id: existingLibrary.id },
       data: validatedData,
+      omit: { createdAt: true, updatedAt: true },
       include: {
         floors: {
-          include: {
-            seats: true,
-          },
+          select: { id: true, name: true, totalSeats: true },
+          orderBy: { name: "asc" },
         },
-        shifts: true,
+        shifts: {
+          select: {
+            id: true,
+            name: true,
+            startTime: true,
+            endTime: true,
+            isActive: true,
+            price: true,
+          },
+          orderBy: { name: "asc" },
+        },
       },
     });
 
@@ -85,17 +104,13 @@ export async function PUT(req: NextRequest) {
     if (error instanceof ZodError) {
       return NextResponse.json(
         { error: "Validation failed", details: error.issues },
-        { status: 400 }
+        { status: 400 },
       );
     }
     console.error("Failed to update library:", error);
     return NextResponse.json(
       { error: "Failed to update library" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
-
-
-
-

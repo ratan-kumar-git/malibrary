@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { LibrarySetupForm } from '@/components/setup/LibrarySetupForm';
-import { useLibraryStore } from '@/lib/store';
+import { useLibraryStore } from '@/store/useLibraryStore';
 import { Loader2 } from 'lucide-react';
 
 const SetupPage = () => {

@@ -6,7 +6,7 @@ import { LibraryBasicDetails } from "@/components/settings/LibraryBasicDetails";
 import { ShiftDetails } from "@/components/settings/ShiftDetails";
 import { FloorsSection } from "@/components/settings/FloorsSection";
 import { SettingsSkeleton } from "@/components/skelton/SettingsSkeleton";
-import { useLibraryStore } from "@/lib/store";
+import { useLibraryStore } from "@/store/useLibraryStore";
 import {
   Breadcrumb,
   BreadcrumbItem,

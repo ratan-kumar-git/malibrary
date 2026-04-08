@@ -2,7 +2,7 @@
 
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import type { Library, Floor, Shift, LibraryFormState, LibrarySetupPayload, FloorWithSeats } from '@/lib/validations';
+import type { Library, Floor, Shift, LibraryFormState, LibrarySetupPayload } from '@/lib/validations';
 
 type LibrarywithDetails = Library & {
   floors: Floor[];
@@ -21,15 +21,6 @@ interface UnifiedLibraryStore {
   syncFloors: (libraryId: string, floors: Floor[]) => Promise<void>;
   syncShifts: (shiftId: string, updates: Omit<Shift, 'id'>[]) => Promise<void>;
 }
-
-// Helper to transform floors with seats into floors with totalSeats
-const transformFloorsFromDB = (floors: any[]): Floor[] => {
-  return floors.map((floor) => ({
-    id: floor.id,
-    name: floor.name,
-    totalSeats: (floor.seats || []).filter((s: any) => s.isActive).length,
-  }));
-};
 
 export const useLibraryStore = create<UnifiedLibraryStore>()(
   devtools((set, get) => ({
@@ -55,12 +46,8 @@ export const useLibraryStore = create<UnifiedLibraryStore>()(
         });
         if (!response.ok) throw new Error('Failed to set up library');
         const data = await response.json();
-        // Transform floors with seats to have totalSeats
-        const transformedData: LibrarywithDetails = {
-          ...data,
-          floors: transformFloorsFromDB(data.floors || []),
-        } as LibrarywithDetails;
-        set({ data: transformedData });
+
+        set({ data: data });
       } catch (error) {
         const message = error instanceof Error ? error.message : 'Unknown error';
         set({ error: message });
@@ -77,12 +64,7 @@ export const useLibraryStore = create<UnifiedLibraryStore>()(
         const response = await fetch('/api/library');
         if (!response.ok) throw new Error('Failed to fetch library');
         const data = await response.json();
-        // Transform floors with seats to have totalSeats
-        const transformedData: LibrarywithDetails = {
-          ...data,
-          floors: transformFloorsFromDB(data.floors || []),
-        } as LibrarywithDetails;
-        set({ data: transformedData });
+        set({ data: data });
       } catch (error) {
         const message = error instanceof Error ? error.message : 'Unknown error';
         set({ error: message });
@@ -102,12 +84,7 @@ export const useLibraryStore = create<UnifiedLibraryStore>()(
         });
         if (!response.ok) throw new Error('Failed to update library');
         const data = await response.json();
-        // Transform floors with seats to have totalSeats
-        const transformedData: LibrarywithDetails = {
-          ...data,
-          floors: transformFloorsFromDB(data.floors || []),
-        } as LibrarywithDetails;
-        set({ data: transformedData });
+        set({ data: data });
       } catch (error) {
         const message = error instanceof Error ? error.message : 'Unknown error';
         set({ error: message });

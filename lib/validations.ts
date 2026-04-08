@@ -37,7 +37,7 @@ export const floorWithIdSchema = floorSchema.extend({
 
 // Floor with database seats (for API responses)
 export const floorWithSeatsSchema = z.object({
-  id: z.string().cuid(),
+  id: z.cuid(),
   name: z.string(),
   libraryId: z.string(),
   seats: z.array(seatSchema),

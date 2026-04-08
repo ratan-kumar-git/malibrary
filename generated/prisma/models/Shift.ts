@@ -40,32 +40,38 @@ export type ShiftSumAggregateOutputType = {
 
 export type ShiftMinAggregateOutputType = {
   id: string | null
+  libraryId: string | null
   name: $Enums.ShiftType | null
   startTime: number | null
   endTime: number | null
   price: number | null
   isActive: boolean | null
-  libraryId: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type ShiftMaxAggregateOutputType = {
   id: string | null
+  libraryId: string | null
   name: $Enums.ShiftType | null
   startTime: number | null
   endTime: number | null
   price: number | null
   isActive: boolean | null
-  libraryId: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type ShiftCountAggregateOutputType = {
   id: number
+  libraryId: number
   name: number
   startTime: number
   endTime: number
   price: number
   isActive: number
-  libraryId: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -84,32 +90,38 @@ export type ShiftSumAggregateInputType = {
 
 export type ShiftMinAggregateInputType = {
   id?: true
+  libraryId?: true
   name?: true
   startTime?: true
   endTime?: true
   price?: true
   isActive?: true
-  libraryId?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type ShiftMaxAggregateInputType = {
   id?: true
+  libraryId?: true
   name?: true
   startTime?: true
   endTime?: true
   price?: true
   isActive?: true
-  libraryId?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type ShiftCountAggregateInputType = {
   id?: true
+  libraryId?: true
   name?: true
   startTime?: true
   endTime?: true
   price?: true
   isActive?: true
-  libraryId?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -201,12 +213,14 @@ export type ShiftGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 
 export type ShiftGroupByOutputType = {
   id: string
+  libraryId: string
   name: $Enums.ShiftType
   startTime: number
   endTime: number
   price: number
   isActive: boolean
-  libraryId: string
+  createdAt: Date
+  updatedAt: Date
   _count: ShiftCountAggregateOutputType | null
   _avg: ShiftAvgAggregateOutputType | null
   _sum: ShiftSumAggregateOutputType | null
@@ -234,51 +248,60 @@ export type ShiftWhereInput = {
   OR?: Prisma.ShiftWhereInput[]
   NOT?: Prisma.ShiftWhereInput | Prisma.ShiftWhereInput[]
   id?: Prisma.StringFilter<"Shift"> | string
+  libraryId?: Prisma.StringFilter<"Shift"> | string
   name?: Prisma.EnumShiftTypeFilter<"Shift"> | $Enums.ShiftType
   startTime?: Prisma.IntFilter<"Shift"> | number
   endTime?: Prisma.IntFilter<"Shift"> | number
   price?: Prisma.FloatFilter<"Shift"> | number
   isActive?: Prisma.BoolFilter<"Shift"> | boolean
-  libraryId?: Prisma.StringFilter<"Shift"> | string
+  createdAt?: Prisma.DateTimeFilter<"Shift"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Shift"> | Date | string
   library?: Prisma.XOR<Prisma.LibraryScalarRelationFilter, Prisma.LibraryWhereInput>
   assignments?: Prisma.SubscriptionShiftListRelationFilter
 }
 
 export type ShiftOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  libraryId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
   price?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
-  libraryId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   library?: Prisma.LibraryOrderByWithRelationInput
   assignments?: Prisma.SubscriptionShiftOrderByRelationAggregateInput
 }
 
 export type ShiftWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  libraryId_name?: Prisma.ShiftLibraryIdNameCompoundUniqueInput
   AND?: Prisma.ShiftWhereInput | Prisma.ShiftWhereInput[]
   OR?: Prisma.ShiftWhereInput[]
   NOT?: Prisma.ShiftWhereInput | Prisma.ShiftWhereInput[]
+  libraryId?: Prisma.StringFilter<"Shift"> | string
   name?: Prisma.EnumShiftTypeFilter<"Shift"> | $Enums.ShiftType
   startTime?: Prisma.IntFilter<"Shift"> | number
   endTime?: Prisma.IntFilter<"Shift"> | number
   price?: Prisma.FloatFilter<"Shift"> | number
   isActive?: Prisma.BoolFilter<"Shift"> | boolean
-  libraryId?: Prisma.StringFilter<"Shift"> | string
+  createdAt?: Prisma.DateTimeFilter<"Shift"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Shift"> | Date | string
   library?: Prisma.XOR<Prisma.LibraryScalarRelationFilter, Prisma.LibraryWhereInput>
   assignments?: Prisma.SubscriptionShiftListRelationFilter
-}, "id">
+}, "id" | "libraryId_name">
 
 export type ShiftOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  libraryId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
   price?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
-  libraryId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.ShiftCountOrderByAggregateInput
   _avg?: Prisma.ShiftAvgOrderByAggregateInput
   _max?: Prisma.ShiftMaxOrderByAggregateInput
@@ -291,12 +314,14 @@ export type ShiftScalarWhereWithAggregatesInput = {
   OR?: Prisma.ShiftScalarWhereWithAggregatesInput[]
   NOT?: Prisma.ShiftScalarWhereWithAggregatesInput | Prisma.ShiftScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Shift"> | string
+  libraryId?: Prisma.StringWithAggregatesFilter<"Shift"> | string
   name?: Prisma.EnumShiftTypeWithAggregatesFilter<"Shift"> | $Enums.ShiftType
   startTime?: Prisma.IntWithAggregatesFilter<"Shift"> | number
   endTime?: Prisma.IntWithAggregatesFilter<"Shift"> | number
   price?: Prisma.FloatWithAggregatesFilter<"Shift"> | number
   isActive?: Prisma.BoolWithAggregatesFilter<"Shift"> | boolean
-  libraryId?: Prisma.StringWithAggregatesFilter<"Shift"> | string
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Shift"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Shift"> | Date | string
 }
 
 export type ShiftCreateInput = {
@@ -306,18 +331,22 @@ export type ShiftCreateInput = {
   endTime: number
   price: number
   isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
   library: Prisma.LibraryCreateNestedOneWithoutShiftsInput
   assignments?: Prisma.SubscriptionShiftCreateNestedManyWithoutShiftInput
 }
 
 export type ShiftUncheckedCreateInput = {
   id?: string
+  libraryId: string
   name: $Enums.ShiftType
   startTime: number
   endTime: number
   price: number
   isActive?: boolean
-  libraryId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   assignments?: Prisma.SubscriptionShiftUncheckedCreateNestedManyWithoutShiftInput
 }
 
@@ -328,29 +357,35 @@ export type ShiftUpdateInput = {
   endTime?: Prisma.IntFieldUpdateOperationsInput | number
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   library?: Prisma.LibraryUpdateOneRequiredWithoutShiftsNestedInput
   assignments?: Prisma.SubscriptionShiftUpdateManyWithoutShiftNestedInput
 }
 
 export type ShiftUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  libraryId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.EnumShiftTypeFieldUpdateOperationsInput | $Enums.ShiftType
   startTime?: Prisma.IntFieldUpdateOperationsInput | number
   endTime?: Prisma.IntFieldUpdateOperationsInput | number
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  libraryId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignments?: Prisma.SubscriptionShiftUncheckedUpdateManyWithoutShiftNestedInput
 }
 
 export type ShiftCreateManyInput = {
   id?: string
+  libraryId: string
   name: $Enums.ShiftType
   startTime: number
   endTime: number
   price: number
   isActive?: boolean
-  libraryId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ShiftUpdateManyMutationInput = {
@@ -360,16 +395,20 @@ export type ShiftUpdateManyMutationInput = {
   endTime?: Prisma.IntFieldUpdateOperationsInput | number
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ShiftUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  libraryId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.EnumShiftTypeFieldUpdateOperationsInput | $Enums.ShiftType
   startTime?: Prisma.IntFieldUpdateOperationsInput | number
   endTime?: Prisma.IntFieldUpdateOperationsInput | number
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  libraryId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ShiftListRelationFilter = {
@@ -382,14 +421,21 @@ export type ShiftOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type ShiftLibraryIdNameCompoundUniqueInput = {
+  libraryId: string
+  name: $Enums.ShiftType
+}
+
 export type ShiftCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  libraryId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
   price?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
-  libraryId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type ShiftAvgOrderByAggregateInput = {
@@ -400,22 +446,26 @@ export type ShiftAvgOrderByAggregateInput = {
 
 export type ShiftMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  libraryId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
   price?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
-  libraryId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type ShiftMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  libraryId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
   price?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
-  libraryId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type ShiftSumOrderByAggregateInput = {
@@ -504,6 +554,8 @@ export type ShiftCreateWithoutLibraryInput = {
   endTime: number
   price: number
   isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
   assignments?: Prisma.SubscriptionShiftCreateNestedManyWithoutShiftInput
 }
 
@@ -514,6 +566,8 @@ export type ShiftUncheckedCreateWithoutLibraryInput = {
   endTime: number
   price: number
   isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
   assignments?: Prisma.SubscriptionShiftUncheckedCreateNestedManyWithoutShiftInput
 }
 
@@ -548,12 +602,14 @@ export type ShiftScalarWhereInput = {
   OR?: Prisma.ShiftScalarWhereInput[]
   NOT?: Prisma.ShiftScalarWhereInput | Prisma.ShiftScalarWhereInput[]
   id?: Prisma.StringFilter<"Shift"> | string
+  libraryId?: Prisma.StringFilter<"Shift"> | string
   name?: Prisma.EnumShiftTypeFilter<"Shift"> | $Enums.ShiftType
   startTime?: Prisma.IntFilter<"Shift"> | number
   endTime?: Prisma.IntFilter<"Shift"> | number
   price?: Prisma.FloatFilter<"Shift"> | number
   isActive?: Prisma.BoolFilter<"Shift"> | boolean
-  libraryId?: Prisma.StringFilter<"Shift"> | string
+  createdAt?: Prisma.DateTimeFilter<"Shift"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Shift"> | Date | string
 }
 
 export type ShiftCreateWithoutAssignmentsInput = {
@@ -563,17 +619,21 @@ export type ShiftCreateWithoutAssignmentsInput = {
   endTime: number
   price: number
   isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
   library: Prisma.LibraryCreateNestedOneWithoutShiftsInput
 }
 
 export type ShiftUncheckedCreateWithoutAssignmentsInput = {
   id?: string
+  libraryId: string
   name: $Enums.ShiftType
   startTime: number
   endTime: number
   price: number
   isActive?: boolean
-  libraryId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ShiftCreateOrConnectWithoutAssignmentsInput = {
@@ -599,17 +659,21 @@ export type ShiftUpdateWithoutAssignmentsInput = {
   endTime?: Prisma.IntFieldUpdateOperationsInput | number
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   library?: Prisma.LibraryUpdateOneRequiredWithoutShiftsNestedInput
 }
 
 export type ShiftUncheckedUpdateWithoutAssignmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  libraryId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.EnumShiftTypeFieldUpdateOperationsInput | $Enums.ShiftType
   startTime?: Prisma.IntFieldUpdateOperationsInput | number
   endTime?: Prisma.IntFieldUpdateOperationsInput | number
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  libraryId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ShiftCreateManyLibraryInput = {
@@ -619,6 +683,8 @@ export type ShiftCreateManyLibraryInput = {
   endTime: number
   price: number
   isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ShiftUpdateWithoutLibraryInput = {
@@ -628,6 +694,8 @@ export type ShiftUpdateWithoutLibraryInput = {
   endTime?: Prisma.IntFieldUpdateOperationsInput | number
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignments?: Prisma.SubscriptionShiftUpdateManyWithoutShiftNestedInput
 }
 
@@ -638,6 +706,8 @@ export type ShiftUncheckedUpdateWithoutLibraryInput = {
   endTime?: Prisma.IntFieldUpdateOperationsInput | number
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignments?: Prisma.SubscriptionShiftUncheckedUpdateManyWithoutShiftNestedInput
 }
 
@@ -648,6 +718,8 @@ export type ShiftUncheckedUpdateManyWithoutLibraryInput = {
   endTime?: Prisma.IntFieldUpdateOperationsInput | number
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -683,12 +755,14 @@ export type ShiftCountOutputTypeCountAssignmentsArgs<ExtArgs extends runtime.Typ
 
 export type ShiftSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  libraryId?: boolean
   name?: boolean
   startTime?: boolean
   endTime?: boolean
   price?: boolean
   isActive?: boolean
-  libraryId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   library?: boolean | Prisma.LibraryDefaultArgs<ExtArgs>
   assignments?: boolean | Prisma.Shift$assignmentsArgs<ExtArgs>
   _count?: boolean | Prisma.ShiftCountOutputTypeDefaultArgs<ExtArgs>
@@ -696,37 +770,43 @@ export type ShiftSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 
 export type ShiftSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  libraryId?: boolean
   name?: boolean
   startTime?: boolean
   endTime?: boolean
   price?: boolean
   isActive?: boolean
-  libraryId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   library?: boolean | Prisma.LibraryDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["shift"]>
 
 export type ShiftSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  libraryId?: boolean
   name?: boolean
   startTime?: boolean
   endTime?: boolean
   price?: boolean
   isActive?: boolean
-  libraryId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   library?: boolean | Prisma.LibraryDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["shift"]>
 
 export type ShiftSelectScalar = {
   id?: boolean
+  libraryId?: boolean
   name?: boolean
   startTime?: boolean
   endTime?: boolean
   price?: boolean
   isActive?: boolean
-  libraryId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type ShiftOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "startTime" | "endTime" | "price" | "isActive" | "libraryId", ExtArgs["result"]["shift"]>
+export type ShiftOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "libraryId" | "name" | "startTime" | "endTime" | "price" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["shift"]>
 export type ShiftInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   library?: boolean | Prisma.LibraryDefaultArgs<ExtArgs>
   assignments?: boolean | Prisma.Shift$assignmentsArgs<ExtArgs>
@@ -747,12 +827,14 @@ export type $ShiftPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    libraryId: string
     name: $Enums.ShiftType
     startTime: number
     endTime: number
     price: number
     isActive: boolean
-    libraryId: string
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["shift"]>
   composites: {}
 }
@@ -1179,12 +1261,14 @@ export interface Prisma__ShiftClient<T, Null = never, ExtArgs extends runtime.Ty
  */
 export interface ShiftFieldRefs {
   readonly id: Prisma.FieldRef<"Shift", 'String'>
+  readonly libraryId: Prisma.FieldRef<"Shift", 'String'>
   readonly name: Prisma.FieldRef<"Shift", 'ShiftType'>
   readonly startTime: Prisma.FieldRef<"Shift", 'Int'>
   readonly endTime: Prisma.FieldRef<"Shift", 'Int'>
   readonly price: Prisma.FieldRef<"Shift", 'Float'>
   readonly isActive: Prisma.FieldRef<"Shift", 'Boolean'>
-  readonly libraryId: Prisma.FieldRef<"Shift", 'String'>
+  readonly createdAt: Prisma.FieldRef<"Shift", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Shift", 'DateTime'>
 }
     
 

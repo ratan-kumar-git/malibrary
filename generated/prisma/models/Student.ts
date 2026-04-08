@@ -36,39 +36,39 @@ export type StudentSumAggregateOutputType = {
 
 export type StudentMinAggregateOutputType = {
   id: string | null
+  libraryId: string | null
   memberId: string | null
   name: string | null
   gender: string | null
   phoneNumber: string | null
   address: string | null
   lockerNumber: number | null
-  libraryId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
 
 export type StudentMaxAggregateOutputType = {
   id: string | null
+  libraryId: string | null
   memberId: string | null
   name: string | null
   gender: string | null
   phoneNumber: string | null
   address: string | null
   lockerNumber: number | null
-  libraryId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
 
 export type StudentCountAggregateOutputType = {
   id: number
+  libraryId: number
   memberId: number
   name: number
   gender: number
   phoneNumber: number
   address: number
   lockerNumber: number
-  libraryId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -85,39 +85,39 @@ export type StudentSumAggregateInputType = {
 
 export type StudentMinAggregateInputType = {
   id?: true
+  libraryId?: true
   memberId?: true
   name?: true
   gender?: true
   phoneNumber?: true
   address?: true
   lockerNumber?: true
-  libraryId?: true
   createdAt?: true
   updatedAt?: true
 }
 
 export type StudentMaxAggregateInputType = {
   id?: true
+  libraryId?: true
   memberId?: true
   name?: true
   gender?: true
   phoneNumber?: true
   address?: true
   lockerNumber?: true
-  libraryId?: true
   createdAt?: true
   updatedAt?: true
 }
 
 export type StudentCountAggregateInputType = {
   id?: true
+  libraryId?: true
   memberId?: true
   name?: true
   gender?: true
   phoneNumber?: true
   address?: true
   lockerNumber?: true
-  libraryId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -211,13 +211,13 @@ export type StudentGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 
 export type StudentGroupByOutputType = {
   id: string
+  libraryId: string
   memberId: string | null
   name: string
   gender: string
   phoneNumber: string
   address: string | null
   lockerNumber: number | null
-  libraryId: string
   createdAt: Date
   updatedAt: Date
   _count: StudentCountAggregateOutputType | null
@@ -247,13 +247,13 @@ export type StudentWhereInput = {
   OR?: Prisma.StudentWhereInput[]
   NOT?: Prisma.StudentWhereInput | Prisma.StudentWhereInput[]
   id?: Prisma.StringFilter<"Student"> | string
+  libraryId?: Prisma.StringFilter<"Student"> | string
   memberId?: Prisma.StringNullableFilter<"Student"> | string | null
   name?: Prisma.StringFilter<"Student"> | string
   gender?: Prisma.StringFilter<"Student"> | string
   phoneNumber?: Prisma.StringFilter<"Student"> | string
   address?: Prisma.StringNullableFilter<"Student"> | string | null
   lockerNumber?: Prisma.IntNullableFilter<"Student"> | number | null
-  libraryId?: Prisma.StringFilter<"Student"> | string
   createdAt?: Prisma.DateTimeFilter<"Student"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Student"> | Date | string
   library?: Prisma.XOR<Prisma.LibraryScalarRelationFilter, Prisma.LibraryWhereInput>
@@ -262,13 +262,13 @@ export type StudentWhereInput = {
 
 export type StudentOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  libraryId?: Prisma.SortOrder
   memberId?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   phoneNumber?: Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   lockerNumber?: Prisma.SortOrderInput | Prisma.SortOrder
-  libraryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   library?: Prisma.LibraryOrderByWithRelationInput
@@ -283,11 +283,11 @@ export type StudentWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.StudentWhereInput | Prisma.StudentWhereInput[]
   OR?: Prisma.StudentWhereInput[]
   NOT?: Prisma.StudentWhereInput | Prisma.StudentWhereInput[]
+  libraryId?: Prisma.StringFilter<"Student"> | string
   name?: Prisma.StringFilter<"Student"> | string
   gender?: Prisma.StringFilter<"Student"> | string
   phoneNumber?: Prisma.StringFilter<"Student"> | string
   address?: Prisma.StringNullableFilter<"Student"> | string | null
-  libraryId?: Prisma.StringFilter<"Student"> | string
   createdAt?: Prisma.DateTimeFilter<"Student"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Student"> | Date | string
   library?: Prisma.XOR<Prisma.LibraryScalarRelationFilter, Prisma.LibraryWhereInput>
@@ -296,13 +296,13 @@ export type StudentWhereUniqueInput = Prisma.AtLeast<{
 
 export type StudentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  libraryId?: Prisma.SortOrder
   memberId?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   phoneNumber?: Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   lockerNumber?: Prisma.SortOrderInput | Prisma.SortOrder
-  libraryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.StudentCountOrderByAggregateInput
@@ -317,13 +317,13 @@ export type StudentScalarWhereWithAggregatesInput = {
   OR?: Prisma.StudentScalarWhereWithAggregatesInput[]
   NOT?: Prisma.StudentScalarWhereWithAggregatesInput | Prisma.StudentScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Student"> | string
+  libraryId?: Prisma.StringWithAggregatesFilter<"Student"> | string
   memberId?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
   name?: Prisma.StringWithAggregatesFilter<"Student"> | string
   gender?: Prisma.StringWithAggregatesFilter<"Student"> | string
   phoneNumber?: Prisma.StringWithAggregatesFilter<"Student"> | string
   address?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
   lockerNumber?: Prisma.IntNullableWithAggregatesFilter<"Student"> | number | null
-  libraryId?: Prisma.StringWithAggregatesFilter<"Student"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Student"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Student"> | Date | string
 }
@@ -344,13 +344,13 @@ export type StudentCreateInput = {
 
 export type StudentUncheckedCreateInput = {
   id?: string
+  libraryId: string
   memberId?: string | null
   name: string
   gender: string
   phoneNumber: string
   address?: string | null
   lockerNumber?: number | null
-  libraryId: string
   createdAt?: Date | string
   updatedAt?: Date | string
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutStudentInput
@@ -372,13 +372,13 @@ export type StudentUpdateInput = {
 
 export type StudentUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  libraryId?: Prisma.StringFieldUpdateOperationsInput | string
   memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lockerNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  libraryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutStudentNestedInput
@@ -386,13 +386,13 @@ export type StudentUncheckedUpdateInput = {
 
 export type StudentCreateManyInput = {
   id?: string
+  libraryId: string
   memberId?: string | null
   name: string
   gender: string
   phoneNumber: string
   address?: string | null
   lockerNumber?: number | null
-  libraryId: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -411,13 +411,13 @@ export type StudentUpdateManyMutationInput = {
 
 export type StudentUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  libraryId?: Prisma.StringFieldUpdateOperationsInput | string
   memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lockerNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  libraryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -439,13 +439,13 @@ export type StudentLibraryIdPhoneNumberCompoundUniqueInput = {
 
 export type StudentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  libraryId?: Prisma.SortOrder
   memberId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   phoneNumber?: Prisma.SortOrder
   address?: Prisma.SortOrder
   lockerNumber?: Prisma.SortOrder
-  libraryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -456,26 +456,26 @@ export type StudentAvgOrderByAggregateInput = {
 
 export type StudentMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  libraryId?: Prisma.SortOrder
   memberId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   phoneNumber?: Prisma.SortOrder
   address?: Prisma.SortOrder
   lockerNumber?: Prisma.SortOrder
-  libraryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type StudentMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  libraryId?: Prisma.SortOrder
   memberId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   phoneNumber?: Prisma.SortOrder
   address?: Prisma.SortOrder
   lockerNumber?: Prisma.SortOrder
-  libraryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -610,13 +610,13 @@ export type StudentScalarWhereInput = {
   OR?: Prisma.StudentScalarWhereInput[]
   NOT?: Prisma.StudentScalarWhereInput | Prisma.StudentScalarWhereInput[]
   id?: Prisma.StringFilter<"Student"> | string
+  libraryId?: Prisma.StringFilter<"Student"> | string
   memberId?: Prisma.StringNullableFilter<"Student"> | string | null
   name?: Prisma.StringFilter<"Student"> | string
   gender?: Prisma.StringFilter<"Student"> | string
   phoneNumber?: Prisma.StringFilter<"Student"> | string
   address?: Prisma.StringNullableFilter<"Student"> | string | null
   lockerNumber?: Prisma.IntNullableFilter<"Student"> | number | null
-  libraryId?: Prisma.StringFilter<"Student"> | string
   createdAt?: Prisma.DateTimeFilter<"Student"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Student"> | Date | string
 }
@@ -636,13 +636,13 @@ export type StudentCreateWithoutSubscriptionsInput = {
 
 export type StudentUncheckedCreateWithoutSubscriptionsInput = {
   id?: string
+  libraryId: string
   memberId?: string | null
   name: string
   gender: string
   phoneNumber: string
   address?: string | null
   lockerNumber?: number | null
-  libraryId: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -678,13 +678,13 @@ export type StudentUpdateWithoutSubscriptionsInput = {
 
 export type StudentUncheckedUpdateWithoutSubscriptionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  libraryId?: Prisma.StringFieldUpdateOperationsInput | string
   memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lockerNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  libraryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -772,13 +772,13 @@ export type StudentCountOutputTypeCountSubscriptionsArgs<ExtArgs extends runtime
 
 export type StudentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  libraryId?: boolean
   memberId?: boolean
   name?: boolean
   gender?: boolean
   phoneNumber?: boolean
   address?: boolean
   lockerNumber?: boolean
-  libraryId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   library?: boolean | Prisma.LibraryDefaultArgs<ExtArgs>
@@ -788,13 +788,13 @@ export type StudentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 
 export type StudentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  libraryId?: boolean
   memberId?: boolean
   name?: boolean
   gender?: boolean
   phoneNumber?: boolean
   address?: boolean
   lockerNumber?: boolean
-  libraryId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   library?: boolean | Prisma.LibraryDefaultArgs<ExtArgs>
@@ -802,13 +802,13 @@ export type StudentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
 
 export type StudentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  libraryId?: boolean
   memberId?: boolean
   name?: boolean
   gender?: boolean
   phoneNumber?: boolean
   address?: boolean
   lockerNumber?: boolean
-  libraryId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   library?: boolean | Prisma.LibraryDefaultArgs<ExtArgs>
@@ -816,18 +816,18 @@ export type StudentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
 
 export type StudentSelectScalar = {
   id?: boolean
+  libraryId?: boolean
   memberId?: boolean
   name?: boolean
   gender?: boolean
   phoneNumber?: boolean
   address?: boolean
   lockerNumber?: boolean
-  libraryId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type StudentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "memberId" | "name" | "gender" | "phoneNumber" | "address" | "lockerNumber" | "libraryId" | "createdAt" | "updatedAt", ExtArgs["result"]["student"]>
+export type StudentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "libraryId" | "memberId" | "name" | "gender" | "phoneNumber" | "address" | "lockerNumber" | "createdAt" | "updatedAt", ExtArgs["result"]["student"]>
 export type StudentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   library?: boolean | Prisma.LibraryDefaultArgs<ExtArgs>
   subscriptions?: boolean | Prisma.Student$subscriptionsArgs<ExtArgs>
@@ -848,13 +848,13 @@ export type $StudentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    libraryId: string
     memberId: string | null
     name: string
     gender: string
     phoneNumber: string
     address: string | null
     lockerNumber: number | null
-    libraryId: string
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["student"]>
@@ -1283,13 +1283,13 @@ export interface Prisma__StudentClient<T, Null = never, ExtArgs extends runtime.
  */
 export interface StudentFieldRefs {
   readonly id: Prisma.FieldRef<"Student", 'String'>
+  readonly libraryId: Prisma.FieldRef<"Student", 'String'>
   readonly memberId: Prisma.FieldRef<"Student", 'String'>
   readonly name: Prisma.FieldRef<"Student", 'String'>
   readonly gender: Prisma.FieldRef<"Student", 'String'>
   readonly phoneNumber: Prisma.FieldRef<"Student", 'String'>
   readonly address: Prisma.FieldRef<"Student", 'String'>
   readonly lockerNumber: Prisma.FieldRef<"Student", 'Int'>
-  readonly libraryId: Prisma.FieldRef<"Student", 'String'>
   readonly createdAt: Prisma.FieldRef<"Student", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Student", 'DateTime'>
 }

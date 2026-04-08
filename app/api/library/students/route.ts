@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     // Get the seat to find its ID and library ID
     const seat = await prisma.seat.findFirst({
       where: {
-        number: parseInt(seatNo),
+        seatNo: parseInt(seatNo),
       },
       include: {
         floor: {

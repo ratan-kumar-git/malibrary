@@ -20,46 +20,82 @@ export type FloorModel = runtime.Types.Result.DefaultSelection<Prisma.$FloorPayl
 
 export type AggregateFloor = {
   _count: FloorCountAggregateOutputType | null
+  _avg: FloorAvgAggregateOutputType | null
+  _sum: FloorSumAggregateOutputType | null
   _min: FloorMinAggregateOutputType | null
   _max: FloorMaxAggregateOutputType | null
 }
 
+export type FloorAvgAggregateOutputType = {
+  totalSeats: number | null
+}
+
+export type FloorSumAggregateOutputType = {
+  totalSeats: number | null
+}
+
 export type FloorMinAggregateOutputType = {
   id: string | null
-  name: string | null
   libraryId: string | null
+  name: string | null
+  totalSeats: number | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type FloorMaxAggregateOutputType = {
   id: string | null
-  name: string | null
   libraryId: string | null
+  name: string | null
+  totalSeats: number | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type FloorCountAggregateOutputType = {
   id: number
-  name: number
   libraryId: number
+  name: number
+  totalSeats: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
 
+export type FloorAvgAggregateInputType = {
+  totalSeats?: true
+}
+
+export type FloorSumAggregateInputType = {
+  totalSeats?: true
+}
+
 export type FloorMinAggregateInputType = {
   id?: true
-  name?: true
   libraryId?: true
+  name?: true
+  totalSeats?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type FloorMaxAggregateInputType = {
   id?: true
-  name?: true
   libraryId?: true
+  name?: true
+  totalSeats?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type FloorCountAggregateInputType = {
   id?: true
-  name?: true
   libraryId?: true
+  name?: true
+  totalSeats?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -101,6 +137,18 @@ export type FloorAggregateArgs<ExtArgs extends runtime.Types.Extensions.Internal
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: FloorAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: FloorSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: FloorMinAggregateInputType
@@ -131,15 +179,22 @@ export type FloorGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   _count?: FloorCountAggregateInputType | true
+  _avg?: FloorAvgAggregateInputType
+  _sum?: FloorSumAggregateInputType
   _min?: FloorMinAggregateInputType
   _max?: FloorMaxAggregateInputType
 }
 
 export type FloorGroupByOutputType = {
   id: string
-  name: string
   libraryId: string
+  name: string
+  totalSeats: number
+  createdAt: Date
+  updatedAt: Date
   _count: FloorCountAggregateOutputType | null
+  _avg: FloorAvgAggregateOutputType | null
+  _sum: FloorSumAggregateOutputType | null
   _min: FloorMinAggregateOutputType | null
   _max: FloorMaxAggregateOutputType | null
 }
@@ -164,16 +219,22 @@ export type FloorWhereInput = {
   OR?: Prisma.FloorWhereInput[]
   NOT?: Prisma.FloorWhereInput | Prisma.FloorWhereInput[]
   id?: Prisma.StringFilter<"Floor"> | string
-  name?: Prisma.StringFilter<"Floor"> | string
   libraryId?: Prisma.StringFilter<"Floor"> | string
+  name?: Prisma.StringFilter<"Floor"> | string
+  totalSeats?: Prisma.IntFilter<"Floor"> | number
+  createdAt?: Prisma.DateTimeFilter<"Floor"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Floor"> | Date | string
   library?: Prisma.XOR<Prisma.LibraryScalarRelationFilter, Prisma.LibraryWhereInput>
   seats?: Prisma.SeatListRelationFilter
 }
 
 export type FloorOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
   libraryId?: Prisma.SortOrder
+  name?: Prisma.SortOrder
+  totalSeats?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   library?: Prisma.LibraryOrderByWithRelationInput
   seats?: Prisma.SeatOrderByRelationAggregateInput
 }
@@ -184,19 +245,27 @@ export type FloorWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.FloorWhereInput | Prisma.FloorWhereInput[]
   OR?: Prisma.FloorWhereInput[]
   NOT?: Prisma.FloorWhereInput | Prisma.FloorWhereInput[]
-  name?: Prisma.StringFilter<"Floor"> | string
   libraryId?: Prisma.StringFilter<"Floor"> | string
+  name?: Prisma.StringFilter<"Floor"> | string
+  totalSeats?: Prisma.IntFilter<"Floor"> | number
+  createdAt?: Prisma.DateTimeFilter<"Floor"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Floor"> | Date | string
   library?: Prisma.XOR<Prisma.LibraryScalarRelationFilter, Prisma.LibraryWhereInput>
   seats?: Prisma.SeatListRelationFilter
 }, "id" | "libraryId_name">
 
 export type FloorOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
   libraryId?: Prisma.SortOrder
+  name?: Prisma.SortOrder
+  totalSeats?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.FloorCountOrderByAggregateInput
+  _avg?: Prisma.FloorAvgOrderByAggregateInput
   _max?: Prisma.FloorMaxOrderByAggregateInput
   _min?: Prisma.FloorMinOrderByAggregateInput
+  _sum?: Prisma.FloorSumOrderByAggregateInput
 }
 
 export type FloorScalarWhereWithAggregatesInput = {
@@ -204,53 +273,77 @@ export type FloorScalarWhereWithAggregatesInput = {
   OR?: Prisma.FloorScalarWhereWithAggregatesInput[]
   NOT?: Prisma.FloorScalarWhereWithAggregatesInput | Prisma.FloorScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Floor"> | string
-  name?: Prisma.StringWithAggregatesFilter<"Floor"> | string
   libraryId?: Prisma.StringWithAggregatesFilter<"Floor"> | string
+  name?: Prisma.StringWithAggregatesFilter<"Floor"> | string
+  totalSeats?: Prisma.IntWithAggregatesFilter<"Floor"> | number
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Floor"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Floor"> | Date | string
 }
 
 export type FloorCreateInput = {
   id?: string
   name: string
+  totalSeats: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   library: Prisma.LibraryCreateNestedOneWithoutFloorsInput
   seats?: Prisma.SeatCreateNestedManyWithoutFloorInput
 }
 
 export type FloorUncheckedCreateInput = {
   id?: string
-  name: string
   libraryId: string
+  name: string
+  totalSeats: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   seats?: Prisma.SeatUncheckedCreateNestedManyWithoutFloorInput
 }
 
 export type FloorUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  totalSeats?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   library?: Prisma.LibraryUpdateOneRequiredWithoutFloorsNestedInput
   seats?: Prisma.SeatUpdateManyWithoutFloorNestedInput
 }
 
 export type FloorUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
   libraryId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  totalSeats?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   seats?: Prisma.SeatUncheckedUpdateManyWithoutFloorNestedInput
 }
 
 export type FloorCreateManyInput = {
   id?: string
-  name: string
   libraryId: string
+  name: string
+  totalSeats: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type FloorUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  totalSeats?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type FloorUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
   libraryId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  totalSeats?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type FloorListRelationFilter = {
@@ -270,20 +363,37 @@ export type FloorLibraryIdNameCompoundUniqueInput = {
 
 export type FloorCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
   libraryId?: Prisma.SortOrder
+  name?: Prisma.SortOrder
+  totalSeats?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+}
+
+export type FloorAvgOrderByAggregateInput = {
+  totalSeats?: Prisma.SortOrder
 }
 
 export type FloorMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
   libraryId?: Prisma.SortOrder
+  name?: Prisma.SortOrder
+  totalSeats?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type FloorMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
   libraryId?: Prisma.SortOrder
+  name?: Prisma.SortOrder
+  totalSeats?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+}
+
+export type FloorSumOrderByAggregateInput = {
+  totalSeats?: Prisma.SortOrder
 }
 
 export type FloorScalarRelationFilter = {
@@ -333,6 +443,14 @@ export type FloorUncheckedUpdateManyWithoutLibraryNestedInput = {
   deleteMany?: Prisma.FloorScalarWhereInput | Prisma.FloorScalarWhereInput[]
 }
 
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type FloorCreateNestedOneWithoutSeatsInput = {
   create?: Prisma.XOR<Prisma.FloorCreateWithoutSeatsInput, Prisma.FloorUncheckedCreateWithoutSeatsInput>
   connectOrCreate?: Prisma.FloorCreateOrConnectWithoutSeatsInput
@@ -350,12 +468,18 @@ export type FloorUpdateOneRequiredWithoutSeatsNestedInput = {
 export type FloorCreateWithoutLibraryInput = {
   id?: string
   name: string
+  totalSeats: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   seats?: Prisma.SeatCreateNestedManyWithoutFloorInput
 }
 
 export type FloorUncheckedCreateWithoutLibraryInput = {
   id?: string
   name: string
+  totalSeats: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   seats?: Prisma.SeatUncheckedCreateNestedManyWithoutFloorInput
 }
 
@@ -390,20 +514,29 @@ export type FloorScalarWhereInput = {
   OR?: Prisma.FloorScalarWhereInput[]
   NOT?: Prisma.FloorScalarWhereInput | Prisma.FloorScalarWhereInput[]
   id?: Prisma.StringFilter<"Floor"> | string
-  name?: Prisma.StringFilter<"Floor"> | string
   libraryId?: Prisma.StringFilter<"Floor"> | string
+  name?: Prisma.StringFilter<"Floor"> | string
+  totalSeats?: Prisma.IntFilter<"Floor"> | number
+  createdAt?: Prisma.DateTimeFilter<"Floor"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Floor"> | Date | string
 }
 
 export type FloorCreateWithoutSeatsInput = {
   id?: string
   name: string
+  totalSeats: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   library: Prisma.LibraryCreateNestedOneWithoutFloorsInput
 }
 
 export type FloorUncheckedCreateWithoutSeatsInput = {
   id?: string
-  name: string
   libraryId: string
+  name: string
+  totalSeats: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type FloorCreateOrConnectWithoutSeatsInput = {
@@ -425,35 +558,53 @@ export type FloorUpdateToOneWithWhereWithoutSeatsInput = {
 export type FloorUpdateWithoutSeatsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  totalSeats?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   library?: Prisma.LibraryUpdateOneRequiredWithoutFloorsNestedInput
 }
 
 export type FloorUncheckedUpdateWithoutSeatsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
   libraryId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  totalSeats?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type FloorCreateManyLibraryInput = {
   id?: string
   name: string
+  totalSeats: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type FloorUpdateWithoutLibraryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  totalSeats?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   seats?: Prisma.SeatUpdateManyWithoutFloorNestedInput
 }
 
 export type FloorUncheckedUpdateWithoutLibraryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  totalSeats?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   seats?: Prisma.SeatUncheckedUpdateManyWithoutFloorNestedInput
 }
 
 export type FloorUncheckedUpdateManyWithoutLibraryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  totalSeats?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -489,8 +640,11 @@ export type FloorCountOutputTypeCountSeatsArgs<ExtArgs extends runtime.Types.Ext
 
 export type FloorSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  name?: boolean
   libraryId?: boolean
+  name?: boolean
+  totalSeats?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   library?: boolean | Prisma.LibraryDefaultArgs<ExtArgs>
   seats?: boolean | Prisma.Floor$seatsArgs<ExtArgs>
   _count?: boolean | Prisma.FloorCountOutputTypeDefaultArgs<ExtArgs>
@@ -498,25 +652,34 @@ export type FloorSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 
 export type FloorSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  name?: boolean
   libraryId?: boolean
+  name?: boolean
+  totalSeats?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   library?: boolean | Prisma.LibraryDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["floor"]>
 
 export type FloorSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  name?: boolean
   libraryId?: boolean
+  name?: boolean
+  totalSeats?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   library?: boolean | Prisma.LibraryDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["floor"]>
 
 export type FloorSelectScalar = {
   id?: boolean
-  name?: boolean
   libraryId?: boolean
+  name?: boolean
+  totalSeats?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type FloorOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "libraryId", ExtArgs["result"]["floor"]>
+export type FloorOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "libraryId" | "name" | "totalSeats" | "createdAt" | "updatedAt", ExtArgs["result"]["floor"]>
 export type FloorInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   library?: boolean | Prisma.LibraryDefaultArgs<ExtArgs>
   seats?: boolean | Prisma.Floor$seatsArgs<ExtArgs>
@@ -537,8 +700,11 @@ export type $FloorPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    name: string
     libraryId: string
+    name: string
+    totalSeats: number
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["floor"]>
   composites: {}
 }
@@ -965,8 +1131,11 @@ export interface Prisma__FloorClient<T, Null = never, ExtArgs extends runtime.Ty
  */
 export interface FloorFieldRefs {
   readonly id: Prisma.FieldRef<"Floor", 'String'>
-  readonly name: Prisma.FieldRef<"Floor", 'String'>
   readonly libraryId: Prisma.FieldRef<"Floor", 'String'>
+  readonly name: Prisma.FieldRef<"Floor", 'String'>
+  readonly totalSeats: Prisma.FieldRef<"Floor", 'Int'>
+  readonly createdAt: Prisma.FieldRef<"Floor", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Floor", 'DateTime'>
 }
     
 
