@@ -23,7 +23,6 @@ enum ShiftType {
   AFTERNOON
   EVENING
   NIGHT
-  FULL_DAY
 }
 
 model User {

@@ -1,5 +1,3 @@
-// app/api/seat-map/route.ts
-
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { headers } from "next/headers";
@@ -18,26 +16,23 @@ export async function GET(req: Request) {
     const library = await prisma.library.findFirst({
       where: { userId: session.user.id },
       select: { id: true },
-    })
+    });
 
-    const libraryId = library?.id
+    const libraryId = library?.id;
 
     const { searchParams } = new URL(req.url);
+    const targetDateStr = searchParams.get("date");
 
-    const startDate = searchParams.get("startDate");
-    const endDate = searchParams.get("endDate");
-
-    if (!libraryId || !startDate || !endDate) {
+    if (!libraryId || !targetDateStr) {
       return NextResponse.json(
         { message: "Missing required params" },
         { status: 400 },
       );
     }
 
-    const start = new Date(startDate);
-    const end = new Date(endDate);
+    const startOfDay = new Date(`${targetDateStr}T00:00:00.000Z`);
+    const endOfDay = new Date(`${targetDateStr}T23:59:59.999Z`);
 
-    // 1️⃣ Get floors with seats
     const floors = await prisma.floor.findMany({
       where: { libraryId },
       include: {
@@ -53,19 +48,26 @@ export async function GET(req: Request) {
       orderBy: { name: "asc" },
     });
 
-    // 2️⃣ Get subscriptions within date range
     const subscriptions = await prisma.subscription.findMany({
       where: {
         libraryId,
-        startDate: { lte: end },
-        endDate: { gte: start },
+        status: "ACTIVE",
+        startDate: { lte: endOfDay },
+        endDate: { gte: startOfDay },
       },
       include: {
+        student: {
+          select: {
+            name: true,
+            memberId: true,
+            phoneNumber: true,
+          },
+        },
         subscriptionShifts: {
           include: {
             shift: {
               select: {
-                name: true,
+                name: true, 
               },
             },
           },
@@ -73,36 +75,33 @@ export async function GET(req: Request) {
       },
     });
 
-    // 3️⃣ Create fast lookup map: seatId + shift → subscription
     const seatShiftMap = new Map<string, any>();
 
     for (const sub of subscriptions) {
       for (const ss of sub.subscriptionShifts) {
-        const shiftName = ss.shift.name.toLowerCase(); // MORNING → morning
+        const shiftName = ss.shift.name; 
         const key = `${sub.seatId}_${shiftName}`;
         seatShiftMap.set(key, sub);
       }
     }
 
-    // 4️⃣ Build final seatMap
     const seatMap: Record<string, any> = {};
 
     for (const floor of floors) {
-      const floorKey = floor.name; // ✅ original floor name
-
+      const floorKey = floor.name;
       seatMap[floorKey] = {};
 
       for (const seat of floor.seats) {
         const seatKey = String(seat.seatNo);
 
+        // 👇 Updated to match your exact 4 enum values
         const shifts: Record<string, any> = {
-          morning: null,
-          afternoon: null,
-          evening: null,
-          fullDay: null,
+          MORNING: null,
+          AFTERNOON: null,
+          EVENING: null,
+          NIGHT: null,
         };
 
-        // If seat is inactive → keep all null
         if (seat.isActive) {
           for (const shiftName of Object.keys(shifts)) {
             const key = `${seat.id}_${shiftName}`;
@@ -112,13 +111,14 @@ export async function GET(req: Request) {
               shifts[shiftName] = {
                 id: sub.id,
                 studentId: sub.studentId,
+                studentName: sub.student.name,
+                memberId: sub.student.memberId,
+                phoneNumber: sub.student.phoneNumber,
                 libraryId: sub.libraryId,
                 startDate: sub.startDate,
                 endDate: sub.endDate,
                 seatNo: `${floor.name}-${seat.seatNo}`,
-                shift: sub.subscriptionShifts.map((s: any) =>
-                  s.shift.name.toLowerCase(),
-                ),
+                shift: sub.subscriptionShifts.map((s: any) => s.shift.name),
                 totalFee: sub.totalAmount,
                 feeDue: sub.totalAmount - sub.amountPaid,
                 isActive: sub.status === "ACTIVE",
@@ -129,18 +129,21 @@ export async function GET(req: Request) {
           }
         }
 
-        seatMap[floorKey][seatKey] = shifts;
+        seatMap[floorKey][seatKey] = {
+          seatId: seat.id,
+          floorId: floor.id,
+          seatNo: seat.seatNo,
+          shifts: shifts,
+        };
       }
     }
 
-    // 5️⃣ Final response
     return NextResponse.json({
       message: "Seat map fetched",
       seatMap,
     });
   } catch (error) {
     console.error("Seat Map Error:", error);
-
     return NextResponse.json(
       { message: "Internal Server Error" },
       { status: 500 },

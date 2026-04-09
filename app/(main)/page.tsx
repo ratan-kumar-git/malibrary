@@ -5,7 +5,6 @@ import {
   Wifi,
   Clock,
   ArrowRight,
-  CheckCircle2,
   ChevronRight,
   MapPin,
   BookOpen,
@@ -122,7 +121,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#fafafa] text-gray-950 selection:bg-primary/20 font-sans">
+    <div className="min-h-screen bg-background text-foreground selection:bg-primary/20 font-sans">
       {/* HERO SECTION */}
       <section className="relative overflow-hidden pt-24 pb-20 lg:pt-36 lg:pb-32">
         <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] bg-size-[40px_40px] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />

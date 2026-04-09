@@ -8,10 +8,9 @@ export const metadata: Metadata = {
 
 export default function SeatMapPage() {
   return (
-    <div className="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto mt-24">
+    <div className="min-h-screen bg-background text-foreground selection:bg-primary/20">
+      <div className="max-w-6xl mx-auto px-6 pt-24 space-y-6">
         <SeatMap />
-      
       </div>
     </div>
   );
