@@ -6,31 +6,33 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
 
     const {
+      seatId,
       name,
       gender,
       phoneNumber,
       address,
       lockerNumber,
-      shifts,
+      selectedShifts,
       startDate,
       endDate,
-      seatNo,
-      totalAmount,
-      amountPaid,
+      totalAmount = 0,
+      amountPaid = 0,
     } = body;
 
+    console.log('Registration payload received:', { seatId, selectedShifts, startDate, endDate });
+
     // Validate required fields
-    if (!name || !gender || !phoneNumber) {
+    if (!name || !gender || !phoneNumber || !seatId) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
       );
     }
 
-    // Get the seat to find its ID and library ID
+    // Get the seat to find library ID and verify it exists
     const seat = await prisma.seat.findFirst({
       where: {
-        seatNo: parseInt(seatNo),
+        id: seatId,
       },
       include: {
         floor: {
@@ -73,7 +75,21 @@ export async function POST(request: NextRequest) {
       });
 
       // Create subscription if shifts are selected
-      if (shifts && shifts.length > 0) {
+      if (selectedShifts && selectedShifts.length > 0) {
+        // Verify all shifts exist and belong to this library
+        const shiftsExist = await tx.shift.findMany({
+          where: {
+            id: { in: selectedShifts },
+            libraryId: libraryId,
+          },
+        });
+
+        console.log(`Found ${shiftsExist.length} valid shifts out of ${selectedShifts.length} requested`);
+        
+        if (shiftsExist.length !== selectedShifts.length) {
+          throw new Error("One or more selected shifts are not available for this library");
+        }
+
         const subscription = await tx.subscription.create({
           data: {
             studentId: student.id,
@@ -81,29 +97,21 @@ export async function POST(request: NextRequest) {
             seatId: seat.id,
             startDate: new Date(startDate),
             endDate: new Date(endDate),
-            totalAmount: parseFloat(totalAmount),
-            amountPaid: parseFloat(amountPaid),
+            totalAmount: parseFloat(totalAmount) || 0,
+            amountPaid: parseFloat(amountPaid) || 0,
             status: "ACTIVE",
           },
         });
 
-        // Create subscription shifts - find actual shift records by name
-        for (const shiftName of shifts) {
-          const shiftRecord = await tx.shift.findFirst({
-            where: {
-              name: shiftName,
-              libraryId: libraryId,
+        // Create subscription shifts - use shift IDs directly
+        for (const shiftId of selectedShifts) {
+          console.log(`Creating SubscriptionShift with shiftId: ${shiftId}`);
+          await tx.subscriptionShift.create({
+            data: {
+              subscriptionId: subscription.id,
+              shiftId,
             },
           });
-
-          if (shiftRecord) {
-            await tx.subscriptionShift.create({
-              data: {
-                subscriptionId: subscription.id,
-                shiftId: shiftRecord.id,
-              },
-            });
-          }
         }
 
         return { student, subscription };

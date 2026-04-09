@@ -161,7 +161,7 @@ export function SeatDetails({ selectedSeat, onClose, selectedShift, activeShifts
                     className="w-full h-9 text-xs bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm"
                     onClick={() =>
                       router.push(
-                        `/register?seatId=${data.seatId}&shift=${key}`,
+                        `/register?seatId=${data.seatId}&shift=${selectedShift}&date=${new Date().toISOString().split("T")[0]}`,
                       )
                     }
                   >
@@ -264,7 +264,7 @@ export function SeatDetails({ selectedSeat, onClose, selectedShift, activeShifts
                     className="w-full h-12 bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm"
                     onClick={() =>
                       router.push(
-                        `/register?seatId=${data.seatId}&shift=${selectedShift}`,
+                        `/register?seatId=${data.seatId}&shift=${selectedShift}&date=${new Date().toISOString().split("T")[0]}`,
                       )
                     }
                   >
