@@ -31,15 +31,46 @@ export async function PUT(req: NextRequest) {
     const incomingIds = floors
       .filter((f) => !f.id.startsWith("temp-"))
       .map((f) => f.id);
+      
     const floorsToCreate = floors.filter((f) => f.id.startsWith("temp-"));
     const floorsToUpdate = floors.filter((f) => !f.id.startsWith("temp-"));
 
+    const floorsSlatedForDeletion = await prisma.floor.findMany({
+      where: {
+        libraryId,
+        id: { notIn: incomingIds.length > 0 ? incomingIds : ["prevent-empty-in"] }
+      },
+      include: {
+        seats: {
+          select: {
+            _count: { select: { subscriptions: true } }
+          }
+        }
+      }
+    });
+
+    for (const floor of floorsSlatedForDeletion) {
+      const hasBookings = floor.seats.some(seat => seat._count.subscriptions > 0);
+      if (hasBookings) {
+        return NextResponse.json(
+          { 
+            error: `Cannot delete floor "${floor.name}" because it has existing student bookings. Please keep the floor, or you can reduce its seat count instead.` 
+          },
+          { status: 400 }
+        );
+      }
+    }
+
     await prisma.$transaction(
       async (tx) => {
-        // 1. Delete floors not in incoming list
-        await tx.floor.deleteMany({
-          where: { libraryId, id: { notIn: incomingIds } },
-        });
+        // 1. Delete floors that are not in the incoming list (only if they have no bookings)
+        if (incomingIds.length > 0) {
+          await tx.floor.deleteMany({
+            where: { libraryId, id: { notIn: incomingIds } },
+          });
+        } else {
+           await tx.floor.deleteMany({ where: { libraryId } });
+        }
 
         // 2. Create new floors and their seats
         for (const f of floorsToCreate) {
@@ -76,7 +107,6 @@ export async function PUT(req: NextRequest) {
           const currentCount = existingSeats.length;
 
           if (f.totalSeats > currentCount) {
-            // Bulk Create missing seats
             const newSeats = Array.from(
               { length: f.totalSeats - currentCount },
               (_, i) => ({
@@ -86,8 +116,8 @@ export async function PUT(req: NextRequest) {
               }),
             );
             await tx.seat.createMany({ data: newSeats });
+            
           } else if (f.totalSeats < currentCount) {
-            // Bulk Manage excess seats
             const excessSeats = existingSeats.slice(f.totalSeats);
 
             const seatIdsToDelete = excessSeats

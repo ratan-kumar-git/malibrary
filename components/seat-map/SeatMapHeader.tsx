@@ -16,17 +16,35 @@ interface Props {
   selectedShift: string;
   setSelectedShift: (s: string) => void;
   onClearSeat: () => void;
+  activeShifts: string[]; 
 }
 
-const shiftOptions = [
-  { id: "ALL", label: "All Shifts" },
-  { id: "MORNING", label: "Morning" },
-  { id: "AFTERNOON", label: "Afternoon" },
-  { id: "EVENING", label: "Evening" },
-  { id: "NIGHT", label: "Night" },
-];
+const formatShiftLabel = (shift: string) => {
+  return shift
+    .replace("_", " ")
+    .toLowerCase()
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+};
 
-export function SeatMapHeader({ floors, selectedFloor, setSelectedFloor, selectedDate, setSelectedDate, selectedShift, setSelectedShift, onClearSeat }: Props) {
+export function SeatMapHeader({ 
+  floors, 
+  selectedFloor, 
+  setSelectedFloor, 
+  selectedDate, 
+  setSelectedDate, 
+  selectedShift, 
+  setSelectedShift, 
+  onClearSeat,
+  activeShifts
+}: Props) {
+  const shiftOptions = [
+    { id: "ALL", label: "All Shifts" },
+    ...activeShifts.map((shift) => ({
+      id: shift,
+      label: formatShiftLabel(shift),
+    })),
+  ];
+
   return (
     <header className="flex flex-col justify-between gap-6 pb-6 border-b border-border/50">
       <div className="flex justify-between items-center gap-4">

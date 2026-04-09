@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { differenceInDays, startOfDay } from "date-fns";
-import { SeatInfo, SeatShifts, SHIFT_KEYS } from "@/types/seatMapTypes";
+import { SeatInfo } from "@/types/seatMapTypes"; // Cleaned up unused imports
 
 interface Props {
   currentFloorSeats: [string, SeatInfo][];
@@ -10,6 +10,7 @@ interface Props {
   setSelectedSeat: (seat: { floorName: string; data: SeatInfo }) => void;
   selectedFloor: string;
   selectedShift: string;
+  activeShifts: string[];
 }
 
 export function SeatGrid({
@@ -18,11 +19,12 @@ export function SeatGrid({
   setSelectedSeat,
   selectedFloor,
   selectedShift,
+  activeShifts,
 }: Props) {
   const isAllMode = selectedShift === "ALL";
 
-  // --- Calculate Statistics ---
-  const stats = useMemo(() => {
+  // --- Calculate Statistics with explicit Types ---
+  const stats = useMemo<{ totalSlots: number; occupiedSlots: number }>(() => {
     let totalSlots = 0;
     let occupiedSlots = 0;
 
@@ -30,16 +32,16 @@ export function SeatGrid({
       const shifts = seatInfo.shifts;
 
       if (isAllMode) {
-        totalSlots += 4;
-        SHIFT_KEYS.forEach((key) => {
-          const shift = shifts[key];
+        totalSlots += activeShifts.length;
+        activeShifts.forEach((key) => {
+          const shift = shifts[key as keyof typeof shifts];
           if (shift) {
             occupiedSlots++;
           }
         });
       } else {
         totalSlots += 1;
-        const shift = shifts[selectedShift as keyof SeatShifts];
+        const shift = shifts[selectedShift as keyof typeof shifts];
         if (shift) {
           occupiedSlots++;
         }
@@ -47,7 +49,7 @@ export function SeatGrid({
     });
 
     return { totalSlots, occupiedSlots };
-  }, [currentFloorSeats, isAllMode, selectedShift]);
+  }, [currentFloorSeats, isAllMode, selectedShift, activeShifts]);
 
   return (
     <div className="flex-1 w-full bg-background rounded-2xl p-6 md:p-8 border border-border shadow-sm">
@@ -57,7 +59,7 @@ export function SeatGrid({
           <span className="w-2.5 h-2.5 rounded-full bg-blue-700" /> Total {stats.totalSlots}
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" /> Available {stats.totalSlots-stats.occupiedSlots}
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" /> Available {stats.totalSlots - stats.occupiedSlots}
         </div>
         <div className="flex items-center gap-1.5">
           <span className="w-2.5 h-2.5 rounded-full bg-primary" /> Booked {stats.occupiedSlots}
@@ -73,27 +75,28 @@ export function SeatGrid({
           let minExpireDays: number | null = null;
 
           if (isAllMode) {
-            Object.values(shifts).forEach((shift) => {
+            activeShifts.forEach((shiftKey) => {
+              const shift = shifts[shiftKey as keyof typeof shifts];
               if (shift) {
                 const end = startOfDay(new Date(shift.endDate));
                 const today = startOfDay(new Date());
                 const diff = differenceInDays(end, today);
-                if (minExpireDays === null || diff < minExpireDays)
+                if (minExpireDays === null || diff < minExpireDays) {
                   minExpireDays = diff;
+                }
               }
             });
           } else {
-            const currentShiftData = shifts[selectedShift as keyof SeatShifts];
+            const currentShiftData = shifts[selectedShift as keyof typeof shifts];
             if (currentShiftData) {
               minExpireDays = differenceInDays(
                 startOfDay(new Date(currentShiftData.endDate)),
-                startOfDay(new Date()),
+                startOfDay(new Date())
               );
             }
           }
 
-          const isBookedSingle =
-            !isAllMode && !!shifts[selectedShift as keyof SeatShifts];
+          const isBookedSingle = !isAllMode && !!shifts[selectedShift as keyof typeof shifts];
 
           return (
             <div key={seatNoStr} className="flex justify-center">
@@ -103,7 +106,7 @@ export function SeatGrid({
                 }
                 className={cn(
                   "relative flex flex-col items-center justify-end w-14 h-16 transition-all focus:outline-none group",
-                  isSelected ? "scale-110 z-10" : "hover:-translate-y-1",
+                  isSelected ? "scale-110 z-10" : "hover:-translate-y-1"
                 )}
               >
                 {minExpireDays !== null && (
@@ -113,7 +116,7 @@ export function SeatGrid({
                       isSelected ? "scale-110" : "",
                       minExpireDays <= 3
                         ? "bg-destructive text-destructive-foreground"
-                        : "bg-amber-500 text-white",
+                        : "bg-amber-500 text-white"
                     )}
                   >
                     {minExpireDays < 0 ? "0" : minExpireDays}
@@ -125,7 +128,7 @@ export function SeatGrid({
                     "w-8 h-2.5 rounded-t-full mb-1 transition-colors shadow-sm",
                     isSelected
                       ? "bg-primary"
-                      : "bg-muted-foreground/30 group-hover:bg-muted-foreground/50",
+                      : "bg-muted-foreground/30 group-hover:bg-muted-foreground/50"
                   )}
                 />
 
@@ -139,17 +142,17 @@ export function SeatGrid({
                       ? "bg-primary border-primary"
                       : !isAllMode && !isBookedSingle
                         ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-700 hover:bg-emerald-500/20"
-                        : "",
+                        : ""
                   )}
                 >
                   {isAllMode ? (
-                    <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 gap-0.5 bg-background p-0.5">
-                      {SHIFT_KEYS.map((key) => (
+                    <div className="absolute inset-0 flex flex-wrap gap-0.5 bg-background p-0.5">
+                      {activeShifts.map((key) => (
                         <div
                           key={key}
                           className={cn(
-                            "w-full h-full rounded-[3px]",
-                            shifts[key] ? "bg-primary" : "bg-emerald-500/20",
+                            "flex-1 min-w-[40%] rounded-[3px]",
+                            shifts[key as keyof typeof shifts] ? "bg-primary" : "bg-emerald-500/20"
                           )}
                         />
                       ))}
@@ -165,7 +168,7 @@ export function SeatGrid({
                         "text-sm font-bold",
                         isBookedSingle
                           ? "text-primary-foreground"
-                          : "text-emerald-700",
+                          : "text-emerald-700"
                       )}
                     >
                       {seatInfo.seatNo}

@@ -1,20 +1,32 @@
 "use client";
+
 import React, { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { SeatMapData, SeatInfo } from "@/types/seatMapTypes";
-import { SeatMapHeader } from "./SeatMapHeader";
-import { SeatGrid } from "./SeatGrid";
-import { SeatDetails } from "./SeatDetails";
+import { SeatMapHeader } from "@/components/seat-map/SeatMapHeader";
+import { SeatGrid } from "@/components/seat-map/SeatGrid";
+import { SeatDetails } from "@/components/seat-map/SeatDetails";
+import { SeatInfo, SeatMapData } from "@/types/seatMapTypes";
+import { SeatMapSkeleton } from "../skelton/SeatMapSkeleton";
 
-const fetchSeatMap = async (dateStr?: string): Promise<SeatMapData> => {
-  if (!dateStr) return {};
+interface SeatMapResponse {
+  seatMap: SeatMapData;
+  activeShifts: string[];
+}
+
+// 2. Return the full response
+const fetchSeatMap = async (dateStr?: string): Promise<SeatMapResponse> => {
+  if (!dateStr) return { seatMap: {}, activeShifts: [] };
   const response = await fetch(`/api/library/seat-map?date=${dateStr}`);
   if (!response.ok) throw new Error("Failed to fetch seat map");
+
   const data = await response.json();
-  return data.seatMap || {};
+  return {
+    seatMap: data.seatMap || {},
+    activeShifts: data.activeShifts || [],
+  };
 };
 
-export default function SeatMap() {
+export default function SeatMapPage() {
   const [selectedFloor, setSelectedFloor] = useState<string>("");
   const [selectedShift, setSelectedShift] = useState<string>("ALL");
   const [selectedSeat, setSelectedSeat] = useState<{
@@ -27,12 +39,17 @@ export default function SeatMap() {
 
   const dateStr = selectedDate?.toISOString().split("T")[0];
 
-  const { data: seatMapData = {}, isLoading } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["seatMap", dateStr],
     queryFn: () => fetchSeatMap(dateStr),
     staleTime: 30 * 1000,
   });
 
+  const seatMapData = useMemo(() => data?.seatMap || {}, [data?.seatMap]);
+  const activeShifts = useMemo(
+    () => data?.activeShifts || [],
+    [data?.activeShifts],
+  );
   const floors = useMemo(() => Object.keys(seatMapData), [seatMapData]);
 
   React.useEffect(() => {
@@ -49,14 +66,7 @@ export default function SeatMap() {
   }, [seatMapData, selectedFloor]);
 
   if (isLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] text-muted-foreground animate-pulse">
-        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mb-4" />
-        <p className="text-sm tracking-widest uppercase">
-          Loading Floor Plan...
-        </p>
-      </div>
-    );
+    return <SeatMapSkeleton />;
   }
 
   return (
@@ -70,6 +80,7 @@ export default function SeatMap() {
         selectedShift={selectedShift}
         setSelectedShift={setSelectedShift}
         onClearSeat={() => setSelectedSeat(null)}
+        activeShifts={activeShifts}
       />
 
       <div className="flex flex-col xl:flex-row gap-8 items-start">
@@ -79,14 +90,16 @@ export default function SeatMap() {
           setSelectedSeat={setSelectedSeat}
           selectedFloor={selectedFloor}
           selectedShift={selectedShift}
+          activeShifts={activeShifts}
         />
 
-        <div className="w-full xl:w-95 shrink-0">
+        <div className="w-full xl:w-105 shrink-0">
           <div className="sticky top-8">
             <SeatDetails
               selectedSeat={selectedSeat}
               onClose={() => setSelectedSeat(null)}
               selectedShift={selectedShift}
+              activeShifts={activeShifts}
             />
           </div>
         </div>

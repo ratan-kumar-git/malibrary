@@ -33,6 +33,17 @@ export async function GET(req: Request) {
     const startOfDay = new Date(`${targetDateStr}T00:00:00.000Z`);
     const endOfDay = new Date(`${targetDateStr}T23:59:59.999Z`);
 
+    const activeLibraryShifts = await prisma.shift.findMany({
+      where: { 
+        libraryId, 
+        isActive: true 
+      },
+      select: { name: true },
+      orderBy: { startTime: 'asc' } 
+    });
+
+    const activeShiftNames = activeLibraryShifts.map(s => s.name);
+
     const floors = await prisma.floor.findMany({
       where: { libraryId },
       include: {
@@ -93,14 +104,10 @@ export async function GET(req: Request) {
 
       for (const seat of floor.seats) {
         const seatKey = String(seat.seatNo);
-
-        // 👇 Updated to match your exact 4 enum values
-        const shifts: Record<string, any> = {
-          MORNING: null,
-          AFTERNOON: null,
-          EVENING: null,
-          NIGHT: null,
-        };
+        const shifts: Record<string, any> = {};
+        for (const shiftName of activeShiftNames) {
+          shifts[shiftName] = null;
+        }
 
         if (seat.isActive) {
           for (const shiftName of Object.keys(shifts)) {
@@ -140,6 +147,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json({
       message: "Seat map fetched",
+      activeShifts: activeShiftNames, 
       seatMap,
     });
   } catch (error) {

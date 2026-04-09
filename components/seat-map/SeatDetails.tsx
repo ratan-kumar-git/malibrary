@@ -6,20 +6,19 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import {
   SeatInfo,
-  SeatShifts,
-  SHIFT_KEYS,
   getDaysRemaining,
   formatShiftName,
-} from "@/types/seatMapTypes";
+} from "@/types/seatMapTypes"; // Removed SHIFT_KEYS
 import { useRouter } from "next/navigation";
 
 interface Props {
   selectedSeat: { floorName: string; data: SeatInfo } | null;
   onClose: () => void;
   selectedShift: string;
+  activeShifts: string[]; // 👇 1. Added activeShifts prop
 }
 
-export function SeatDetails({ selectedSeat, onClose, selectedShift }: Props) {
+export function SeatDetails({ selectedSeat, onClose, selectedShift, activeShifts }: Props) {
   const router = useRouter();
 
   if (!selectedSeat) {
@@ -69,13 +68,15 @@ export function SeatDetails({ selectedSeat, onClose, selectedShift }: Props) {
             Shift Details
           </p>
           <div className="space-y-4">
-            {SHIFT_KEYS.map((key) => {
-              const shiftData = data.shifts[key];
+            {activeShifts.map((key) => {
+              const shiftData = data.shifts[key as keyof typeof data.shifts];
+              
               if (shiftData) {
                 const daysRemaining = getDaysRemaining(shiftData.endDate);
                 const isExpiringSoon =
                   daysRemaining.includes("today") ||
                   daysRemaining.includes("Expired");
+                
                 return (
                   <div
                     key={key}
@@ -138,6 +139,7 @@ export function SeatDetails({ selectedSeat, onClose, selectedShift }: Props) {
                   </div>
                 );
               }
+              
               return (
                 <div
                   key={key}
@@ -173,18 +175,19 @@ export function SeatDetails({ selectedSeat, onClose, selectedShift }: Props) {
       ) : (
         <div className="space-y-6 mt-4">
           {(() => {
-            const shiftKey = selectedShift as keyof SeatShifts;
-            const shiftData = data.shifts[shiftKey];
+            // 👇 3. Look up the specific shift dynamically 
+            const shiftData = data.shifts[selectedShift as keyof typeof data.shifts];
 
             if (shiftData) {
               const daysRemaining = getDaysRemaining(shiftData.endDate);
               const isExpiringSoon =
                 daysRemaining.includes("today") ||
                 daysRemaining.includes("Expired");
+                
               return (
                 <div className="space-y-6">
                   <Badge className="bg-primary text-primary-foreground">
-                    Booked • {formatShiftName(shiftKey)}
+                    Booked • {formatShiftName(selectedShift)}
                   </Badge>
                   <div className="space-y-4">
                     <div className="p-4 bg-muted/30 rounded-xl border border-border/50">
@@ -238,6 +241,7 @@ export function SeatDetails({ selectedSeat, onClose, selectedShift }: Props) {
                 </div>
               );
             }
+            
             return (
               <div className="py-6 text-center space-y-6 border border-emerald-500/20 bg-emerald-500/5 rounded-2xl">
                 <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-emerald-500/10 text-emerald-600 mb-2">
@@ -250,7 +254,7 @@ export function SeatDetails({ selectedSeat, onClose, selectedShift }: Props) {
                   <p className="text-sm text-muted-foreground leading-relaxed">
                     Ready to book for the{" "}
                     <strong className="text-foreground font-medium">
-                      {formatShiftName(shiftKey)}
+                      {formatShiftName(selectedShift)}
                     </strong>{" "}
                     shift.
                   </p>
@@ -260,7 +264,7 @@ export function SeatDetails({ selectedSeat, onClose, selectedShift }: Props) {
                     className="w-full h-12 bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm"
                     onClick={() =>
                       router.push(
-                        `/register?seatId=${data.seatId}&shift=${shiftKey}`,
+                        `/register?seatId=${data.seatId}&shift=${selectedShift}`,
                       )
                     }
                   >
