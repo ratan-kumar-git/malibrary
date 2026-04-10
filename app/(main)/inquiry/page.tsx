@@ -263,11 +263,13 @@ export default function BookingInquiryPage() {
                   <div className="space-y-1">
                     <Label
                       htmlFor="name"
-                      className="text-xs font-semibold text-gray-700"
+                      className="text-xs font-semibold text-gray-700 flex justify-between"
                     >
-                      Full Name *{" "}
+                      <span>Full Name *</span>
                       {errors.name && (
-                        <span className="text-red-500 text-xs">required</span>
+                        <span className="text-red-500 text-xs font-normal">
+                          {(errors.name.message as string) || "Required"}
+                        </span>
                       )}
                     </Label>
                     <Controller
@@ -286,7 +288,7 @@ export default function BookingInquiryPage() {
                           id="name"
                           type="text"
                           placeholder="John Doe"
-                          className={`h-9 rounded-lg text-sm ${errors.name ? "border-red-200 bg-red-50/30" : ""}`}
+                          className={`h-9 rounded-lg text-sm ${errors.name ? "border-red-400 bg-red-50/50 focus-visible:ring-red-500" : ""}`}
                         />
                       )}
                     />
@@ -294,11 +296,13 @@ export default function BookingInquiryPage() {
                   <div className="space-y-1">
                     <Label
                       htmlFor="gender"
-                      className="text-xs font-semibold text-gray-700"
+                      className="text-xs font-semibold text-gray-700 flex justify-between"
                     >
-                      Gender *{" "}
+                      <span>Gender *</span>
                       {errors.gender && (
-                        <span className="text-red-500 text-xs">required</span>
+                        <span className="text-red-500 text-xs font-normal">
+                          {(errors.gender.message as string) || "Required"}
+                        </span>
                       )}
                     </Label>
                     <Controller
@@ -310,7 +314,9 @@ export default function BookingInquiryPage() {
                           <SelectTrigger
                             id="gender"
                             className={`h-9 rounded-lg text-sm ${
-                              errors.gender ? "border-red-200 bg-red-50/30" : ""
+                              errors.gender
+                                ? "border-red-400 bg-red-50/50 focus:ring-red-500"
+                                : ""
                             }`}
                           >
                             <SelectValue placeholder="Select gender" />
@@ -331,11 +337,13 @@ export default function BookingInquiryPage() {
                   <div className="space-y-1">
                     <Label
                       htmlFor="phone"
-                      className="text-xs font-semibold text-gray-700"
+                      className="text-xs font-semibold text-gray-700 flex justify-between"
                     >
-                      Phone *{" "}
+                      <span>Phone *</span>
                       {errors.phone && (
-                        <span className="text-red-500 text-xs">required</span>
+                        <span className="text-red-500 text-xs font-normal">
+                          {(errors.phone.message as string) || "Required"}
+                        </span>
                       )}
                     </Label>
                     <Controller
@@ -344,8 +352,8 @@ export default function BookingInquiryPage() {
                       rules={{
                         required: "Phone is required",
                         pattern: {
-                          value: /^[0-9+-]{10,15}$/,
-                          message: "Invalid phone number",
+                          value: /^\d{10}$/,
+                          message: "Must be exactly 10 digits",
                         },
                       }}
                       render={({ field }) => (
@@ -353,8 +361,13 @@ export default function BookingInquiryPage() {
                           {...field}
                           id="phone"
                           type="tel"
-                          placeholder="+91 9876543210"
-                          className={`h-9 rounded-lg text-sm ${errors.phone ? "border-red-200 bg-red-50/30" : ""}`}
+                          maxLength={10}
+                          placeholder="9876543210"
+                          className={`h-9 rounded-lg text-sm ${errors.phone ? "border-red-400 bg-red-50/50 focus-visible:ring-red-500" : ""}`}
+                          onInput={(e) => {
+                            e.currentTarget.value =
+                              e.currentTarget.value.replace(/\D/g, "");
+                          }}
                         />
                       )}
                     />
@@ -362,9 +375,14 @@ export default function BookingInquiryPage() {
                   <div className="space-y-1">
                     <Label
                       htmlFor="date"
-                      className="text-xs font-semibold text-gray-700"
+                      className="text-xs font-semibold text-gray-700 flex justify-between"
                     >
-                      Joining Date
+                      <span>Joining Date</span>
+                      {errors.date && (
+                        <span className="text-red-500 text-xs font-normal">
+                          {errors.date.message as string}
+                        </span>
+                      )}
                     </Label>
                     <Controller
                       name="date"
@@ -375,7 +393,7 @@ export default function BookingInquiryPage() {
                           id="date"
                           type="date"
                           min={new Date().toISOString().split("T")[0]}
-                          className="h-9 rounded-lg text-sm"
+                          className={`h-9 rounded-lg text-sm ${errors.date ? "border-red-400 bg-red-50/50" : ""}`}
                         />
                       )}
                     />
@@ -386,9 +404,14 @@ export default function BookingInquiryPage() {
                 <div className="space-y-1">
                   <Label
                     htmlFor="address"
-                    className="text-xs font-semibold text-gray-700"
+                    className="text-xs font-semibold text-gray-700 flex justify-between"
                   >
-                    Address
+                    <span>Address</span>
+                    {errors.address && (
+                      <span className="text-red-500 text-xs font-normal">
+                        {errors.address.message as string}
+                      </span>
+                    )}
                   </Label>
                   <Controller
                     name="address"
@@ -399,7 +422,7 @@ export default function BookingInquiryPage() {
                         id="address"
                         placeholder="Your address..."
                         rows={2}
-                        className="rounded-lg text-sm resize-none"
+                        className={`rounded-lg text-sm resize-none ${errors.address ? "border-red-400 bg-red-50/50" : ""}`}
                       />
                     )}
                   />
@@ -407,16 +430,18 @@ export default function BookingInquiryPage() {
 
                 {/* Shift Selection */}
                 <div className="space-y-2">
-                  <Label className="text-xs font-semibold text-gray-700">
-                    Preferred Shifts *{" "}
+                  <Label className="text-xs font-semibold text-gray-700 flex justify-between">
+                    <span>Preferred Shifts *</span>
                     {selectedShifts.length === 0 && (
-                      <span className="text-red-500 text-xs">required</span>
+                      <span className="text-red-500 text-xs font-normal">
+                        Please select at least one shift
+                      </span>
                     )}
                   </Label>
                   <div
                     className={`grid grid-cols-4 gap-2 ${
                       selectedShifts.length === 0
-                        ? "p-2 rounded-lg border border-red-200 bg-red-50/30"
+                        ? "p-2 rounded-lg border border-red-300 bg-red-50/30"
                         : ""
                     }`}
                   >
@@ -449,9 +474,14 @@ export default function BookingInquiryPage() {
                 <div className="space-y-1">
                   <Label
                     htmlFor="message"
-                    className="text-xs font-semibold text-gray-700"
+                    className="text-xs font-semibold text-gray-700 flex justify-between"
                   >
-                    Special Requests
+                    <span>Special Requests</span>
+                    {errors.message && (
+                      <span className="text-red-500 text-xs font-normal">
+                        {errors.message.message as string}
+                      </span>
+                    )}
                   </Label>
                   <Controller
                     name="message"
@@ -462,7 +492,7 @@ export default function BookingInquiryPage() {
                         id="message"
                         placeholder="Any special requirements..."
                         rows={2}
-                        className="rounded-lg text-sm resize-none"
+                        className={`rounded-lg text-sm resize-none ${errors.message ? "border-red-400 bg-red-50/50" : ""}`}
                       />
                     )}
                   />

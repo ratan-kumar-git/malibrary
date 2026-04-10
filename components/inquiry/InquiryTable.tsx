@@ -4,7 +4,6 @@ import { useEffect, useState, useMemo } from "react";
 import { format } from "date-fns";
 import {
   Trash2,
-  MessageCircle,
   Eye,
   Edit2,
   Loader2,
@@ -31,13 +30,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-
 import InquiryStatusDialog from "./InquiryStatusDialog";
 import InquiryDetailsDialog from "./InquiryDetailsDialog";
 import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
 import { cn } from "@/lib/utils";
 import { Inquiry } from "@/types/inqueriy";
 import { toast } from "sonner";
+import { Button } from "../ui/button";
+import { WhatsappIcon } from "../icons/SocialIcons";
 
 export default function InquiryTable() {
   const [allInquiries, setAllInquiries] = useState<Inquiry[]>([]);
@@ -95,7 +95,9 @@ export default function InquiryTable() {
     try {
       setDeleting(inquiryToDelete.id);
       await fetch(`/api/inquiry/${inquiryToDelete.id}`, { method: "DELETE" });
-      setAllInquiries(allInquiries.filter((inq) => inq.id !== inquiryToDelete.id));
+      setAllInquiries(
+        allInquiries.filter((inq) => inq.id !== inquiryToDelete.id),
+      );
       setShowDeleteDialog(false);
       setInquiryToDelete(null);
     } finally {
@@ -122,7 +124,7 @@ export default function InquiryTable() {
       }
     } catch (error) {
       console.error(error);
-    toast.error("Failed to update status");
+      toast.error("Failed to update status");
     }
   };
 
@@ -305,12 +307,12 @@ export default function InquiryTable() {
                   </TableCell>
                   <TableCell className="pr-6 text-right">
                     <div className="flex items-center justify-end gap-1">
-                      <ActionBtn
-                        icon={MessageCircle}
-                        color="text-emerald-500 hover:bg-emerald-500/10"
+                      <Button
+                        className="p-2 rounded-lg transition-colors bg-background border border-border shadow-sm hover:border-transparent text-green-500 hover:bg-green-500/10"
                         onClick={() => sendWhatsapp(inq.phoneNumber, inq.name)}
-                        title="WhatsApp"
-                      />
+                      >
+                       <WhatsappIcon />
+                      </Button>
                       <ActionBtn
                         icon={Eye}
                         color="text-blue-500 hover:bg-blue-500/10"
