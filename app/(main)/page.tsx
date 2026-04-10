@@ -3,7 +3,6 @@ import Link from "next/link";
 import {
   Armchair,
   Wifi,
-  Clock,
   ArrowRight,
   ChevronRight,
   MapPin,
@@ -19,35 +18,9 @@ import {
   Lock,
 } from "lucide-react";
 import Image from "next/image";
+import { ShiftsSection } from "@/components/shifts/ShiftsSection";
 
 export default function Home() {
-  const shifts = [
-    {
-      name: "Morning Shift",
-      time: "6:00 AM - 12:00 PM",
-      seats: "180/200",
-      color: "from-orange-400 to-orange-600",
-    },
-    {
-      name: "Afternoon Shift",
-      time: "12:00 PM - 6:00 PM",
-      seats: "195/200",
-      color: "from-blue-400 to-blue-600",
-    },
-    {
-      name: "Evening Shift",
-      time: "6:00 PM - 10:00 PM",
-      seats: "175/200",
-      color: "from-purple-400 to-purple-600",
-    },
-    {
-      name: "Full Day",
-      time: "6:00 AM - 10:00 PM",
-      seats: "190/200",
-      color: "from-green-400 to-green-600",
-    },
-  ];
-
   const facilities = [
     {
       icon: BookOpen,
@@ -182,113 +155,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* STATS BAR */}
-      {/* <section className="bg-white inset-ring-y-1 inset-ring-gray-100">
-        <div className="max-w-6xl mx-auto px-6 py-12">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-gray-100">
-            <div className="space-y-2">
-              <h4 className="text-4xl font-extrabold text-gray-950">800+</h4>
-              <p className="text-sm text-gray-500 font-medium">Total Seats</p>
-            </div>
-            <div className="space-y-2">
-              <h4 className="text-4xl font-extrabold text-gray-950">4</h4>
-              <p className="text-sm text-gray-500 font-medium">Shift Timings</p>
-            </div>
-            <div className="space-y-2 hidden md:block">
-              <h4 className="text-4xl font-extrabold text-gray-950">5</h4>
-              <p className="text-sm text-gray-500 font-medium">Floors</p>
-            </div>
-            <div className="space-y-2 hidden md:block">
-              <h4 className="text-4xl font-extrabold text-gray-950">10K+</h4>
-              <p className="text-sm text-gray-500 font-medium">
-                Book Collection
-              </p>
-            </div>
-          </div>
-        </div>
-      </section> */}
-
-      {/* STATS / TRUST BAR */}
-      {/* <section className="bg-white inset-ring-y-1 inset-ring-gray-100">
-        <div className="max-w-6xl mx-auto px-6 py-12">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-gray-100">
-            <div className="space-y-2">
-              <h4 className="text-4xl font-extrabold text-gray-950">90%</h4>
-              <p className="text-sm text-gray-500 font-medium">
-                Seat Utilization
-              </p>
-            </div>
-            <div className="space-y-2">
-              <h4 className="text-4xl font-extrabold text-gray-950">99.9%</h4>
-              <p className="text-sm text-gray-500 font-medium">
-                Uptime Guarantee
-              </p>
-            </div>
-            <div className="space-y-2 hidden md:block">
-              <h4 className="text-4xl font-extrabold text-gray-950">
-                Real-time
-              </h4>
-              <p className="text-sm text-gray-500 font-medium">
-                Availability Updates
-              </p>
-            </div>
-            <div className="space-y-2 hidden md:block">
-              <h4 className="text-4xl font-extrabold text-gray-950">&lt;1s</h4>
-              <p className="text-sm text-gray-500 font-medium">Booking Time</p>
-            </div>
-          </div>
-        </div>
-      </section> */}
-
       {/* SHIFT TIMINGS SECTION */}
-      <section className="max-w-6xl mx-auto px-6 py-20">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-gray-950 text-balance">
-            Our Shift Timings
-          </h2>
-          <p className="text-gray-500 mt-5 text-lg max-w-2xl mx-auto">
-            Choose the shift that works best for your study schedule.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {shifts.map((shift, idx) => (
-            <div
-              key={idx}
-              className="group relative overflow-hidden rounded-2xl bg-white border border-gray-200/60 p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
-            >
-              <div
-                className={`absolute top-0 right-0 size-24 bg-linear-to-bl ${shift.color} opacity-10 rounded-bl-full -z-10 transition-transform duration-500 group-hover:scale-110`}
-              />
-              <div className="mb-4">
-                <div
-                  className={`inline-flex items-center justify-center w-12 h-12 rounded-xl bg-linear-to-r ${shift.color} text-white mb-3`}
-                >
-                  <Clock className="size-6" />
-                </div>
-                <h3 className="text-lg font-bold text-gray-950">
-                  {shift.name}
-                </h3>
-              </div>
-              <div className="space-y-3">
-                <p className="text-sm text-gray-600 flex items-center gap-2">
-                  <Clock className="size-4 opacity-60" />
-                  {shift.time}
-                </p>
-                <div className="pt-2 border-t border-gray-100">
-                  <p className="text-sm font-medium text-gray-950">
-                    {shift.seats.split("/")[0]} Available
-                  </p>
-                  <p className="text-xs text-gray-500">{shift.seats} seats</p>
-                </div>
-              </div>
-              <Button asChild size="sm" className="w-full mt-4 rounded-lg">
-                <Link href="/register">Book Seat</Link>
-              </Button>
-            </div>
-          ))}
-        </div>
-      </section>
+      <ShiftsSection
+        title="Our Shift Timings"
+        subtitle="Choose the shift that works best for your study schedule."
+        variant="home"
+      />
 
       {/* FACILITIES SECTION */}
       <section className="bg-white py-20">
@@ -383,7 +255,7 @@ export default function Home() {
               asChild
               variant="outline"
               size="lg"
-              className="h-14 px-8 rounded-full text-base w-full sm:w-auto hover:scale-105 transition-transform"
+              className="h-14 px-8 rounded-full text-black text-base w-full sm:w-auto hover:scale-105 transition-transform"
             >
               <Link href="/seat-map">View Seat Map</Link>
             </Button>

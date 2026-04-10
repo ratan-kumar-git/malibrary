@@ -9,6 +9,49 @@ interface SyncShiftsRequest {
   shifts: Shift[];
 }
 
+export async function GET() {
+  try {
+    const library = await prisma.library.findFirst({
+      select: {
+        id: true,
+        name: true,
+        shifts: {
+          select: {
+            id: true,
+            name: true,
+            startTime: true,
+            endTime: true,
+            price: true,
+            isActive: true,
+          },
+        },
+      },
+    });
+
+    if (!library) {
+      return NextResponse.json(
+        { error: "No library found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        libraryId: library.id,
+        libraryName: library.name,
+        shifts: library.shifts,
+      },
+    });
+  } catch (error) {
+    console.error("Failed to fetch public shifts:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch shifts" },
+      { status: 500 }
+    );
+  }
+}
+
 export async function PUT(req: NextRequest) {
   try {
     const session = await auth.api.getSession({
