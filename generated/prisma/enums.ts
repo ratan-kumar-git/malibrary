@@ -30,8 +30,17 @@ export const ShiftType = {
   MORNING: 'MORNING',
   AFTERNOON: 'AFTERNOON',
   EVENING: 'EVENING',
-  NIGHT: 'NIGHT',
-  FULL_DAY: 'FULL_DAY'
+  NIGHT: 'NIGHT'
 } as const
 
 export type ShiftType = (typeof ShiftType)[keyof typeof ShiftType]
+
+
+export const InquiryStatus = {
+  PENDING: 'PENDING',
+  CONTACTED: 'CONTACTED',
+  CONVERTED: 'CONVERTED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type InquiryStatus = (typeof InquiryStatus)[keyof typeof InquiryStatus]

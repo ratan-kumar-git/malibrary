@@ -58,13 +58,12 @@ export default function Navbar() {
     ? [
         { name: "Home", href: "/", icon: Home },
         { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-        { name: "Seat Map", href: "/seat-map", icon: Users },
-        { name: "About", href: "/about", icon: Users },
-        { name: "Contact Us", href: "/contact-us", icon: MessageCircleDashed },
+        { name: "Booking", href: "/seat-map", icon: Users },
+        { name: "Inquiry", href: "/inquiry", icon: Users },
       ]
     : [
         { name: "Home", href: "/", icon: Home },
-        { name: "Seat Map", href: "/seat-map", icon: Users },
+        { name: "Inquiry", href: "/inquiry", icon: Users },
         { name: "About", href: "/about", icon: Users },
         { name: "Contact Us", href: "/contact-us", icon: MessageCircleDashed },
       ];

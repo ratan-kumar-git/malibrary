@@ -72,3 +72,8 @@ export type Subscription = Prisma.SubscriptionModel
  * 
  */
 export type SubscriptionShift = Prisma.SubscriptionShiftModel
+/**
+ * Model Inquiry
+ * 
+ */
+export type Inquiry = Prisma.InquiryModel

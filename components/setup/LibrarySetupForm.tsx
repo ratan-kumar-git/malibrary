@@ -43,9 +43,9 @@ const initialShiftsForm = [
     isActive: true,
   },
   {
-    name: "FULL_DAY" as const,
-    startTime: 420,
-    endTime: 1320,
+    name: "NIGHT" as const,
+    startTime: 1320,
+    endTime: 420,
     price: 1500,
     isActive: false,
   },

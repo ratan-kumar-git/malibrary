@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 function RegisterPageSkeleton() {
   return (
     <div className="space-y-6">
-      <div className="h-32 bg-gradient-to-r from-slate-200 to-slate-100 rounded-lg animate-pulse" />
+      <div className="h-32 bg-linear-to-r from-slate-200 to-slate-100 rounded-lg animate-pulse" />
       <div className="space-y-4">
         <div className="h-10 bg-slate-100 rounded-lg animate-pulse" />
         <div className="h-40 bg-slate-100 rounded-lg animate-pulse" />

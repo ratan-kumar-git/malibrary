@@ -26,22 +26,22 @@ enum ShiftType {
 }
 
 model User {
-  id            String    @id
+  id            String  @id
   name          String
   email         String
-  emailVerified Boolean   @default(false)
+  emailVerified Boolean @default(false)
   image         String?
-  role          ROLE      @default(USER)
+  role          ROLE    @default(USER)
 
-  banned        Boolean?  @default(false)
-  banReason     String?
-  banExpires    DateTime?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  banned     Boolean?  @default(false)
+  banReason  String?
+  banExpires DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
-  sessions      Session[]
-  accounts      Account[]
-  libraries     Library[]
+  sessions  Session[]
+  accounts  Account[]
+  libraries Library[]
 
   @@unique([email])
   @@map("user")
@@ -97,9 +97,9 @@ model Verification {
 }
 
 model Library {
-  id            String @id @default(cuid())
+  id     String @id @default(cuid())
   userId String @unique
-  
+
   name          String
   email         String?
   contactNumber String
@@ -115,7 +115,7 @@ model Library {
   updatedAt DateTime @updatedAt
 
   // User relation
-  user   User   @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 
   // Relations
   floors        Floor[]
@@ -128,33 +128,33 @@ model Library {
 }
 
 model Floor {
-  id        String  @id @default(cuid())
+  id        String @id @default(cuid())
   libraryId String
 
-  name      String
+  name       String
   totalSeats Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  library   Library @relation(fields: [libraryId], references: [id], onDelete: Cascade)
-  seats     Seat[]
+  library Library @relation(fields: [libraryId], references: [id], onDelete: Cascade)
+  seats   Seat[]
 
   @@unique([libraryId, name])
   @@index([libraryId])
 }
 
 model Seat {
-  id       String  @id @default(cuid())
-  floorId  String
-  
+  id      String @id @default(cuid())
+  floorId String
+
   seatNo   Int
   isActive Boolean @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  floor    Floor   @relation(fields: [floorId], references: [id], onDelete: Cascade)
+  floor         Floor          @relation(fields: [floorId], references: [id], onDelete: Cascade)
   subscriptions Subscription[]
 
   @@unique([floorId, seatNo])
@@ -162,7 +162,7 @@ model Seat {
 }
 
 model Shift {
-  id        String    @id @default(cuid())
+  id        String @id @default(cuid())
   libraryId String
 
   name      ShiftType
@@ -171,10 +171,10 @@ model Shift {
   price     Float
   isActive  Boolean   @default(true)
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  library   Library @relation(fields: [libraryId], references: [id], onDelete: Cascade)
+  library     Library             @relation(fields: [libraryId], references: [id], onDelete: Cascade)
   assignments SubscriptionShift[]
 
   @@unique([libraryId, name])
@@ -182,7 +182,7 @@ model Shift {
 }
 
 model Student {
-  id           String  @id @default(cuid())
+  id        String @id @default(cuid())
   libraryId String
 
   memberId     String? @unique
@@ -192,43 +192,63 @@ model Student {
   address      String?
   lockerNumber Int?    @unique
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-
-  library   Library @relation(fields: [libraryId], references: [id])
+  library       Library        @relation(fields: [libraryId], references: [id])
   subscriptions Subscription[]
-  
+
   @@unique([libraryId, phoneNumber])
   @@index([libraryId])
 }
 
 model Subscription {
-  id        String  @id @default(cuid())
+  id        String @id @default(cuid())
   libraryId String
   seatId    String
   studentId String
 
-  startDate DateTime
-  endDate   DateTime
+  startDate   DateTime
+  endDate     DateTime
   totalAmount Float
-  amountPaid  Float  @default(0)
-  status      Status @default(ACTIVE)
+  amountPaid  Float    @default(0)
+  status      Status   @default(ACTIVE)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  library   Library @relation(fields: [libraryId], references: [id])
-  seat      Seat    @relation(fields: [seatId], references: [id])
-  student   Student @relation(fields: [studentId], references: [id])
+  library            Library             @relation(fields: [libraryId], references: [id])
+  seat               Seat                @relation(fields: [seatId], references: [id])
+  student            Student             @relation(fields: [studentId], references: [id])
   subscriptionShifts SubscriptionShift[]
 }
 
 model SubscriptionShift {
   subscriptionId String
   shiftId        String
-  
-  subscription   Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
-  shift          Shift        @relation(fields: [shiftId], references: [id])
+
+  subscription Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  shift        Shift        @relation(fields: [shiftId], references: [id])
+
   @@id([subscriptionId, shiftId])
+}
+
+model Inquiry {
+  id          String        @id @default(cuid())
+  name        String
+  gender      String
+  phoneNumber String
+  address     String?
+  shiftNames  ShiftType[]
+  joiningDate DateTime?
+  message     String?       @db.Text
+  status      InquiryStatus @default(PENDING)
+  createdAt   DateTime      @default(now())
+}
+
+enum InquiryStatus {
+  PENDING
+  CONTACTED
+  CONVERTED
+  CANCELLED
 }

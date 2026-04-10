@@ -4,7 +4,7 @@ import React from 'react'
 
 const Footer = () => {
   return (
-    <footer className="bg-gradient-to-b from-white to-gray-50 border-t border-gray-200/50 py-12">
+    <footer className="bg-linear-to-b from-white to-gray-50 border-t border-gray-200/50 py-12">
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           {/* Brand */}
@@ -46,7 +46,7 @@ const Footer = () => {
         </div>
 
         {/* Divider */}
-        <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent mb-6" />
+        <div className="h-px bg-linear-to-r from-transparent via-gray-200 to-transparent mb-6" />
 
         {/* Bottom */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-500">

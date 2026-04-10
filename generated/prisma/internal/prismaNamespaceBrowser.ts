@@ -61,7 +61,8 @@ export const ModelName = {
   Shift: 'Shift',
   Student: 'Student',
   Subscription: 'Subscription',
-  SubscriptionShift: 'SubscriptionShift'
+  SubscriptionShift: 'SubscriptionShift',
+  Inquiry: 'Inquiry'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -239,6 +240,22 @@ export const SubscriptionShiftScalarFieldEnum = {
 } as const
 
 export type SubscriptionShiftScalarFieldEnum = (typeof SubscriptionShiftScalarFieldEnum)[keyof typeof SubscriptionShiftScalarFieldEnum]
+
+
+export const InquiryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  gender: 'gender',
+  phoneNumber: 'phoneNumber',
+  address: 'address',
+  shiftNames: 'shiftNames',
+  joiningDate: 'joiningDate',
+  message: 'message',
+  status: 'status',
+  createdAt: 'createdAt'
+} as const
+
+export type InquiryScalarFieldEnum = (typeof InquiryScalarFieldEnum)[keyof typeof InquiryScalarFieldEnum]
 
 
 export const SortOrder = {
