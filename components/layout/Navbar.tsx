@@ -8,12 +8,17 @@ import {
   LogOut,
   User,
   LayoutDashboard,
-  Users,
   ChevronRight,
   Home,
   MessageCircleDashed,
   Settings,
-  BookMarkedIcon
+  BookMarkedIcon,
+  Bell,
+  MessageSquare,
+  GraduationCap,
+  Phone,
+  FileSpreadsheetIcon,
+  HistoryIcon,
 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
@@ -56,16 +61,18 @@ export default function Navbar() {
 
   const navLinks = session
     ? [
-        { name: "Home", href: "/", icon: Home },
         { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-        { name: "Booking", href: "/seat-map", icon: Users },
-        { name: "Inquiry", href: "/inquiry", icon: Users },
+        { name: "Booking", href: "/seat-map", icon: FileSpreadsheetIcon },
+        { name: "Student", href: "/student", icon: GraduationCap },
+        { name: "History", href: "/history", icon: HistoryIcon },
+        { name: "Request", href: "/inquiry-request", icon: Bell },
+        { name: "Inquiry", href: "/inquiry", icon: MessageSquare },
       ]
     : [
         { name: "Home", href: "/", icon: Home },
-        { name: "Inquiry", href: "/inquiry", icon: Users },
-        { name: "About", href: "/about", icon: Users },
-        { name: "Contact Us", href: "/contact-us", icon: MessageCircleDashed },
+        { name: "Inquiry", href: "/inquiry", icon: MessageCircleDashed },
+        { name: "About", href: "/about", icon: User },
+        { name: "Contact Us", href: "/contact-us", icon: Phone },
       ];
 
   const handleLogout = async () => {
@@ -156,7 +163,7 @@ export default function Navbar() {
                       Menu
                     </p>
                     {navLinks.map((link) => {
-                      const Icon = link.icon;
+                      const Icon = link.icon
                       return (
                         <Link
                           key={link.href}
@@ -324,7 +331,8 @@ export default function Navbar() {
                       className="cursor-pointer rounded-xl p-3 focus:bg-gray-100"
                     >
                       <Link href="/settings" className="w-full">
-                        <Settings className="mr-2 size-4 text-gray-500" /> Settings
+                        <Settings className="mr-2 size-4 text-gray-500" />{" "}
+                        Settings
                       </Link>
                     </DropdownMenuItem>
                   </DropdownMenuGroup>

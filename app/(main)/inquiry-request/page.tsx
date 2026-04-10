@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   description: "Manage library inquiry requests",
 };
 
-export default function InquiryPage() {
+export default function InquiryRequestPage() {
   return (
     <main className="min-h-screen w-full bg-background">
       <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">

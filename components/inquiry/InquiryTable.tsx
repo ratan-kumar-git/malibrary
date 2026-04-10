@@ -34,6 +34,7 @@ import { Badge } from "@/components/ui/badge";
 
 import InquiryStatusDialog from "./InquiryStatusDialog";
 import InquiryDetailsDialog from "./InquiryDetailsDialog";
+import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
 import { cn } from "@/lib/utils";
 import { Inquiry } from "@/types/inqueriy";
 import { toast } from "sonner";
@@ -48,7 +49,9 @@ export default function InquiryTable() {
   const [selectedInquiry, setSelectedInquiry] = useState<Inquiry | null>(null);
   const [showStatusDialog, setShowStatusDialog] = useState(false);
   const [showDetailsDialog, setShowDetailsDialog] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [inquiryToDelete, setInquiryToDelete] = useState<Inquiry | null>(null);
 
   useEffect(() => {
     const fetchAllInquiries = async () => {
@@ -82,13 +85,19 @@ export default function InquiryTable() {
     });
   }, [allInquiries, searchTerm, statusFilter, shiftFilter]);
 
-  const handleDelete = async (id: string) => {
-    if (!window.confirm("Are you sure you want to delete this inquiry?"))
-      return;
+  const openDeleteDialog = (inquiry: Inquiry) => {
+    setInquiryToDelete(inquiry);
+    setShowDeleteDialog(true);
+  };
+
+  const handleDelete = async () => {
+    if (!inquiryToDelete) return;
     try {
-      setDeleting(id);
-      await fetch(`/api/inquiry/${id}`, { method: "DELETE" });
-      setAllInquiries(allInquiries.filter((inq) => inq.id !== id));
+      setDeleting(inquiryToDelete.id);
+      await fetch(`/api/inquiry/${inquiryToDelete.id}`, { method: "DELETE" });
+      setAllInquiries(allInquiries.filter((inq) => inq.id !== inquiryToDelete.id));
+      setShowDeleteDialog(false);
+      setInquiryToDelete(null);
     } finally {
       setDeleting(null);
     }
@@ -295,7 +304,7 @@ export default function InquiryTable() {
                     </Badge>
                   </TableCell>
                   <TableCell className="pr-6 text-right">
-                    <div className="flex items-center justify-end gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+                    <div className="flex items-center justify-end gap-1">
                       <ActionBtn
                         icon={MessageCircle}
                         color="text-emerald-500 hover:bg-emerald-500/10"
@@ -323,7 +332,7 @@ export default function InquiryTable() {
                       <ActionBtn
                         icon={deleting === inq.id ? Loader2 : Trash2}
                         color="text-destructive hover:bg-destructive/10"
-                        onClick={() => handleDelete(inq.id)}
+                        onClick={() => openDeleteDialog(inq)}
                         title="Delete"
                         spin={deleting === inq.id}
                       />
@@ -355,6 +364,16 @@ export default function InquiryTable() {
             inquiry={selectedInquiry}
           />
         </>
+      )}
+
+      {inquiryToDelete && (
+        <DeleteConfirmationDialog
+          open={showDeleteDialog}
+          onOpenChange={setShowDeleteDialog}
+          onConfirm={handleDelete}
+          isLoading={deleting === inquiryToDelete.id}
+          inquiryName={inquiryToDelete.name}
+        />
       )}
     </div>
   );
