@@ -1,65 +1,106 @@
-import { BookMarkedIcon, Mail, MessageCircle } from 'lucide-react'
-import Link from 'next/link'
-import React from 'react'
+import { BookMarkedIcon } from 'lucide-react';
+import Link from 'next/link';
+import { 
+  WhatsappIcon, 
+  FacebookIcon, 
+  InstagramIcon, 
+  YoutubeIcon 
+} from '@/components/icons/SocialIcons'; 
 
 const Footer = () => {
+  const currentYear = new Date().getFullYear();
+
   return (
-    <footer className="bg-linear-to-b from-white to-gray-50 border-t border-gray-200/50 py-12">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+    <footer className="w-full bg-background border-t border-border mt-auto">
+      <div className="max-w-6xl mx-auto px-6 py-12">
+        
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+          
           {/* Brand */}
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-2 font-bold text-gray-950 text-lg">
-              <div className="size-6 rounded-lg bg-primary text-white flex items-center justify-center">
-                <BookMarkedIcon className="size-3" />
+          <div className="flex flex-col gap-4">
+            <Link 
+              href="/" 
+              className="flex items-center gap-2 font-bold text-foreground text-lg"
+            >
+              <div className="size-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center">
+                <BookMarkedIcon className="size-4" />
               </div>
               MaLibrary
-            </div>
-            <p className="text-xs text-gray-500">Modern library management system</p>
+            </Link>
+            <p className="text-sm text-muted-foreground">
+              Your perfect study space
+            </p>
           </div>
 
-          {/* Links */}
-          <div className="flex flex-col gap-3">
-            <h3 className="text-sm font-semibold text-gray-950">Quick Links</h3>
-            <div className="flex flex-col gap-2">
-              <Link href="/about" className="text-sm text-gray-600 hover:text-primary transition-colors">About</Link>
-              <Link href="/contact-us" className="text-sm text-gray-600 hover:text-primary transition-colors">Contact</Link>
-              <Link href="/" className="text-sm text-gray-600 hover:text-primary transition-colors">Home</Link>
-            </div>
+          {/* Links Column 1 */}
+          <div className="flex flex-col gap-4">
+            <h4 className="text-sm font-semibold text-foreground">Explore</h4>
+            <nav className="flex flex-col gap-2">
+              <Link href="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">About</Link>
+              <Link href="/facilities" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Facilities</Link>
+              <Link href="/pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Pricing</Link>
+            </nav>
           </div>
 
-          {/* Social */}
-          <div className="flex flex-col gap-3">
-            <h3 className="text-sm font-semibold text-gray-950">Connect</h3>
-            <div className="flex gap-3">
-              <Link href="#" className="p-2 rounded-lg bg-gray-100 text-gray-600 hover:bg-primary hover:text-white transition-all">
-                <MessageCircle size={16} />
+          {/* Links Column 2 */}
+          <div className="flex flex-col gap-4">
+            <h4 className="text-sm font-semibold text-foreground">Support</h4>
+            <nav className="flex flex-col gap-2">
+              <Link href="/contact-us" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Contact</Link>
+              <Link href="/faq" className="text-sm text-muted-foreground hover:text-foreground transition-colors">FAQs</Link>
+              <Link href="/rules" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Policies</Link>
+            </nav>
+          </div>
+
+          {/* CTA */}
+          <div className="flex flex-col gap-4">
+            <h4 className="text-sm font-semibold text-foreground">Action</h4>
+            <nav className="flex flex-col gap-2">
+              <Link 
+                href="/inquiry" 
+                className="text-sm text-primary hover:underline font-medium"
+              >
+                Reserve Seat
               </Link>
-              <Link href="#" className="p-2 rounded-lg bg-gray-100 text-gray-600 hover:bg-primary hover:text-white transition-all">
-                <MessageCircle size={16} />
+              <Link 
+                href="/login" 
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Login
               </Link>
-              <Link href="#" className="p-2 rounded-lg bg-gray-100 text-gray-600 hover:bg-primary hover:text-white transition-all">
-                <Mail size={16} />
-              </Link>
-            </div>
+            </nav>
           </div>
         </div>
 
         {/* Divider */}
-        <div className="h-px bg-linear-to-r from-transparent via-gray-200 to-transparent mb-6" />
+        <div className="h-px bg-border mb-8" />
 
         {/* Bottom */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-500">
-          <p>&copy; {new Date().getFullYear()} MaLibrary. All rights reserved.</p>
-          <div className="flex gap-6">
-            <Link href="#" className="hover:text-gray-950 transition-colors">Privacy</Link>
-            <Link href="#" className="hover:text-gray-950 transition-colors">Terms</Link>
-            <Link href="#" className="hover:text-gray-950 transition-colors">Cookies</Link>
+        <div className="flex flex-col-reverse md:flex-row items-center justify-between gap-4">
+          <p className="text-xs text-muted-foreground">
+            &copy; {currentYear} MaLibrary. All rights reserved.
+          </p>
+          
+          {/* Social Links */}
+          <div className="flex items-center gap-3">
+            <a href="https://wa.me/yournumber" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+              <WhatsappIcon className="size-4" />
+            </a>
+            <a href="https://instagram.com/yourhandle" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+              <InstagramIcon className="size-4" />
+            </a>
+            <a href="https://facebook.com/yourpage" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+              <FacebookIcon className="size-4" />
+            </a>
+            <a href="https://youtube.com/yourchannel" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+              <YoutubeIcon className="size-4" />
+            </a>
           </div>
         </div>
       </div>
     </footer>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;

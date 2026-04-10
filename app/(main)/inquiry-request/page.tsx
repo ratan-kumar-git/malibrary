@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 export default function InquiryRequestPage() {
   return (
-    <main className="min-h-screen w-full bg-background">
+    <div className="min-h-screen w-full bg-background">
       <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
         {/* Breadcrumb */}
         <div className="mt-24 mb-8">
@@ -47,6 +47,6 @@ export default function InquiryRequestPage() {
           <InquiryTable />
         </Card>
       </div>
-    </main>
+    </div>
   );
 }

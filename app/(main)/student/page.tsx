@@ -1,9 +1,43 @@
-import React from 'react'
+import { Metadata } from "next";
+import StudentTable from "@/components/students/StudentTable";
+import { Home } from "lucide-react";
+import Link from "next/link";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 
-const page = () => {
+export const metadata: Metadata = {
+  title: "Students | Admin",
+  description: "Manage library students and subscriptions",
+};
+
+export default function StudentsPage() {
   return (
-    <div>page</div>
-  )
-}
+    <div className="min-h-screen w-full bg-background">
+      <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
+        {/* Breadcrumb */}
+        <div className="mt-24 mb-8">
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link href="/">
+                    <Home className="w-4 h-4" />
+                  </Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage className="text-primary flex items-center gap-2">
+                  Students
+                </BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
 
-export default page
+        <div className="bg-card rounded-2xl shadow-xl shadow-foreground/5 border border-border overflow-hidden">
+          <StudentTable />
+        </div>
+      </div>
+    </div>
+  );
+}
