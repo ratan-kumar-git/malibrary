@@ -14,6 +14,7 @@ import {
   KeyRound,
   AlertTriangle,
   LucideIcon,
+  Plus,
 } from "lucide-react";
 import {
   Table,
@@ -37,6 +38,7 @@ import {
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import EditStudentDialog from "./EditStudentDialog";
+import AddStudentDialog from "./AddStudentDialog";
 
 // Define the type based on your Prisma Schema
 interface Subscription {
@@ -61,6 +63,7 @@ export default function StudentTable() {
   const [loading, setLoading] = useState(true);
 
   // Action States
+  const [showAddDialog, setShowAddDialog] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -160,8 +163,8 @@ export default function StudentTable() {
   return (
     <div className="flex flex-col h-full bg-card">
       {/* Sleek Toolbar */}
-      <div className="p-6 border-b border-border flex justify-between items-center bg-muted/10">
-        <div className="relative w-full max-w-sm group">
+      <div className="p-6 border-b border-border flex justify-between items-center gap-4 bg-muted/10">
+        <div className="relative flex-1 max-w-sm group">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
           <Input
             placeholder="Search by name, ID, phone, or locker..."
@@ -170,9 +173,18 @@ export default function StudentTable() {
             className="pl-10 h-11 bg-background border-border rounded-xl focus-visible:ring-primary focus-visible:border-transparent transition-all w-full"
           />
         </div>
-        <div className="text-sm font-medium text-muted-foreground">
-          Total Students:{" "}
-          <span className="text-foreground">{filteredStudents.length}</span>
+        <div className="flex items-center gap-4">
+          <div className="text-sm font-medium text-muted-foreground">
+            Total Students:{" "}
+            <span className="text-foreground">{filteredStudents.length}</span>
+          </div>
+          <Button
+            onClick={() => setShowAddDialog(true)}
+            className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl"
+          >
+            <Plus className="size-4 mr-2" />
+            Add Student
+          </Button>
         </div>
       </div>
 
@@ -356,6 +368,13 @@ export default function StudentTable() {
           onSuccess={fetchStudents}
         />
       )}
+
+      {/* Add Student Dialog */}
+      <AddStudentDialog
+        open={showAddDialog}
+        onOpenChange={setShowAddDialog}
+        onSuccess={fetchStudents}
+      />
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>

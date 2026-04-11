@@ -13,7 +13,6 @@ interface SeatMapResponse {
   activeShifts: string[];
 }
 
-// 2. Return the full response
 const fetchSeatMap = async (dateStr?: string): Promise<SeatMapResponse> => {
   if (!dateStr) return { seatMap: {}, activeShifts: [] };
   const response = await fetch(`/api/library/seat-map?date=${dateStr}`);
@@ -31,6 +30,7 @@ export default function SeatMapPage() {
   const [selectedShift, setSelectedShift] = useState<string>("ALL");
   const [selectedSeat, setSelectedSeat] = useState<{
     floorName: string;
+    seatNo: string;
     data: SeatInfo;
   } | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(

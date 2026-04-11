@@ -115,7 +115,6 @@ export default function BookingInquiryPage() {
   };
 
   async function onSubmit(data: FormData) {
-    // Validate shifts
     if (selectedShifts.length === 0) {
       toast.error("Please select at least one shift");
       return;

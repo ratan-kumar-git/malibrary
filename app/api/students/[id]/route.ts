@@ -1,62 +1,42 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
+// GET SINGLE STUDENT
 export async function GET(
   req: Request,
   context: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await context.params;
+    const session = await auth.api.getSession({ headers: await headers() });
 
-    // Try to find by student ID first, then by memberId
-    let student = await prisma.student.findUnique({
-      where: { id },
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const isNumeric = /^\d+$/.test(id);
+
+    const student = await prisma.student.findFirst({
+      where: {
+        OR: [{ id: id }, isNumeric ? { memberId: parseInt(id) } : {}],
+        library: { userId: session.user.id },
+      },
       include: {
         subscriptions: {
-          orderBy: { startDate: "desc" },
+          orderBy: { createdAt: "desc" },
+        },
+        assignments: {
           include: {
             seat: {
-              include: {
-                floor: {
-                  include: {
-                    library: true,
-                  },
-                },
-              },
+              include: { floor: true },
             },
-            subscriptionShifts: {
-              include: { shift: true },
-            },
+            shift: true,
           },
         },
       },
     });
-
-    // If not found by ID, try by memberId
-    if (!student && id) {
-      student = await prisma.student.findUnique({
-        where: { memberId: id },
-        include: {
-          subscriptions: {
-            orderBy: { startDate: "desc" },
-            include: {
-              seat: {
-                include: {
-                  floor: {
-                    include: {
-                      library: true,
-                    },
-                  },
-                },
-              },
-              subscriptionShifts: {
-                include: { shift: true },
-              },
-            },
-          },
-        },
-      });
-    }
 
     if (!student) {
       return NextResponse.json(
@@ -65,7 +45,7 @@ export async function GET(
       );
     }
 
-    return NextResponse.json({ success: true, data: student }, { status: 200 });
+    return NextResponse.json({ success: true, data: student });
   } catch (error) {
     console.error("Fetch Student Error:", error);
     return NextResponse.json(
@@ -75,25 +55,37 @@ export async function GET(
   }
 }
 
+// UPDATE STUDENT
 export async function PATCH(
   req: Request,
   context: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await context.params;
+    const session = await auth.api.getSession({ headers: await headers() });
+
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const body = await req.json();
     const { name, gender, phoneNumber, address, lockerNumber } = body;
 
+    // Manual check for lockerNumber unique constraint within the same library
     if (lockerNumber) {
-      const existingLocker = await prisma.student.findUnique({
-        where: { lockerNumber: Number(lockerNumber) },
+      const existingLocker = await prisma.student.findFirst({
+        where: {
+          lockerNumber: Number(lockerNumber),
+          library: { userId: session.user.id },
+          NOT: { id: id },
+        },
       });
 
-      if (existingLocker && existingLocker.id !== id) {
+      if (existingLocker) {
         return NextResponse.json(
           {
             success: false,
-            message: `Locker ${lockerNumber} is already in use by another student.`,
+            message: `Locker ${lockerNumber} is already in use.`,
           },
           { status: 400 },
         );
@@ -101,7 +93,10 @@ export async function PATCH(
     }
 
     const updatedStudent = await prisma.student.update({
-      where: { id },
+      where: {
+        id,
+        library: { userId: session.user.id },
+      },
       data: {
         name,
         gender,
@@ -111,14 +106,11 @@ export async function PATCH(
       },
     });
 
-    return NextResponse.json(
-      {
-        success: true,
-        message: "Student updated successfully",
-        data: updatedStudent,
-      },
-      { status: 200 },
-    );
+    return NextResponse.json({
+      success: true,
+      message: "Student updated",
+      data: updatedStudent,
+    });
   } catch (error) {
     console.error("Update Student Error:", error);
     return NextResponse.json(
@@ -135,18 +127,20 @@ export async function DELETE(
 ) {
   try {
     const { id } = await context.params;
+    const session = await auth.api.getSession({ headers: await headers() });
+
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
     await prisma.student.delete({
-      where: { id },
+      where: {
+        id,
+        library: { userId: session.user.id },
+      },
     });
 
-    return NextResponse.json(
-      {
-        success: true,
-        message: "Student and related records deleted successfully",
-      },
-      { status: 200 },
-    );
+    return NextResponse.json({ success: true, message: "Student deleted" });
   } catch (error) {
     console.error("Delete Student Error:", error);
     return NextResponse.json(

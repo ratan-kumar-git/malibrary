@@ -20,9 +20,9 @@ export default async function proxy(req: NextRequest) {
     "/dashboard",
     "/register",
     "/seat-map",
-    "/inquiry",
     "/history",
     "/student",
+    "/inquiry-request",
   ];
 
   const isPrivateRoute = privateRoutePrefixes.some((route) =>

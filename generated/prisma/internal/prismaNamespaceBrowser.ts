@@ -61,7 +61,7 @@ export const ModelName = {
   Shift: 'Shift',
   Student: 'Student',
   Subscription: 'Subscription',
-  SubscriptionShift: 'SubscriptionShift',
+  SeatAssignment: 'SeatAssignment',
   Inquiry: 'Inquiry'
 } as const
 
@@ -220,8 +220,14 @@ export type StudentScalarFieldEnum = (typeof StudentScalarFieldEnum)[keyof typeo
 export const SubscriptionScalarFieldEnum = {
   id: 'id',
   libraryId: 'libraryId',
-  seatId: 'seatId',
   studentId: 'studentId',
+  floorName: 'floorName',
+  seatNo: 'seatNo',
+  shiftName: 'shiftName',
+  studentName: 'studentName',
+  studentGender: 'studentGender',
+  studentPhone: 'studentPhone',
+  studentAddress: 'studentAddress',
   startDate: 'startDate',
   endDate: 'endDate',
   totalAmount: 'totalAmount',
@@ -234,12 +240,16 @@ export const SubscriptionScalarFieldEnum = {
 export type SubscriptionScalarFieldEnum = (typeof SubscriptionScalarFieldEnum)[keyof typeof SubscriptionScalarFieldEnum]
 
 
-export const SubscriptionShiftScalarFieldEnum = {
-  subscriptionId: 'subscriptionId',
-  shiftId: 'shiftId'
+export const SeatAssignmentScalarFieldEnum = {
+  id: 'id',
+  seatId: 'seatId',
+  shiftId: 'shiftId',
+  studentId: 'studentId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
-export type SubscriptionShiftScalarFieldEnum = (typeof SubscriptionShiftScalarFieldEnum)[keyof typeof SubscriptionShiftScalarFieldEnum]
+export type SeatAssignmentScalarFieldEnum = (typeof SeatAssignmentScalarFieldEnum)[keyof typeof SeatAssignmentScalarFieldEnum]
 
 
 export const InquiryScalarFieldEnum = {

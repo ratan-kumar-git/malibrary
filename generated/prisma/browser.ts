@@ -68,10 +68,10 @@ export type Student = Prisma.StudentModel
  */
 export type Subscription = Prisma.SubscriptionModel
 /**
- * Model SubscriptionShift
+ * Model SeatAssignment
  * 
  */
-export type SubscriptionShift = Prisma.SubscriptionShiftModel
+export type SeatAssignment = Prisma.SeatAssignmentModel
 /**
  * Model Inquiry
  * 

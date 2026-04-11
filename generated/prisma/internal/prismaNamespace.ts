@@ -394,7 +394,7 @@ export const ModelName = {
   Shift: 'Shift',
   Student: 'Student',
   Subscription: 'Subscription',
-  SubscriptionShift: 'SubscriptionShift',
+  SeatAssignment: 'SeatAssignment',
   Inquiry: 'Inquiry'
 } as const
 
@@ -411,7 +411,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "library" | "floor" | "seat" | "shift" | "student" | "subscription" | "subscriptionShift" | "inquiry"
+    modelProps: "user" | "session" | "account" | "verification" | "library" | "floor" | "seat" | "shift" | "student" | "subscription" | "seatAssignment" | "inquiry"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1155,77 +1155,77 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    SubscriptionShift: {
-      payload: Prisma.$SubscriptionShiftPayload<ExtArgs>
-      fields: Prisma.SubscriptionShiftFieldRefs
+    SeatAssignment: {
+      payload: Prisma.$SeatAssignmentPayload<ExtArgs>
+      fields: Prisma.SeatAssignmentFieldRefs
       operations: {
         findUnique: {
-          args: Prisma.SubscriptionShiftFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionShiftPayload> | null
+          args: Prisma.SeatAssignmentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SeatAssignmentPayload> | null
         }
         findUniqueOrThrow: {
-          args: Prisma.SubscriptionShiftFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionShiftPayload>
+          args: Prisma.SeatAssignmentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SeatAssignmentPayload>
         }
         findFirst: {
-          args: Prisma.SubscriptionShiftFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionShiftPayload> | null
+          args: Prisma.SeatAssignmentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SeatAssignmentPayload> | null
         }
         findFirstOrThrow: {
-          args: Prisma.SubscriptionShiftFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionShiftPayload>
+          args: Prisma.SeatAssignmentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SeatAssignmentPayload>
         }
         findMany: {
-          args: Prisma.SubscriptionShiftFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionShiftPayload>[]
+          args: Prisma.SeatAssignmentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SeatAssignmentPayload>[]
         }
         create: {
-          args: Prisma.SubscriptionShiftCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionShiftPayload>
+          args: Prisma.SeatAssignmentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SeatAssignmentPayload>
         }
         createMany: {
-          args: Prisma.SubscriptionShiftCreateManyArgs<ExtArgs>
+          args: Prisma.SeatAssignmentCreateManyArgs<ExtArgs>
           result: BatchPayload
         }
         createManyAndReturn: {
-          args: Prisma.SubscriptionShiftCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionShiftPayload>[]
+          args: Prisma.SeatAssignmentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SeatAssignmentPayload>[]
         }
         delete: {
-          args: Prisma.SubscriptionShiftDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionShiftPayload>
+          args: Prisma.SeatAssignmentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SeatAssignmentPayload>
         }
         update: {
-          args: Prisma.SubscriptionShiftUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionShiftPayload>
+          args: Prisma.SeatAssignmentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SeatAssignmentPayload>
         }
         deleteMany: {
-          args: Prisma.SubscriptionShiftDeleteManyArgs<ExtArgs>
+          args: Prisma.SeatAssignmentDeleteManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateMany: {
-          args: Prisma.SubscriptionShiftUpdateManyArgs<ExtArgs>
+          args: Prisma.SeatAssignmentUpdateManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateManyAndReturn: {
-          args: Prisma.SubscriptionShiftUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionShiftPayload>[]
+          args: Prisma.SeatAssignmentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SeatAssignmentPayload>[]
         }
         upsert: {
-          args: Prisma.SubscriptionShiftUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionShiftPayload>
+          args: Prisma.SeatAssignmentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SeatAssignmentPayload>
         }
         aggregate: {
-          args: Prisma.SubscriptionShiftAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateSubscriptionShift>
+          args: Prisma.SeatAssignmentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSeatAssignment>
         }
         groupBy: {
-          args: Prisma.SubscriptionShiftGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.SubscriptionShiftGroupByOutputType>[]
+          args: Prisma.SeatAssignmentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SeatAssignmentGroupByOutputType>[]
         }
         count: {
-          args: Prisma.SubscriptionShiftCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.SubscriptionShiftCountAggregateOutputType> | number
+          args: Prisma.SeatAssignmentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SeatAssignmentCountAggregateOutputType> | number
         }
       }
     }
@@ -1481,8 +1481,14 @@ export type StudentScalarFieldEnum = (typeof StudentScalarFieldEnum)[keyof typeo
 export const SubscriptionScalarFieldEnum = {
   id: 'id',
   libraryId: 'libraryId',
-  seatId: 'seatId',
   studentId: 'studentId',
+  floorName: 'floorName',
+  seatNo: 'seatNo',
+  shiftName: 'shiftName',
+  studentName: 'studentName',
+  studentGender: 'studentGender',
+  studentPhone: 'studentPhone',
+  studentAddress: 'studentAddress',
   startDate: 'startDate',
   endDate: 'endDate',
   totalAmount: 'totalAmount',
@@ -1495,12 +1501,16 @@ export const SubscriptionScalarFieldEnum = {
 export type SubscriptionScalarFieldEnum = (typeof SubscriptionScalarFieldEnum)[keyof typeof SubscriptionScalarFieldEnum]
 
 
-export const SubscriptionShiftScalarFieldEnum = {
-  subscriptionId: 'subscriptionId',
-  shiftId: 'shiftId'
+export const SeatAssignmentScalarFieldEnum = {
+  id: 'id',
+  seatId: 'seatId',
+  shiftId: 'shiftId',
+  studentId: 'studentId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
-export type SubscriptionShiftScalarFieldEnum = (typeof SubscriptionShiftScalarFieldEnum)[keyof typeof SubscriptionShiftScalarFieldEnum]
+export type SeatAssignmentScalarFieldEnum = (typeof SeatAssignmentScalarFieldEnum)[keyof typeof SeatAssignmentScalarFieldEnum]
 
 
 export const InquiryScalarFieldEnum = {
@@ -1772,7 +1782,7 @@ export type GlobalOmitConfig = {
   shift?: Prisma.ShiftOmit
   student?: Prisma.StudentOmit
   subscription?: Prisma.SubscriptionOmit
-  subscriptionShift?: Prisma.SubscriptionShiftOmit
+  seatAssignment?: Prisma.SeatAssignmentOmit
   inquiry?: Prisma.InquiryOmit
 }
 

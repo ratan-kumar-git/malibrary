@@ -17,7 +17,7 @@ export type Library = z.infer<typeof librarySchema> & { id: string };
 
 // Seat Validation
 export const seatSchema = z.object({
-  id: z.string().cuid(),
+  id: z.cuid(),
   number: z.number().int().min(1),
   isActive: z.boolean(),
   floorId: z.string(),
@@ -95,35 +95,46 @@ export const librarySetupSchema = librarySchema.extend({
 // payload type for library setup
 export type LibrarySetupPayload = z.input<typeof librarySetupSchema>;
 
-// Student Validation
+// --- Student Validation ---
 export const studentSchema = z.object({
   name: z.string().min(1, 'Name is required').max(255),
-  gender: z.enum(['male', 'female', 'other']),
+  gender: z.string().min(1, 'Gender is required'),
   phoneNumber: z.string().regex(/^\d{10}$/, 'Phone number must be 10 digits'),
-  address: z.string().optional(),
-  lockerNumber: z.string().optional(),
+  address: z.string().optional().nullable(),
+  lockerNumber: z.preprocess(
+    (val) => (val === "" ? undefined : Number(val)),
+    z.number().optional()
+  ),
 });
 
-export type Student = z.infer<typeof studentSchema> & { id: string; memberId: string };
+export type Student = z.infer<typeof studentSchema> & { id: string; memberId: number };
 
-// Subscription Validation
+// --- Subscription Validation ---
 export const subscriptionSchema = z.object({
-  shifts: z.array(z.string()).min(1, 'At least one shift must be selected'),
-  startDate: z.string(),
-  endDate: z.string(),
-  seatNo: z.number().min(1),
+  // In your new schema, Subscription tracks shiftName (ShiftType) 
+  // and SeatAssignment tracks multiple shifts via shiftId
+  shiftIds: z.array(z.string()).min(1, 'At least one shift must be selected'),
+  floorId: z.string().min(1, 'Floor is required'),
+  seatId: z.string().min(1, 'Seat is required'),
+  
+  startDate: z.coerce.date(), // Use coerce to handle string-to-date conversion
+  endDate: z.coerce.date(),
+  
   totalAmount: z.number().min(0),
   amountPaid: z.number().min(0),
 });
 
 export type SubscriptionInput = z.infer<typeof subscriptionSchema>;
 
-// Student Registration (Combined) Validation
+// --- Student Registration (Combined) Validation ---
 export const studentRegistrationSchema = studentSchema.extend({
-  shifts: z.array(z.string()).min(1, 'At least one shift must be selected'),
-  startDate: z.string(),
-  endDate: z.string(),
-  seatNo: z.number().min(1),
+  shiftIds: z.array(z.string()).min(1, 'At least one shift must be selected'),
+  floorId: z.string().min(1, 'Floor is required'),
+  seatId: z.string().min(1, 'Seat is required'),
+  
+  startDate: z.coerce.date(),
+  endDate: z.coerce.date(),
+  
   totalAmount: z.number().min(0),
   amountPaid: z.number().min(0),
 });

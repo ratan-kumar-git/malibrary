@@ -13,7 +13,7 @@ export async function GET() {
   }
 
   const library = await prisma.library.findUnique({
-    where: { userId: "yR9Le0yKXYaB6D9rNxDPjuySiH5oLuLv" },
+    where: { userId: session.user.id },
     include: {
       floors: {
         select: { id: true, name: true },

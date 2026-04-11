@@ -19,8 +19,7 @@ export type ROLE = (typeof ROLE)[keyof typeof ROLE]
 
 export const Status = {
   ACTIVE: 'ACTIVE',
-  EXPIRED: 'EXPIRED',
-  UPCOMING: 'UPCOMING'
+  EXPIRED: 'EXPIRED'
 } as const
 
 export type Status = (typeof Status)[keyof typeof Status]

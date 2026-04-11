@@ -2,10 +2,13 @@
 CREATE TYPE "ROLE" AS ENUM ('ADMIN', 'USER');
 
 -- CreateEnum
-CREATE TYPE "Status" AS ENUM ('ACTIVE', 'EXPIRED', 'UPCOMING');
+CREATE TYPE "Status" AS ENUM ('ACTIVE', 'EXPIRED');
 
 -- CreateEnum
-CREATE TYPE "ShiftType" AS ENUM ('MORNING', 'AFTERNOON', 'EVENING', 'NIGHT', 'FULL_DAY');
+CREATE TYPE "ShiftType" AS ENUM ('MORNING', 'AFTERNOON', 'EVENING', 'NIGHT');
+
+-- CreateEnum
+CREATE TYPE "InquiryStatus" AS ENUM ('PENDING', 'CONTACTED', 'CONVERTED', 'CANCELLED');
 
 -- CreateTable
 CREATE TABLE "user" (
@@ -131,7 +134,7 @@ CREATE TABLE "Shift" (
 CREATE TABLE "Student" (
     "id" TEXT NOT NULL,
     "libraryId" TEXT NOT NULL,
-    "memberId" TEXT,
+    "memberId" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "gender" TEXT NOT NULL,
     "phoneNumber" TEXT NOT NULL,
@@ -147,12 +150,18 @@ CREATE TABLE "Student" (
 CREATE TABLE "Subscription" (
     "id" TEXT NOT NULL,
     "libraryId" TEXT NOT NULL,
-    "seatId" TEXT NOT NULL,
-    "studentId" TEXT NOT NULL,
+    "studentId" TEXT,
+    "floorName" TEXT NOT NULL,
+    "seatNo" INTEGER NOT NULL,
+    "shiftName" "ShiftType"[],
+    "studentName" TEXT NOT NULL,
+    "studentGender" TEXT NOT NULL,
+    "studentPhone" TEXT NOT NULL,
+    "studentAddress" TEXT,
     "startDate" TIMESTAMP(3) NOT NULL,
     "endDate" TIMESTAMP(3) NOT NULL,
-    "totalAmount" DOUBLE PRECISION NOT NULL,
-    "amountPaid" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "totalAmount" INTEGER NOT NULL,
+    "amountPaid" INTEGER NOT NULL DEFAULT 0,
     "status" "Status" NOT NULL DEFAULT 'ACTIVE',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -161,11 +170,31 @@ CREATE TABLE "Subscription" (
 );
 
 -- CreateTable
-CREATE TABLE "SubscriptionShift" (
-    "subscriptionId" TEXT NOT NULL,
+CREATE TABLE "SeatAssignment" (
+    "id" TEXT NOT NULL,
+    "seatId" TEXT NOT NULL,
     "shiftId" TEXT NOT NULL,
+    "studentId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "SubscriptionShift_pkey" PRIMARY KEY ("subscriptionId","shiftId")
+    CONSTRAINT "SeatAssignment_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Inquiry" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "gender" TEXT NOT NULL,
+    "phoneNumber" TEXT NOT NULL,
+    "address" TEXT,
+    "shiftNames" "ShiftType"[],
+    "joiningDate" TIMESTAMP(3),
+    "message" TEXT,
+    "status" "InquiryStatus" NOT NULL DEFAULT 'PENDING',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Inquiry_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -211,9 +240,6 @@ CREATE INDEX "Shift_libraryId_idx" ON "Shift"("libraryId");
 CREATE UNIQUE INDEX "Shift_libraryId_name_key" ON "Shift"("libraryId", "name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Student_memberId_key" ON "Student"("memberId");
-
--- CreateIndex
 CREATE UNIQUE INDEX "Student_lockerNumber_key" ON "Student"("lockerNumber");
 
 -- CreateIndex
@@ -221,6 +247,21 @@ CREATE INDEX "Student_libraryId_idx" ON "Student"("libraryId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Student_libraryId_phoneNumber_key" ON "Student"("libraryId", "phoneNumber");
+
+-- CreateIndex
+CREATE INDEX "Subscription_libraryId_status_idx" ON "Subscription"("libraryId", "status");
+
+-- CreateIndex
+CREATE INDEX "Subscription_startDate_endDate_idx" ON "Subscription"("startDate", "endDate");
+
+-- CreateIndex
+CREATE INDEX "Subscription_studentId_idx" ON "Subscription"("studentId");
+
+-- CreateIndex
+CREATE INDEX "SeatAssignment_studentId_idx" ON "SeatAssignment"("studentId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "SeatAssignment_seatId_shiftId_key" ON "SeatAssignment"("seatId", "shiftId");
 
 -- AddForeignKey
 ALTER TABLE "session" ADD CONSTRAINT "session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -241,19 +282,19 @@ ALTER TABLE "Seat" ADD CONSTRAINT "Seat_floorId_fkey" FOREIGN KEY ("floorId") RE
 ALTER TABLE "Shift" ADD CONSTRAINT "Shift_libraryId_fkey" FOREIGN KEY ("libraryId") REFERENCES "Library"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Student" ADD CONSTRAINT "Student_libraryId_fkey" FOREIGN KEY ("libraryId") REFERENCES "Library"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Student" ADD CONSTRAINT "Student_libraryId_fkey" FOREIGN KEY ("libraryId") REFERENCES "Library"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Subscription" ADD CONSTRAINT "Subscription_libraryId_fkey" FOREIGN KEY ("libraryId") REFERENCES "Library"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Subscription" ADD CONSTRAINT "Subscription_seatId_fkey" FOREIGN KEY ("seatId") REFERENCES "Seat"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Subscription" ADD CONSTRAINT "Subscription_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Student"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Subscription" ADD CONSTRAINT "Subscription_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Student"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "SeatAssignment" ADD CONSTRAINT "SeatAssignment_seatId_fkey" FOREIGN KEY ("seatId") REFERENCES "Seat"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "SubscriptionShift" ADD CONSTRAINT "SubscriptionShift_subscriptionId_fkey" FOREIGN KEY ("subscriptionId") REFERENCES "Subscription"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "SeatAssignment" ADD CONSTRAINT "SeatAssignment_shiftId_fkey" FOREIGN KEY ("shiftId") REFERENCES "Shift"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "SubscriptionShift" ADD CONSTRAINT "SubscriptionShift_shiftId_fkey" FOREIGN KEY ("shiftId") REFERENCES "Shift"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "SeatAssignment" ADD CONSTRAINT "SeatAssignment_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Student"("id") ON DELETE CASCADE ON UPDATE CASCADE;

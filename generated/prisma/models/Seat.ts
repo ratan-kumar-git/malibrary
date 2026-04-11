@@ -225,7 +225,7 @@ export type SeatWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Seat"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Seat"> | Date | string
   floor?: Prisma.XOR<Prisma.FloorScalarRelationFilter, Prisma.FloorWhereInput>
-  subscriptions?: Prisma.SubscriptionListRelationFilter
+  assignments?: Prisma.SeatAssignmentListRelationFilter
 }
 
 export type SeatOrderByWithRelationInput = {
@@ -236,7 +236,7 @@ export type SeatOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   floor?: Prisma.FloorOrderByWithRelationInput
-  subscriptions?: Prisma.SubscriptionOrderByRelationAggregateInput
+  assignments?: Prisma.SeatAssignmentOrderByRelationAggregateInput
 }
 
 export type SeatWhereUniqueInput = Prisma.AtLeast<{
@@ -251,7 +251,7 @@ export type SeatWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Seat"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Seat"> | Date | string
   floor?: Prisma.XOR<Prisma.FloorScalarRelationFilter, Prisma.FloorWhereInput>
-  subscriptions?: Prisma.SubscriptionListRelationFilter
+  assignments?: Prisma.SeatAssignmentListRelationFilter
 }, "id" | "floorId_seatNo">
 
 export type SeatOrderByWithAggregationInput = {
@@ -287,7 +287,7 @@ export type SeatCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   floor: Prisma.FloorCreateNestedOneWithoutSeatsInput
-  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutSeatInput
+  assignments?: Prisma.SeatAssignmentCreateNestedManyWithoutSeatInput
 }
 
 export type SeatUncheckedCreateInput = {
@@ -297,7 +297,7 @@ export type SeatUncheckedCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutSeatInput
+  assignments?: Prisma.SeatAssignmentUncheckedCreateNestedManyWithoutSeatInput
 }
 
 export type SeatUpdateInput = {
@@ -307,7 +307,7 @@ export type SeatUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   floor?: Prisma.FloorUpdateOneRequiredWithoutSeatsNestedInput
-  subscriptions?: Prisma.SubscriptionUpdateManyWithoutSeatNestedInput
+  assignments?: Prisma.SeatAssignmentUpdateManyWithoutSeatNestedInput
 }
 
 export type SeatUncheckedUpdateInput = {
@@ -317,7 +317,7 @@ export type SeatUncheckedUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutSeatNestedInput
+  assignments?: Prisma.SeatAssignmentUncheckedUpdateManyWithoutSeatNestedInput
 }
 
 export type SeatCreateManyInput = {
@@ -443,18 +443,18 @@ export type SeatUncheckedUpdateManyWithoutFloorNestedInput = {
   deleteMany?: Prisma.SeatScalarWhereInput | Prisma.SeatScalarWhereInput[]
 }
 
-export type SeatCreateNestedOneWithoutSubscriptionsInput = {
-  create?: Prisma.XOR<Prisma.SeatCreateWithoutSubscriptionsInput, Prisma.SeatUncheckedCreateWithoutSubscriptionsInput>
-  connectOrCreate?: Prisma.SeatCreateOrConnectWithoutSubscriptionsInput
+export type SeatCreateNestedOneWithoutAssignmentsInput = {
+  create?: Prisma.XOR<Prisma.SeatCreateWithoutAssignmentsInput, Prisma.SeatUncheckedCreateWithoutAssignmentsInput>
+  connectOrCreate?: Prisma.SeatCreateOrConnectWithoutAssignmentsInput
   connect?: Prisma.SeatWhereUniqueInput
 }
 
-export type SeatUpdateOneRequiredWithoutSubscriptionsNestedInput = {
-  create?: Prisma.XOR<Prisma.SeatCreateWithoutSubscriptionsInput, Prisma.SeatUncheckedCreateWithoutSubscriptionsInput>
-  connectOrCreate?: Prisma.SeatCreateOrConnectWithoutSubscriptionsInput
-  upsert?: Prisma.SeatUpsertWithoutSubscriptionsInput
+export type SeatUpdateOneRequiredWithoutAssignmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.SeatCreateWithoutAssignmentsInput, Prisma.SeatUncheckedCreateWithoutAssignmentsInput>
+  connectOrCreate?: Prisma.SeatCreateOrConnectWithoutAssignmentsInput
+  upsert?: Prisma.SeatUpsertWithoutAssignmentsInput
   connect?: Prisma.SeatWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.SeatUpdateToOneWithWhereWithoutSubscriptionsInput, Prisma.SeatUpdateWithoutSubscriptionsInput>, Prisma.SeatUncheckedUpdateWithoutSubscriptionsInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SeatUpdateToOneWithWhereWithoutAssignmentsInput, Prisma.SeatUpdateWithoutAssignmentsInput>, Prisma.SeatUncheckedUpdateWithoutAssignmentsInput>
 }
 
 export type SeatCreateWithoutFloorInput = {
@@ -463,7 +463,7 @@ export type SeatCreateWithoutFloorInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutSeatInput
+  assignments?: Prisma.SeatAssignmentCreateNestedManyWithoutSeatInput
 }
 
 export type SeatUncheckedCreateWithoutFloorInput = {
@@ -472,7 +472,7 @@ export type SeatUncheckedCreateWithoutFloorInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutSeatInput
+  assignments?: Prisma.SeatAssignmentUncheckedCreateNestedManyWithoutSeatInput
 }
 
 export type SeatCreateOrConnectWithoutFloorInput = {
@@ -513,7 +513,7 @@ export type SeatScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Seat"> | Date | string
 }
 
-export type SeatCreateWithoutSubscriptionsInput = {
+export type SeatCreateWithoutAssignmentsInput = {
   id?: string
   seatNo: number
   isActive?: boolean
@@ -522,7 +522,7 @@ export type SeatCreateWithoutSubscriptionsInput = {
   floor: Prisma.FloorCreateNestedOneWithoutSeatsInput
 }
 
-export type SeatUncheckedCreateWithoutSubscriptionsInput = {
+export type SeatUncheckedCreateWithoutAssignmentsInput = {
   id?: string
   floorId: string
   seatNo: number
@@ -531,23 +531,23 @@ export type SeatUncheckedCreateWithoutSubscriptionsInput = {
   updatedAt?: Date | string
 }
 
-export type SeatCreateOrConnectWithoutSubscriptionsInput = {
+export type SeatCreateOrConnectWithoutAssignmentsInput = {
   where: Prisma.SeatWhereUniqueInput
-  create: Prisma.XOR<Prisma.SeatCreateWithoutSubscriptionsInput, Prisma.SeatUncheckedCreateWithoutSubscriptionsInput>
+  create: Prisma.XOR<Prisma.SeatCreateWithoutAssignmentsInput, Prisma.SeatUncheckedCreateWithoutAssignmentsInput>
 }
 
-export type SeatUpsertWithoutSubscriptionsInput = {
-  update: Prisma.XOR<Prisma.SeatUpdateWithoutSubscriptionsInput, Prisma.SeatUncheckedUpdateWithoutSubscriptionsInput>
-  create: Prisma.XOR<Prisma.SeatCreateWithoutSubscriptionsInput, Prisma.SeatUncheckedCreateWithoutSubscriptionsInput>
+export type SeatUpsertWithoutAssignmentsInput = {
+  update: Prisma.XOR<Prisma.SeatUpdateWithoutAssignmentsInput, Prisma.SeatUncheckedUpdateWithoutAssignmentsInput>
+  create: Prisma.XOR<Prisma.SeatCreateWithoutAssignmentsInput, Prisma.SeatUncheckedCreateWithoutAssignmentsInput>
   where?: Prisma.SeatWhereInput
 }
 
-export type SeatUpdateToOneWithWhereWithoutSubscriptionsInput = {
+export type SeatUpdateToOneWithWhereWithoutAssignmentsInput = {
   where?: Prisma.SeatWhereInput
-  data: Prisma.XOR<Prisma.SeatUpdateWithoutSubscriptionsInput, Prisma.SeatUncheckedUpdateWithoutSubscriptionsInput>
+  data: Prisma.XOR<Prisma.SeatUpdateWithoutAssignmentsInput, Prisma.SeatUncheckedUpdateWithoutAssignmentsInput>
 }
 
-export type SeatUpdateWithoutSubscriptionsInput = {
+export type SeatUpdateWithoutAssignmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   seatNo?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -556,7 +556,7 @@ export type SeatUpdateWithoutSubscriptionsInput = {
   floor?: Prisma.FloorUpdateOneRequiredWithoutSeatsNestedInput
 }
 
-export type SeatUncheckedUpdateWithoutSubscriptionsInput = {
+export type SeatUncheckedUpdateWithoutAssignmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   floorId?: Prisma.StringFieldUpdateOperationsInput | string
   seatNo?: Prisma.IntFieldUpdateOperationsInput | number
@@ -579,7 +579,7 @@ export type SeatUpdateWithoutFloorInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  subscriptions?: Prisma.SubscriptionUpdateManyWithoutSeatNestedInput
+  assignments?: Prisma.SeatAssignmentUpdateManyWithoutSeatNestedInput
 }
 
 export type SeatUncheckedUpdateWithoutFloorInput = {
@@ -588,7 +588,7 @@ export type SeatUncheckedUpdateWithoutFloorInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutSeatNestedInput
+  assignments?: Prisma.SeatAssignmentUncheckedUpdateManyWithoutSeatNestedInput
 }
 
 export type SeatUncheckedUpdateManyWithoutFloorInput = {
@@ -605,11 +605,11 @@ export type SeatUncheckedUpdateManyWithoutFloorInput = {
  */
 
 export type SeatCountOutputType = {
-  subscriptions: number
+  assignments: number
 }
 
 export type SeatCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  subscriptions?: boolean | SeatCountOutputTypeCountSubscriptionsArgs
+  assignments?: boolean | SeatCountOutputTypeCountAssignmentsArgs
 }
 
 /**
@@ -625,8 +625,8 @@ export type SeatCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
 /**
  * SeatCountOutputType without action
  */
-export type SeatCountOutputTypeCountSubscriptionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.SubscriptionWhereInput
+export type SeatCountOutputTypeCountAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SeatAssignmentWhereInput
 }
 
 
@@ -638,7 +638,7 @@ export type SeatSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   createdAt?: boolean
   updatedAt?: boolean
   floor?: boolean | Prisma.FloorDefaultArgs<ExtArgs>
-  subscriptions?: boolean | Prisma.Seat$subscriptionsArgs<ExtArgs>
+  assignments?: boolean | Prisma.Seat$assignmentsArgs<ExtArgs>
   _count?: boolean | Prisma.SeatCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["seat"]>
 
@@ -674,7 +674,7 @@ export type SeatSelectScalar = {
 export type SeatOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "floorId" | "seatNo" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["seat"]>
 export type SeatInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   floor?: boolean | Prisma.FloorDefaultArgs<ExtArgs>
-  subscriptions?: boolean | Prisma.Seat$subscriptionsArgs<ExtArgs>
+  assignments?: boolean | Prisma.Seat$assignmentsArgs<ExtArgs>
   _count?: boolean | Prisma.SeatCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type SeatIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -688,7 +688,7 @@ export type $SeatPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name: "Seat"
   objects: {
     floor: Prisma.$FloorPayload<ExtArgs>
-    subscriptions: Prisma.$SubscriptionPayload<ExtArgs>[]
+    assignments: Prisma.$SeatAssignmentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1092,7 +1092,7 @@ readonly fields: SeatFieldRefs;
 export interface Prisma__SeatClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   floor<T extends Prisma.FloorDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FloorDefaultArgs<ExtArgs>>): Prisma.Prisma__FloorClient<runtime.Types.Result.GetResult<Prisma.$FloorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  subscriptions<T extends Prisma.Seat$subscriptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Seat$subscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  assignments<T extends Prisma.Seat$assignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Seat$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SeatAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1529,27 +1529,27 @@ export type SeatDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
- * Seat.subscriptions
+ * Seat.assignments
  */
-export type Seat$subscriptionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Seat$assignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Subscription
+   * Select specific fields to fetch from the SeatAssignment
    */
-  select?: Prisma.SubscriptionSelect<ExtArgs> | null
+  select?: Prisma.SeatAssignmentSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Subscription
+   * Omit specific fields from the SeatAssignment
    */
-  omit?: Prisma.SubscriptionOmit<ExtArgs> | null
+  omit?: Prisma.SeatAssignmentOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.SubscriptionInclude<ExtArgs> | null
-  where?: Prisma.SubscriptionWhereInput
-  orderBy?: Prisma.SubscriptionOrderByWithRelationInput | Prisma.SubscriptionOrderByWithRelationInput[]
-  cursor?: Prisma.SubscriptionWhereUniqueInput
+  include?: Prisma.SeatAssignmentInclude<ExtArgs> | null
+  where?: Prisma.SeatAssignmentWhereInput
+  orderBy?: Prisma.SeatAssignmentOrderByWithRelationInput | Prisma.SeatAssignmentOrderByWithRelationInput[]
+  cursor?: Prisma.SeatAssignmentWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.SubscriptionScalarFieldEnum | Prisma.SubscriptionScalarFieldEnum[]
+  distinct?: Prisma.SeatAssignmentScalarFieldEnum | Prisma.SeatAssignmentScalarFieldEnum[]
 }
 
 /**

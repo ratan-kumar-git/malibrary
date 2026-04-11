@@ -1,33 +1,21 @@
 import { differenceInDays, startOfDay } from "date-fns";
 
-export interface ShiftData {
-  id: string;
-  studentId: string;
+export interface ShiftAssignment {
   studentName: string;
-  memberId: string | null;
-  phoneNumber: string;
-  libraryId: string;
-  startDate: string;
-  endDate: string;
-  seatNo: string;
-  shift: string[];
-  totalFee: number;
-  feeDue: number;
-  isActive: boolean;
+  memberId: number | null;
+  expiry: string | null;
+  isDue: boolean;
 }
 
 export interface SeatShifts {
-  MORNING: ShiftData | null;
-  AFTERNOON: ShiftData | null;
-  EVENING: ShiftData | null;
-  NIGHT: ShiftData | null;
+  [shiftName: string]: ShiftAssignment | null;
 }
 
 export interface SeatInfo {
-  seatId: string;
-  floorId: string;
-  seatNo: number;
+  id: string;
+  active: boolean;
   shifts: SeatShifts;
+  seatNo?: number; // Optional for backwards compatibility
 }
 
 export interface SeatMapData {
@@ -36,17 +24,26 @@ export interface SeatMapData {
   };
 }
 
-export const SHIFT_KEYS: (keyof SeatShifts)[] = ["MORNING", "AFTERNOON", "EVENING", "NIGHT"];
+export const SHIFT_KEYS = ["MORNING", "AFTERNOON", "EVENING", "NIGHT"];
 
-export const getDaysRemaining = (endDateStr: string) => {
+export const getDaysRemaining = (endDateStr: string | null) => {
+  if (!endDateStr) return null;
   const end = startOfDay(new Date(endDateStr));
   const today = startOfDay(new Date());
   const diffDays = differenceInDays(end, today);
 
-  if (diffDays < 0) return "Expired";
-  if (diffDays === 0) return "Expires today";
-  if (diffDays === 1) return "Expires tomorrow";
-  return `Expires in ${diffDays} days`;
+  if (diffDays < 0) return { text: "Expired", days: diffDays, status: "expired" };
+  if (diffDays === 0) return { text: "Expires today", days: 0, status: "expiring" };
+  if (diffDays === 1) return { text: "Expires tomorrow", days: 1, status: "expiring" };
+  return { text: `Expires in ${diffDays} days`, days: diffDays, status: "active" };
+};
+
+export const getSubscriptionStatus = (endDateStr: string | null): "active" | "expired" | "vacant" => {
+  if (!endDateStr) return "vacant";
+  const end = startOfDay(new Date(endDateStr));
+  const today = startOfDay(new Date());
+  const diffDays = differenceInDays(end, today);
+  return diffDays < 0 ? "expired" : "active";
 };
 
 export const formatShiftName = (shift: string) => {

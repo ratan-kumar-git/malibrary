@@ -372,14 +372,6 @@ export type InquiryUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type EnumShiftTypeNullableListFilter<$PrismaModel = never> = {
-  equals?: $Enums.ShiftType[] | Prisma.ListEnumShiftTypeFieldRefInput<$PrismaModel> | null
-  has?: $Enums.ShiftType | Prisma.EnumShiftTypeFieldRefInput<$PrismaModel> | null
-  hasEvery?: $Enums.ShiftType[] | Prisma.ListEnumShiftTypeFieldRefInput<$PrismaModel>
-  hasSome?: $Enums.ShiftType[] | Prisma.ListEnumShiftTypeFieldRefInput<$PrismaModel>
-  isEmpty?: boolean
-}
-
 export type InquiryCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
