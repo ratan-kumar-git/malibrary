@@ -3,8 +3,10 @@ import { differenceInDays, startOfDay } from "date-fns";
 export interface ShiftAssignment {
   studentName: string;
   memberId: number | null;
+  studentId: string;
   expiry: string | null;
   isDue: boolean;
+  subscriptionId: string | null;
 }
 
 export interface SeatShifts {

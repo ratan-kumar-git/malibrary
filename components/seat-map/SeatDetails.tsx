@@ -1,5 +1,5 @@
-import React from "react";
-import { X, Search, Info, User, AlertCircle, Timer, Zap, CreditCard } from "lucide-react";
+import React, { useState } from "react";
+import { X, Search, Info, User, AlertCircle, Timer, Zap, CreditCard, Loader2, Trash2, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
@@ -22,6 +22,71 @@ interface Props {
 
 export function SeatDetails({ selectedSeat, onClose, selectedShift, activeShifts }: Props) {
   const router = useRouter();
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [renewLoading, setRenewLoading] = useState(false);
+  const [actionMessage, setActionMessage] = useState('');
+
+  const handleDeleteSubscription = async (subscriptionId: string) => {
+    if (!confirm('Are you sure you want to dissociate this seat? This will end the subscription.')) {
+      return;
+    }
+
+    setDeleteLoading(true);
+    try {
+      const res = await fetch(`/api/subscriptions/${subscriptionId}`, {
+        method: 'DELETE',
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || 'Failed to delete subscription');
+      }
+
+      setActionMessage('Subscription dissociated successfully');
+      setTimeout(() => {
+        router.refresh();
+        onClose();
+      }, 1000);
+    } catch (error) {
+      setActionMessage(`Error: ${error instanceof Error ? error.message : 'Failed to delete'}`);
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
+
+  const handleRenewSubscription = async (subscriptionId: string) => {
+    const months = prompt('Enter number of months to renew:', '1');
+    if (!months) return;
+
+    setRenewLoading(true);
+    try {
+      const res = await fetch(`/api/subscriptions/${subscriptionId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ months: parseInt(months) }),
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || 'Failed to renew subscription');
+      }
+
+      const result = await res.json();
+      setActionMessage(`Renewed for ${months} month(s)!`);
+      setTimeout(() => {
+        router.refresh();
+      }, 1500);
+    } catch (error) {
+      setActionMessage(`Error: ${error instanceof Error ? error.message : 'Failed to renew'}`);
+    } finally {
+      setRenewLoading(false);
+    }
+  };
+
+  const formatMemberId = (memberId: number | null) => {
+    if (!memberId) return 'N/A';
+    return `MID${String(memberId).padStart(4, '0')}`;
+  };
 
   if (!selectedSeat) {
     return (
@@ -160,7 +225,12 @@ export function SeatDetails({ selectedSeat, onClose, selectedShift, activeShifts
                       {shiftData.memberId && (
                         <div className="bg-background p-2 rounded-lg border border-border/50 text-xs">
                           <p className="text-muted-foreground mb-0.5">Member ID</p>
-                          <p className="font-mono font-bold text-foreground">#{shiftData.memberId}</p>
+                          <button
+                            onClick={() => router.push(`/student/${shiftData.studentId}`)}
+                            className="font-mono font-bold text-primary hover:underline transition-colors"
+                          >
+                            {formatMemberId(shiftData.memberId)}
+                          </button>
                         </div>
                       )}
 
@@ -182,6 +252,29 @@ export function SeatDetails({ selectedSeat, onClose, selectedShift, activeShifts
                         <div className="flex items-center gap-2 p-2 rounded-lg text-xs font-medium bg-amber-500/10 text-amber-700 border border-amber-500/20">
                           <AlertCircle size={14} />
                           Payment due
+                        </div>
+                      )}
+
+                      {shiftData.subscriptionId && (
+                        <div className="flex gap-1.5 pt-2 border-t border-border/30">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="flex-1 h-7 text-[11px]  text-destructive hover:bg-destructive/10"
+                            disabled={deleteLoading || renewLoading}
+                            onClick={() => handleDeleteSubscription(shiftData.subscriptionId!)}
+                          >
+                            {deleteLoading ? <Loader2 size={12} className="animate-spin" /> : <Trash2 size={12} />}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="flex-1 h-7 text-[11px] text-emerald-600 hover:bg-emerald-600/10"
+                            disabled={deleteLoading || renewLoading}
+                            onClick={() => handleRenewSubscription(shiftData.subscriptionId!)}
+                          >
+                            {renewLoading ? <Loader2 size={12} className="animate-spin" /> : <RotateCcw size={12} />}
+                          </Button>
                         </div>
                       )}
                     </div>
@@ -207,7 +300,7 @@ export function SeatDetails({ selectedSeat, onClose, selectedShift, activeShifts
                     className="w-full h-9 text-xs bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm"
                     onClick={() =>
                       router.push(
-                        `/register?seatId=${data.id}&shift=${shiftName}&date=${new Date().toISOString().split("T")[0]}`
+                        `/booking?seatId=${data.id}&shift=${shiftName}&date=${new Date().toISOString().split("T")[0]}`
                       )
                     }
                   >
@@ -241,7 +334,8 @@ export function SeatDetails({ selectedSeat, onClose, selectedShift, activeShifts
                   </Badge>
 
                   <div className="space-y-3">
-                    <div className="p-4 bg-muted/30 rounded-xl border border-border/50 space-y-2">
+                    {/* Student Info Card */}
+                    <div className="p-4 bg-muted/30 rounded-xl border border-border/50 space-y-3">
                       <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wide flex items-center gap-1.5 mb-2">
                         <User size={14} /> Student Info
                       </p>
@@ -254,13 +348,17 @@ export function SeatDetails({ selectedSeat, onClose, selectedShift, activeShifts
                       {shiftData.memberId && (
                         <div>
                           <p className="text-sm text-muted-foreground">Member ID</p>
-                          <p className="font-mono font-bold text-foreground text-lg">
-                            #{shiftData.memberId}
-                          </p>
+                          <button
+                            onClick={() => router.push(`/student/${shiftData.studentId}`)}
+                            className="font-mono font-bold text-lg text-primary hover:underline transition-colors"
+                          >
+                            {formatMemberId(shiftData.memberId)}
+                          </button>
                         </div>
                       )}
                     </div>
 
+                    {/* Expiry Info */}
                     {shiftData.expiry && (
                       <div
                         className={cn(
@@ -296,10 +394,69 @@ export function SeatDetails({ selectedSeat, onClose, selectedShift, activeShifts
                       </div>
                     )}
 
+                    {/* Payment Due Alert */}
                     {shiftData.isDue && (
                       <div className="flex items-center gap-2 p-3 rounded-xl text-sm font-semibold bg-amber-500/10 text-amber-700 border border-amber-500/20">
                         <AlertCircle size={16} />
                         Payment due from this member
+                      </div>
+                    )}
+
+                    {/* Action Message */}
+                    {actionMessage && (
+                      <div className={cn(
+                        "p-3 rounded-xl text-sm font-medium border",
+                        actionMessage.includes('Error')
+                          ? "bg-red-500/10 text-red-700 border-red-500/20"
+                          : "bg-emerald-500/10 text-emerald-700 border-emerald-500/20"
+                      )}>
+                        {actionMessage}
+                      </div>
+                    )}
+
+                    {/* Subscription Management Card */}
+                    {shiftData.subscriptionId && (
+                      <div className="space-y-3 p-4 border-2 border-primary/30 bg-primary/5 rounded-xl">
+                        <p className="text-xs font-bold text-primary uppercase tracking-wider">Subscription Actions</p>
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="flex-1 gap-2 text-destructive hover:text-destructive hover:bg-destructive/10 border-destructive/20"
+                            disabled={deleteLoading || renewLoading}
+                            onClick={() => handleDeleteSubscription(shiftData.subscriptionId!)}
+                          >
+                            {deleteLoading ? (
+                              <>
+                                <Loader2 size={14} className="animate-spin" />
+                                Removing...
+                              </>
+                            ) : (
+                              <>
+                                <Trash2 size={14} />
+                                Dissociate
+                              </>
+                            )}
+                          </Button>
+                          <Button
+                            size="sm"
+                            className="flex-1 gap-2 bg-emerald-600 hover:bg-emerald-700"
+                            disabled={deleteLoading || renewLoading}
+                            onClick={() => handleRenewSubscription(shiftData.subscriptionId!)}
+                          >
+                            {renewLoading ? (
+                              <>
+                                <Loader2 size={14} className="animate-spin" />
+                                Renewing...
+                              </>
+                            ) : (
+                              <>
+                                <RotateCcw size={14} />
+                                Renew
+                              </>
+                            )}
+                          </Button>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -328,7 +485,7 @@ export function SeatDetails({ selectedSeat, onClose, selectedShift, activeShifts
                   className="w-full h-11 bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm mt-2"
                   onClick={() =>
                     router.push(
-                      `/register?seatId=${data.id}&shift=${selectedShift}&date=${new Date().toISOString().split("T")[0]}`
+                      `/booking?seatId=${data.id}&shift=${selectedShift}&date=${new Date().toISOString().split("T")[0]}`
                     )
                   }
                 >

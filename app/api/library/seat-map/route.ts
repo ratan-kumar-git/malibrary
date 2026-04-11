@@ -3,7 +3,22 @@ import prisma from "@/lib/prisma";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
-export async function GET(req: Request) {
+interface ShiftData {
+  studentName: string;
+  memberId: number;
+  studentId: string;
+  expiry: Date | null;
+  isDue: boolean;
+  subscriptionId: string | null;
+}
+
+interface SeatInfo {
+  id: string;
+  active: boolean;
+  shifts: Record<string, ShiftData | null>;
+}
+
+export async function GET() {
   try {
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -39,12 +54,13 @@ export async function GET(req: Request) {
               include: {
                 student: {
                   select: {
+                    id: true,
                     name: true,
                     memberId: true,
                     subscriptions: {
                       where: { status: "ACTIVE" },
                       take: 1,
-                      select: { endDate: true, totalAmount: true, amountPaid: true }
+                      select: { id: true, endDate: true, totalAmount: true, amountPaid: true }
                     }
                   }
                 }
@@ -58,13 +74,13 @@ export async function GET(req: Request) {
     });
 
     // 3. Transform data into the SeatMap structure
-    const seatMap: Record<string, any> = {};
+    const seatMap: Record<string, Record<number, SeatInfo>> = {};
 
     for (const floor of floors) {
-      const floorData: Record<number, any> = {};
+      const floorData: Record<number, SeatInfo> = {};
 
       for (const seat of floor.seats) {
-        const shiftsObj: Record<string, any> = {};
+        const shiftsObj: Record<string, ShiftData | null> = {};
 
         // Initialize all active shifts as null (Vacant)
         for (const s of activeShifts) {
@@ -82,8 +98,10 @@ export async function GET(req: Request) {
           shiftsObj[shiftInfo.name] = {
             studentName: asg.student.name,
             memberId: asg.student.memberId,
+            studentId: asg.student.id,
             expiry: sub?.endDate || null,
-            isDue: sub ? (sub.totalAmount > sub.amountPaid) : false
+            isDue: sub ? (sub.totalAmount > sub.amountPaid) : false,
+            subscriptionId: sub?.id || null,
           };
         }
 
