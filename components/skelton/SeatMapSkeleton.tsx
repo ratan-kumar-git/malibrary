@@ -2,7 +2,7 @@ import React from "react";
 
 export function SeatMapSkeleton() {
   return (
-    <div className="min-h-screen bg-muted/10 text-foreground pt-4">
+    <div className="min-h-screen bg-muted/10 text-foreground">
       <div className="max-w-6xl mx-auto p-4 md:p-8 space-y-8 animate-pulse">
         
         {/* --- HEADER SKELETON --- */}
@@ -10,8 +10,6 @@ export function SeatMapSkeleton() {
           <div className="flex flex-wrap items-center gap-4">
             {/* Floor Dropdown Placeholder */}
             <div className="w-45 h-10 bg-muted rounded-md" />
-            {/* Date Picker Placeholder */}
-            <div className="w-50 h-10 bg-muted rounded-md" />
           </div>
 
           <div className="flex gap-2 overflow-x-hidden">

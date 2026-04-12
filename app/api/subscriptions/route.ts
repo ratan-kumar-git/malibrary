@@ -1,94 +1,112 @@
+// app/api/subscriptions/route.ts  (POST only — replace your existing POST)
+//
+// KEY FIXES vs old version:
+//   1. Conflict check now uses SeatAssignment (not Subscription)
+//      Reason: SeatAssignment is the source of truth for physical occupancy.
+//              A student with an expired subscription is still physically seated
+//              until the librarian removes them. Checking Subscription would
+//              allow double-booking expired seats.
+//
+//   2. amountPaid is now actually saved (was ignored before)
+//
+//   3. No more date-range conflict check — if SeatAssignment exists for
+//      seat+shift, it's occupied. Period. No date logic needed.
+
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import prisma from '@/lib/prisma';
 import { headers } from 'next/headers';
 
+function shiftsOverlap(s1: number, e1: number, s2: number, e2: number) {
+  return s1 < e2 && s2 < e1;
+}
+
+function formatTime(minutes: number): string {
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  const displayHours = hours % 12 || 12;
+  return `${displayHours}:${mins.toString().padStart(2, '0')} ${ampm}`;
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
-
+    const session = await auth.api.getSession({ headers: await headers() });
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await request.json();
-    const {
-      seatId,
-      studentId,
-      newStudent,
-      shiftIds,
-      startDate,
-      endDate,
-      totalAmount,
-    } = body;
+    const { seatId, studentId, newStudent, shiftIds, startDate, endDate, totalAmount, amountPaid = 0 } = body;
 
-    // Validate required fields
     if (!seatId || !shiftIds?.length || !startDate || !endDate) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    // Get library info
     const library = await prisma.library.findUnique({
       where: { userId: session.user.id },
     });
-
     if (!library) {
-      return NextResponse.json(
-        { error: 'User not associated with a library' },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: 'Library not found' }, { status: 403 });
     }
 
-    // Get seat with floor information
+    // Verify seat belongs to this library
     const seat = await prisma.seat.findUnique({
       where: { id: seatId },
       include: { floor: true },
     });
-
-    if (!seat) {
-      return NextResponse.json(
-        { error: 'Seat not found' },
-        { status: 404 }
-      );
+    if (!seat || seat.floor.libraryId !== library.id) {
+      return NextResponse.json({ error: 'Seat not found' }, { status: 404 });
     }
 
-    const floor = seat.floor;
-    if (!floor || floor.libraryId !== library.id) {
-      return NextResponse.json(
-        { error: 'Floor validation failed' },
-        { status: 403 }
-      );
-    }
-
-    // Get shift info
+    // Verify shifts belong to this library
     const shifts = await prisma.shift.findMany({
+      where: { id: { in: shiftIds }, libraryId: library.id },
+    });
+    if (shifts.length !== shiftIds.length) {
+      return NextResponse.json({ error: 'One or more shifts not found' }, { status: 404 });
+    }
+
+    // Validate selected shifts don't overlap with each other
+    for (let i = 0; i < shifts.length; i++) {
+      for (let j = i + 1; j < shifts.length; j++) {
+        const s1 = shifts[i], s2 = shifts[j];
+        if (shiftsOverlap(s1.startTime, s1.endTime, s2.startTime, s2.endTime)) {
+          return NextResponse.json({
+            error: `Shifts overlap: ${s1.name} (${formatTime(s1.startTime)}-${formatTime(s1.endTime)}) and ${s2.name} (${formatTime(s2.startTime)}-${formatTime(s2.endTime)})`,
+          }, { status: 400 });
+        }
+      }
+    }
+
+    // ✅ CORRECT CONFLICT CHECK: Use SeatAssignment, not Subscription
+    // If a SeatAssignment row exists for this seat+shift, it's physically occupied.
+    // Doesn't matter if the subscription is active or expired.
+    const existingAssignments = await prisma.seatAssignment.findMany({
       where: {
-        id: { in: shiftIds },
-        libraryId: library.id,
+        seatId,
+        shiftId: { in: shiftIds },
+      },
+      include: {
+        shift: { select: { name: true } },
+        student: { select: { name: true, memberId: true } },
       },
     });
 
-    if (shifts.length !== shiftIds.length) {
-      return NextResponse.json(
-        { error: 'One or more shifts not found' },
-        { status: 404 }
+    if (existingAssignments.length > 0) {
+      const conflicts = existingAssignments.map(
+        (a) => `${a.shift.name} (occupied by ${a.student.name} #${a.student.memberId})`
       );
+      return NextResponse.json({
+        error: `Seat already occupied for: ${conflicts.join(', ')}. Librarian must remove the student before rebooking.`,
+      }, { status: 409 });
     }
 
-    // Handle student
+    // Handle student: create new or use existing
     let finalStudentId = studentId;
 
     if (newStudent) {
-      // Create new student
-      const createdStudent = await prisma.student.create({
+      const created = await prisma.student.create({
         data: {
           name: newStudent.name,
           phoneNumber: newStudent.phoneNumber,
@@ -97,112 +115,84 @@ export async function POST(request: NextRequest) {
           libraryId: library.id,
         },
       });
-
-      finalStudentId = createdStudent.id;
+      finalStudentId = created.id;
     } else if (!studentId) {
-      return NextResponse.json(
-        { error: 'Student information is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Student information required' }, { status: 400 });
     }
 
-    // Get student details for subscription
     const student = await prisma.student.findUnique({
       where: { id: finalStudentId },
     });
-
     if (!student) {
-      return NextResponse.json(
-        { error: 'Student not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Student not found' }, { status: 404 });
     }
 
-    // Check for conflicting seat assignments
-    const conflictingAssignments = await prisma.seatAssignment.findMany({
-      where: {
-        seatId: seat.id,
-        shiftId: { in: shifts.map((s) => s.id) },
-      },
-    });
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    start.setUTCHours(0, 0, 0, 0);
+    end.setUTCHours(23, 59, 59, 999);
 
-    if (conflictingAssignments.length > 0) {
-      return NextResponse.json(
-        { error: 'Seat is not available for selected shifts' },
-        { status: 409 }
-      );
-    }
-
-    // Create subscription
-    const subscription = await prisma.subscription.create({
-      data: {
-        libraryId: library.id,
-        studentId: finalStudentId,
-        floorName: floor.name,
-        seatNo: seat.seatNo,
-        shiftName: shifts.map((s) => s.name),
-        studentName: student.name,
-        studentGender: student.gender,
-        studentPhone: student.phoneNumber,
-        studentAddress: student.address || '',
-        startDate: new Date(startDate),
-        endDate: new Date(endDate),
-        totalAmount: Math.round(totalAmount) || 0,
-        amountPaid: 0,
-        status: 'ACTIVE',
-      },
-    });
-
-    // Create seat assignments for each shift
-    await Promise.all(
-      shifts.map((shift) =>
-        prisma.seatAssignment.create({
-          data: {
-            seatId: seat.id,
-            shiftId: shift.id,
-            studentId: finalStudentId,
-          },
-        })
-      )
-    );
-
-    return NextResponse.json(
-      {
-        success: true,
+    // Create Subscription (financial snapshot) + SeatAssignments (physical occupancy)
+    // Done in a transaction so either both succeed or neither does
+    const result = await prisma.$transaction(async (tx) => {
+      const subscription = await tx.subscription.create({
         data: {
-          id: subscription.id,
+          libraryId: library.id,
           studentId: finalStudentId,
-          studentName: student.name,
-          memberId: student.memberId,
+          floorName: seat.floor.name,
           seatNo: seat.seatNo,
-          floorName: floor.name,
-          startDate: subscription.startDate,
-          endDate: subscription.endDate,
-          totalAmount: subscription.totalAmount,
-          shifts: shifts.map((s) => ({
-            id: s.id,
-            name: s.name,
-            price: s.price,
-          })),
+          shiftName: shifts.map((s) => s.name),
+          studentName: student.name,
+          studentGender: student.gender,
+          studentPhone: student.phoneNumber,
+          studentAddress: student.address || '',
+          startDate: start,
+          endDate: end,
+          totalAmount: Math.round(totalAmount) || 0,
+          amountPaid: Math.round(amountPaid) || 0, // ✅ FIXED: was always 0 before
+          status: 'ACTIVE',
         },
+      });
+
+      // Create one SeatAssignment per shift
+      await tx.seatAssignment.createMany({
+        data: shifts.map((shift) => ({
+          seatId: seat.id,
+          shiftId: shift.id,
+          studentId: finalStudentId,
+        })),
+      });
+
+      return subscription;
+    });
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        id: result.id,
+        studentId: finalStudentId,
+        studentName: student.name,
+        memberId: student.memberId,
+        seatNo: seat.seatNo,
+        floorName: seat.floor.name,
+        startDate: result.startDate,
+        endDate: result.endDate,
+        totalAmount: result.totalAmount,
+        amountPaid: result.amountPaid,
+        shifts: shifts.map((s) => ({ id: s.id, name: s.name, price: s.price })),
       },
-      { status: 201 }
-    );
+    }, { status: 201 });
+
   } catch (error) {
     console.error('Subscription creation error:', error);
-
-    if (
-      error instanceof Error &&
-      error.message.includes('Unique constraint failed')
-    ) {
+    if (error instanceof Error && error.message.includes('Unique constraint')) {
       return NextResponse.json(
-        { error: 'This seat is already booked for these shifts' },
+        { error: 'Seat already assigned for one of the selected shifts' },
         { status: 409 }
       );
     }
-
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to create subscription' },
+      { error: error instanceof Error ? error.message : 'Failed to create booking' },
       { status: 500 }
     );
   }

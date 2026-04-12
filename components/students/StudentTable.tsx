@@ -28,7 +28,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -44,9 +43,14 @@ import { cn } from "@/lib/utils";
 import EditStudentDialog from "./EditStudentDialog";
 import AddStudentDialog from "./AddStudentDialog";
 import { formatMemberId } from "@/lib/helper";
+import { useRouter } from "next/navigation";
 
 // Define the type based on your Prisma Schema
 interface Subscription {
+  id: string;
+  totalAmount: number;
+  amountPaid: number;
+  startDate: string;
   endDate: string;
   status: string;
 }
@@ -63,9 +67,12 @@ interface Student {
 }
 
 export default function StudentTable() {
+  const router = useRouter();
   const [students, setStudents] = useState<Student[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState<"all" | "active" | "expired" | "none">("all");
+  const [statusFilter, setStatusFilter] = useState<
+    "all" | "active" | "expired" | "none"
+  >("all");
   const [loading, setLoading] = useState(true);
 
   // Action States
@@ -110,7 +117,10 @@ export default function StudentTable() {
       const latestSub = s.subscriptions[0];
       if (!latestSub) return statusFilter === "none";
 
-      const daysLeft = differenceInDays(new Date(latestSub.endDate), new Date());
+      const daysLeft = differenceInDays(
+        new Date(latestSub.endDate),
+        new Date(),
+      );
       const isExpired = latestSub.status !== "ACTIVE" || daysLeft < 0;
 
       if (statusFilter === "active") return !isExpired;
@@ -203,12 +213,32 @@ export default function StudentTable() {
   return (
     <div className="flex flex-col h-full bg-card">
       {/* Stats Section */}
-      <div className="p-6 border-b border-border bg-gradient-to-r from-muted/30 to-transparent">
+      <div className="p-6 border-b border-border bg-linear-to-r from-muted/30 to-transparent">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <StatCard icon={TrendingUp} label="Total Students" value={stats.total} color="bg-blue-500" />
-          <StatCard icon={CheckCircle2} label="Active" value={stats.active} color="bg-emerald-500" />
-          <StatCard icon={AlertCircle} label="Expired" value={stats.expired} color="bg-destructive" />
-          <StatCard icon={Clock} label="No Subscription" value={stats.noSub} color="bg-amber-500" />
+          <StatCard
+            icon={TrendingUp}
+            label="Total Students"
+            value={stats.total}
+            color="bg-blue-500"
+          />
+          <StatCard
+            icon={CheckCircle2}
+            label="Active"
+            value={stats.active}
+            color="bg-emerald-500"
+          />
+          <StatCard
+            icon={AlertCircle}
+            label="Expired"
+            value={stats.expired}
+            color="bg-destructive"
+          />
+          <StatCard
+            icon={Clock}
+            label="No Subscription"
+            value={stats.noSub}
+            color="bg-amber-500"
+          />
         </div>
       </div>
 
@@ -248,7 +278,7 @@ export default function StudentTable() {
                 "px-4 py-2 rounded-lg whitespace-nowrap transition-all border font-medium flex items-center gap-2",
                 statusFilter === tab.id
                   ? "bg-primary text-primary-foreground border-primary"
-                  : "bg-background border-border text-muted-foreground hover:bg-muted hover:text-foreground"
+                  : "bg-background border-border text-muted-foreground hover:bg-muted hover:text-foreground",
               )}
             >
               {tab.icon && <tab.icon className="size-4" />}
@@ -300,6 +330,9 @@ export default function StudentTable() {
                 </TableHead>
                 <TableHead className="font-bold text-muted-foreground h-12">
                   Subscription
+                </TableHead>
+                <TableHead className="font-bold text-muted-foreground h-12 w-24 text-center">
+                  Dues
                 </TableHead>
                 <TableHead className="font-bold text-muted-foreground h-12 text-right pr-6">
                   Actions
@@ -386,15 +419,23 @@ export default function StudentTable() {
                       </Badge>
                     </TableCell>
 
+                    <TableCell className="text-center">
+                      {student.subscriptions[0]
+                        ? `Rs. ${student.subscriptions[0].totalAmount - student.subscriptions[0].amountPaid}`
+                        : "-"}
+                    </TableCell>
+
                     <TableCell className="pr-6 text-right">
                       <div className="flex items-center justify-end gap-1">
                         {/* Renew Subscription Button */}
                         <ActionBtn
                           icon={RefreshCw}
                           color="text-emerald-500 hover:bg-emerald-500/10 border-emerald-500/20"
-                          onClick={() => {
-                            /* Handle redirect to renewal/booking page */
-                          }}
+                          onClick={() =>
+                            router.push(
+                              `/renew/${student.subscriptions[0]?.id}`,
+                            )
+                          }
                           title="Renew Subscription"
                         />
 

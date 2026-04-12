@@ -411,29 +411,22 @@ function ShiftLegend({ shiftsToDisplay, allShifts = [] }: { shiftsToDisplay: str
         const isInactive = shiftInfo && !shiftInfo.isActive;
         return (
           <div key={shift} className={cn("flex items-center gap-1.5", isInactive && "opacity-50")}>
-            <span
-              className={cn("w-2.5 h-2.5 rounded-sm", isInactive && "opacity-50")}
-              style={{
-                background: identity.fill,
-                border: `1px solid ${identity.stroke}`,
-              }}
-            />
             <span style={{ color: identity.stroke }}>{identity.short}</span>
             <span>{positionLabels[idx]} {isInactive && "(Inactive)"}</span>
           </div>
         );
       })}
       <div className="flex items-center gap-1.5 ml-2 pl-2 border-l border-border/50">
+        <span className="w-2.5 h-2.5 rounded-sm bg-slate-100 border border-slate-300" />
+        Vacant
+      </div>
+      <div className="flex items-center gap-1.5">
         <span className="w-2.5 h-2.5 rounded-sm bg-green-100 border border-green-400" />
         Active
       </div>
       <div className="flex items-center gap-1.5">
         <span className="w-2.5 h-2.5 rounded-sm bg-red-100 border border-red-400" />
         Expired
-      </div>
-      <div className="flex items-center gap-1.5">
-        <span className="w-2.5 h-2.5 rounded-sm bg-slate-100 border border-slate-300" />
-        Vacant
       </div>
     </div>
   );
@@ -484,9 +477,6 @@ export function SeatGrid({
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-3 h-3 rounded-full bg-emerald-400" /> Active
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded-full bg-amber-400" /> Expiring
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-3 h-3 rounded-full bg-red-400" /> Expired

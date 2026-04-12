@@ -1,18 +1,18 @@
 import React from "react";
-import { Building2, Calendar as CalendarIcon, ChevronDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
+import { Building2 } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
 interface Props {
   floors: string[];
   selectedFloor: string;
   setSelectedFloor: (f: string) => void;
-  selectedDate: Date | undefined;
-  setSelectedDate: (d: Date) => void;
   selectedShift: string;
   setSelectedShift: (s: string) => void;
   onClearSeat: () => void;
@@ -20,79 +20,59 @@ interface Props {
   allShifts?: { name: string; isActive: boolean }[];
 }
 
-const formatShiftLabel = (shift: string) => {
-  return shift
-    .replace("_", " ")
+const formatShiftLabel = (shift: string) =>
+  shift
+    .replace(/_/g, " ")
     .toLowerCase()
     .replace(/\b\w/g, (c) => c.toUpperCase());
-};
 
-export function SeatMapHeader({ 
-  floors, 
-  selectedFloor, 
-  setSelectedFloor, 
-  selectedDate, 
-  setSelectedDate, 
-  selectedShift, 
-  setSelectedShift, 
+export function SeatMapHeader({
+  floors,
+  selectedFloor,
+  setSelectedFloor,
+  selectedShift,
+  setSelectedShift,
   onClearSeat,
   activeShifts,
-  allShifts = []
+  allShifts = [],
 }: Props) {
-  const shiftsToDisplay = allShifts.length > 0 ? allShifts : activeShifts.map(s => ({ name: s, isActive: true }));
+  const shiftsToDisplay =
+    allShifts.length > 0
+      ? allShifts
+      : activeShifts.map((s) => ({ name: s, isActive: true }));
+
   const shiftOptions = [
     { id: "ALL", label: "All Shifts", isActive: true },
     ...shiftsToDisplay.map((shift) => ({
-      id: typeof shift === 'string' ? shift : shift.name,
-      label: formatShiftLabel(typeof shift === 'string' ? shift : shift.name),
-      isActive: typeof shift === 'string' ? true : shift.isActive,
+      id: typeof shift === "string" ? shift : shift.name,
+      label: formatShiftLabel(
+        typeof shift === "string" ? shift : shift.name
+      ),
+      isActive: typeof shift === "string" ? true : shift.isActive,
     })),
   ];
 
   return (
-    <header className="flex flex-col justify-between gap-6 pb-6 border-b border-border/50">
-      <div className="flex justify-between items-center gap-4">
+    <header className="flex flex-col justify-between gap-5 pb-6 border-b border-border/50">
+      <div className="flex items-center gap-4">
         <Select value={selectedFloor} onValueChange={setSelectedFloor}>
-          <SelectTrigger className="bg-background border-border shadow-sm">
+          <SelectTrigger className="w-48 bg-background border-border shadow-sm">
             <div className="flex items-center gap-2">
-              <Building2 className="w-4 h-4 text-primary" />
-              <SelectValue placeholder="Floor" />
+              <Building2 className="w-4 h-4 text-primary shrink-0" />
+              <SelectValue placeholder="Select floor" />
             </div>
           </SelectTrigger>
           <SelectContent>
             {floors.map((f) => (
-              <SelectItem key={f} value={f}>{f}</SelectItem>
+              <SelectItem key={f} value={f}>
+                {f}
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>
-
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline" className="bg-background border-border justify-between shadow-sm">
-              <div className="flex items-center gap-2">
-                <CalendarIcon className="w-4 h-4 text-primary" />
-                {selectedDate ? format(selectedDate, "MMM dd, yyyy") : "Select date"}
-              </div>
-              <ChevronDown className="w-4 h-4 opacity-50" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="end">
-            <Calendar
-              mode="single"
-              selected={selectedDate}
-              onSelect={(day) => {
-                if (day) {
-                  setSelectedDate(day);
-                  onClearSeat();
-                }
-              }}
-              className="p-3"
-            />
-          </PopoverContent>
-        </Popover>
       </div>
 
-      <div className="flex gap-2 overflow-x-auto lg:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
+      <div className="flex gap-2 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
         {shiftOptions.map((s) => (
           <button
             key={s.id}
@@ -106,12 +86,14 @@ export function SeatMapHeader({
               selectedShift === s.id
                 ? "bg-primary text-primary-foreground border-primary shadow-sm"
                 : !s.isActive
-                  ? "bg-background text-muted-foreground border-border opacity-50 cursor-not-allowed"
-                  : "bg-background text-muted-foreground border-border hover:bg-muted/50 hover:text-foreground"
+                ? "bg-background text-muted-foreground border-border opacity-40 cursor-not-allowed"
+                : "bg-background text-muted-foreground border-border hover:bg-muted/50 hover:text-foreground"
             )}
           >
             {s.label}
-            {!s.isActive && s.id !== "ALL" && " (Inactive)"}
+            {!s.isActive && s.id !== "ALL" && (
+              <span className="ml-1 text-[10px] opacity-60">(Off)</span>
+            )}
           </button>
         ))}
       </div>

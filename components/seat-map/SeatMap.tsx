@@ -14,11 +14,9 @@ interface SeatMapResponse {
   allShifts: { name: string; isActive: boolean }[];
 }
 
-const fetchSeatMap = async (dateStr?: string): Promise<SeatMapResponse> => {
-  if (!dateStr) return { seatMap: {}, activeShifts: [], allShifts: [] };
-  const response = await fetch(`/api/library/seat-map?date=${dateStr}`);
+const fetchSeatMap = async (): Promise<SeatMapResponse> => {
+  const response = await fetch(`/api/library/seat-map`);
   if (!response.ok) throw new Error("Failed to fetch seat map");
-
   const data = await response.json();
   return {
     seatMap: data.seatMap || {},
@@ -35,27 +33,16 @@ export default function SeatMapPage() {
     seatNo: string;
     data: SeatInfo;
   } | null>(null);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
-    new Date(),
-  );
-
-  const dateStr = selectedDate?.toISOString().split("T")[0];
 
   const { data, isLoading } = useQuery({
-    queryKey: ["seatMap", dateStr],
-    queryFn: () => fetchSeatMap(dateStr),
+    queryKey: ["seatMap"],
+    queryFn: fetchSeatMap,
     staleTime: 30 * 1000,
   });
 
   const seatMapData = useMemo(() => data?.seatMap || {}, [data?.seatMap]);
-  const activeShifts = useMemo(
-    () => data?.activeShifts || [],
-    [data?.activeShifts],
-  );
-  const allShifts = useMemo(
-    () => data?.allShifts || [],
-    [data?.allShifts],
-  );
+  const activeShifts = useMemo(() => data?.activeShifts || [], [data?.activeShifts]);
+  const allShifts = useMemo(() => data?.allShifts || [], [data?.allShifts]);
   const floors = useMemo(() => Object.keys(seatMapData), [seatMapData]);
 
   React.useEffect(() => {
@@ -67,13 +54,11 @@ export default function SeatMapPage() {
   const currentFloorSeats = useMemo(() => {
     if (!selectedFloor || !seatMapData[selectedFloor]) return [];
     return Object.entries(seatMapData[selectedFloor]).sort(
-      (a, b) => parseInt(a[0]) - parseInt(b[0]),
+      (a, b) => parseInt(a[0]) - parseInt(b[0])
     );
   }, [seatMapData, selectedFloor]);
 
-  if (isLoading) {
-    return <SeatMapSkeleton />;
-  }
+  if (isLoading) return <SeatMapSkeleton />;
 
   return (
     <>
@@ -81,8 +66,6 @@ export default function SeatMapPage() {
         floors={floors}
         selectedFloor={selectedFloor}
         setSelectedFloor={setSelectedFloor}
-        selectedDate={selectedDate}
-        setSelectedDate={setSelectedDate}
         selectedShift={selectedShift}
         setSelectedShift={setSelectedShift}
         onClearSeat={() => setSelectedSeat(null)}

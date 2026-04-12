@@ -2,7 +2,14 @@ import { Metadata } from "next";
 import StudentTable from "@/components/students/StudentTable";
 import { Home, Users } from "lucide-react";
 import Link from "next/link";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 export const metadata: Metadata = {
   title: "Students | Admin",
@@ -12,7 +19,7 @@ export const metadata: Metadata = {
 export default function StudentsPage() {
   return (
     <div className="min-h-screen w-full bg-background">
-      <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto pb-10 px-4 md:px-6 lg:px-8">
         {/* Breadcrumb */}
         <div className="mt-24 mb-6">
           <Breadcrumb>
@@ -28,7 +35,7 @@ export default function StudentsPage() {
               <BreadcrumbItem>
                 <BreadcrumbPage className="text-primary flex items-center gap-2">
                   <Users className="w-4 h-4" />
-                  Students Management
+                  Students
                 </BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>

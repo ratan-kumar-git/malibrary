@@ -89,7 +89,7 @@ export default function ProfileClient() {
         name={data.user.name || "Administrator"}
         email={data.user.email}
         emailVerified={data.user.emailVerified}
-        role="Library Administrator" 
+        role="Library Administrator"
         createdAt={new Date(data.user.createdAt)}
         image={data.user.image}
       />
@@ -103,13 +103,15 @@ export default function ProfileClient() {
 
         {/* Right Column - Security Settings */}
         <div className="lg:col-span-2">
-          <Card className="rounded-2xl bg-gradient-to-br from-card to-muted/20 border border-border/60 shadow-lg overflow-hidden">
-            <div className="flex items-center gap-4 px-6 py-5 bg-gradient-to-r from-orange-500/10 to-transparent border-b border-border/40">
+          <Card className="rounded-2xl bg-linear-to-br from-card to-muted/20 border border-border/60 shadow-lg overflow-hidden">
+            <div className="flex items-center gap-4 px-6 py-5 bg-linear-to-r from-orange-500/10 to-transparent border-b border-border/40">
               <div className="size-10 rounded-lg bg-orange-500/20 flex items-center justify-center text-orange-600">
                 <Key className="size-6" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-foreground">Password & Security</h3>
+                <h3 className="text-xl font-bold text-foreground">
+                  Password & Security
+                </h3>
                 <p className="text-sm text-muted-foreground">
                   Secure your account and manage active sessions
                 </p>
@@ -121,20 +123,27 @@ export default function ProfileClient() {
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-3">
-                      <Label className="text-foreground font-semibold text-base">Current Password</Label>
+                      <Label className="text-foreground font-semibold text-base">
+                        Current Password
+                      </Label>
                       <Input
                         type="password"
                         placeholder="••••••••"
                         className="h-12 rounded-xl bg-muted/30 border-border/60 focus-visible:ring-2 focus-visible:ring-orange-500/30 focus-visible:bg-background transition-colors"
                         value={passwordData.current}
                         onChange={(e) =>
-                          setPasswordData({ ...passwordData, current: e.target.value })
+                          setPasswordData({
+                            ...passwordData,
+                            current: e.target.value,
+                          })
                         }
                       />
                     </div>
 
                     <div className="space-y-3">
-                      <Label className="text-foreground font-semibold text-base">New Password</Label>
+                      <Label className="text-foreground font-semibold text-base">
+                        New Password
+                      </Label>
                       <Input
                         type="password"
                         placeholder="••••••••"
@@ -142,7 +151,10 @@ export default function ProfileClient() {
                         className="h-12 rounded-xl bg-muted/30 border-border/60 focus-visible:ring-2 focus-visible:ring-orange-500/30 focus-visible:bg-background transition-colors"
                         value={passwordData.new}
                         onChange={(e) =>
-                          setPasswordData({ ...passwordData, new: e.target.value })
+                          setPasswordData({
+                            ...passwordData,
+                            new: e.target.value,
+                          })
                         }
                       />
                       <p className="text-xs font-medium text-muted-foreground">
@@ -153,7 +165,8 @@ export default function ProfileClient() {
 
                   <div className="bg-blue-50/50 border border-blue-200/50 rounded-lg p-4">
                     <p className="text-sm font-medium text-blue-900">
-                      💡 Changing your password will revoke all other active sessions for security purposes.
+                      💡 Changing your password will revoke all other active
+                      sessions for security purposes.
                     </p>
                   </div>
                 </div>

@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Calendar, MapPin, Phone, User, Armchair, Clock, AlertCircle, Home, Trash2, Edit2, ArrowLeft, CheckCircle2, XCircle, RefreshCw, TrendingUp, KeyRound } from 'lucide-react';
+import { Calendar, MapPin, Phone, User, Clock, AlertCircle, Home, Trash2, Edit2, CheckCircle2, XCircle, RefreshCw, TrendingUp, KeyRound } from 'lucide-react';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { toast } from 'sonner';
 import EditStudentDialog from '@/components/students/EditStudentDialog';
@@ -231,7 +231,7 @@ export default function StudentProfilePage() {
         </div>
 
         {/* Header with Actions */}
-        <div className="mb-6 bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/10 rounded-xl p-4">
+        <div className="mb-6 bg-linear-to-r from-primary/10 to-primary/5 border border-primary/10 rounded-xl p-4">
           <div className="flex items-start justify-between gap-3 mb-3">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1 flex-wrap">
@@ -373,7 +373,7 @@ export default function StudentProfilePage() {
           <div className="md:col-span-2 space-y-4">
             {/* Current Subscription */}
             {currentSubscription ? (
-              <Card className="border-2 border-emerald-500/30 bg-gradient-to-br from-emerald-50/50 to-emerald-50/20 shadow-sm overflow-hidden">
+              <Card className="border-2 border-emerald-500/30 bg-linear-to-br from-emerald-50/50 to-emerald-50/20 shadow-sm overflow-hidden">
                 <CardHeader className="bg-emerald-50/50 border-b border-emerald-200/50 px-4 py-3">
                   <CardTitle className="text-base flex items-center gap-1.5">
                     <CheckCircle2 className="size-4 text-emerald-600" />
