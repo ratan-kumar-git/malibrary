@@ -37,3 +37,9 @@ export const minutesToAmPm = (totalMinutes: number): string => {
   
   return `${formattedHours}:${formattedMinutes} ${ampm}`;
 };
+
+
+export const formatMemberId = (memberId: number | null) => {
+    if (!memberId) return 'N/A';
+    return `MID${String(memberId).padStart(4, '0')}`;
+};

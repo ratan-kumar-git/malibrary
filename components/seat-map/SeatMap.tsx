@@ -11,10 +11,11 @@ import { SeatMapSkeleton } from "../skelton/SeatMapSkeleton";
 interface SeatMapResponse {
   seatMap: SeatMapData;
   activeShifts: string[];
+  allShifts: { name: string; isActive: boolean }[];
 }
 
 const fetchSeatMap = async (dateStr?: string): Promise<SeatMapResponse> => {
-  if (!dateStr) return { seatMap: {}, activeShifts: [] };
+  if (!dateStr) return { seatMap: {}, activeShifts: [], allShifts: [] };
   const response = await fetch(`/api/library/seat-map?date=${dateStr}`);
   if (!response.ok) throw new Error("Failed to fetch seat map");
 
@@ -22,6 +23,7 @@ const fetchSeatMap = async (dateStr?: string): Promise<SeatMapResponse> => {
   return {
     seatMap: data.seatMap || {},
     activeShifts: data.activeShifts || [],
+    allShifts: data.allShifts || [],
   };
 };
 
@@ -49,6 +51,10 @@ export default function SeatMapPage() {
   const activeShifts = useMemo(
     () => data?.activeShifts || [],
     [data?.activeShifts],
+  );
+  const allShifts = useMemo(
+    () => data?.allShifts || [],
+    [data?.allShifts],
   );
   const floors = useMemo(() => Object.keys(seatMapData), [seatMapData]);
 
@@ -81,6 +87,7 @@ export default function SeatMapPage() {
         setSelectedShift={setSelectedShift}
         onClearSeat={() => setSelectedSeat(null)}
         activeShifts={activeShifts}
+        allShifts={allShifts}
       />
 
       <div className="flex flex-col xl:flex-row gap-8 items-start">
@@ -91,6 +98,7 @@ export default function SeatMapPage() {
           selectedFloor={selectedFloor}
           selectedShift={selectedShift}
           activeShifts={activeShifts}
+          allShifts={allShifts}
         />
 
         <div className="w-full xl:w-105 shrink-0">
@@ -98,6 +106,7 @@ export default function SeatMapPage() {
             <SeatDetails
               selectedSeat={selectedSeat}
               onClose={() => setSelectedSeat(null)}
+              allShifts={allShifts}
               selectedShift={selectedShift}
               activeShifts={activeShifts}
             />

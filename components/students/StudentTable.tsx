@@ -39,6 +39,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import EditStudentDialog from "./EditStudentDialog";
 import AddStudentDialog from "./AddStudentDialog";
+import { formatMemberId } from "@/lib/helper";
 
 // Define the type based on your Prisma Schema
 interface Subscription {
@@ -255,7 +256,7 @@ export default function StudentTable() {
                           href={`/student/${student.id}`}
                           className="font-mono text-sm font-bold text-primary hover:underline"
                         >
-                          {student.memberId}
+                          {formatMemberId(Number(student.memberId))}
                         </Link>
                       ) : (
                         <span className="text-muted-foreground text-xs italic">

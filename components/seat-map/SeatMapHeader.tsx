@@ -16,7 +16,8 @@ interface Props {
   selectedShift: string;
   setSelectedShift: (s: string) => void;
   onClearSeat: () => void;
-  activeShifts: string[]; 
+  activeShifts: string[];
+  allShifts?: { name: string; isActive: boolean }[];
 }
 
 const formatShiftLabel = (shift: string) => {
@@ -35,13 +36,16 @@ export function SeatMapHeader({
   selectedShift, 
   setSelectedShift, 
   onClearSeat,
-  activeShifts
+  activeShifts,
+  allShifts = []
 }: Props) {
+  const shiftsToDisplay = allShifts.length > 0 ? allShifts : activeShifts.map(s => ({ name: s, isActive: true }));
   const shiftOptions = [
-    { id: "ALL", label: "All Shifts" },
-    ...activeShifts.map((shift) => ({
-      id: shift,
-      label: formatShiftLabel(shift),
+    { id: "ALL", label: "All Shifts", isActive: true },
+    ...shiftsToDisplay.map((shift) => ({
+      id: typeof shift === 'string' ? shift : shift.name,
+      label: formatShiftLabel(typeof shift === 'string' ? shift : shift.name),
+      isActive: typeof shift === 'string' ? true : shift.isActive,
     })),
   ];
 
@@ -72,7 +76,7 @@ export function SeatMapHeader({
               <ChevronDown className="w-4 h-4 opacity-50" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
+          <PopoverContent className="w-auto p-0" align="end">
             <Calendar
               mode="single"
               selected={selectedDate}
@@ -96,14 +100,18 @@ export function SeatMapHeader({
               setSelectedShift(s.id);
               onClearSeat();
             }}
+            disabled={!s.isActive && s.id !== "ALL"}
             className={cn(
               "px-5 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap border",
               selectedShift === s.id
                 ? "bg-primary text-primary-foreground border-primary shadow-sm"
-                : "bg-background text-muted-foreground border-border hover:bg-muted/50 hover:text-foreground"
+                : !s.isActive
+                  ? "bg-background text-muted-foreground border-border opacity-50 cursor-not-allowed"
+                  : "bg-background text-muted-foreground border-border hover:bg-muted/50 hover:text-foreground"
             )}
           >
             {s.label}
+            {!s.isActive && s.id !== "ALL" && " (Inactive)"}
           </button>
         ))}
       </div>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { X, Search, Info, User, AlertCircle, Timer, Zap, CreditCard, Loader2, Trash2, RotateCcw } from "lucide-react";
+import { X, Search, Info, User, AlertCircle, Timer, Zap, Loader2, Trash2, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
@@ -11,16 +11,17 @@ import {
   formatShiftName,
 } from "@/types/seatMapTypes";
 import { useRouter } from "next/navigation";
-import { differenceInDays, startOfDay } from "date-fns";
+import { formatMemberId } from "@/lib/helper";
 
 interface Props {
   selectedSeat: { floorName: string; seatNo: string; data: SeatInfo } | null;
   onClose: () => void;
   selectedShift: string;
   activeShifts: string[];
+  allShifts?: { name: string; isActive: boolean }[];
 }
 
-export function SeatDetails({ selectedSeat, onClose, selectedShift, activeShifts }: Props) {
+export function SeatDetails({ selectedSeat, onClose, selectedShift, activeShifts, allShifts = [] }: Props) {
   const router = useRouter();
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [renewLoading, setRenewLoading] = useState(false);
@@ -83,10 +84,6 @@ export function SeatDetails({ selectedSeat, onClose, selectedShift, activeShifts
     }
   };
 
-  const formatMemberId = (memberId: number | null) => {
-    if (!memberId) return 'N/A';
-    return `MID${String(memberId).padStart(4, '0')}`;
-  };
 
   if (!selectedSeat) {
     return (
@@ -180,8 +177,10 @@ export function SeatDetails({ selectedSeat, onClose, selectedShift, activeShifts
             Shift Details
           </p>
           <div className="space-y-3">
-            {activeShifts.map((shiftName) => {
+            {(allShifts.length > 0 ? allShifts.map(s => s.name) : activeShifts).map((shiftName) => {
               const shiftData = data.shifts[shiftName];
+              const shiftInfo = allShifts.find(s => s.name === shiftName);
+              const isInactive = shiftInfo && !shiftInfo.isActive;
 
               if (shiftData) {
                 const status = getSubscriptionStatus(shiftData.expiry);
@@ -192,26 +191,38 @@ export function SeatDetails({ selectedSeat, onClose, selectedShift, activeShifts
                     key={shiftName}
                     className={cn(
                       "p-4 rounded-xl border shadow-sm space-y-3 transition-colors",
-                      status === "active"
-                        ? "bg-emerald-500/10 border-emerald-500/30"
-                        : "bg-amber-500/10 border-amber-500/30"
+                      isInactive
+                        ? "bg-slate-500/5 border-slate-500/30 opacity-60"
+                        : status === "active"
+                          ? "bg-emerald-500/10 border-emerald-500/30"
+                          : "bg-amber-500/10 border-amber-500/30"
                     )}
                   >
                     <div className="flex justify-between items-center">
                       <span className="text-sm font-semibold text-foreground">
                         {formatShiftName(shiftName)}
                       </span>
-                      <Badge
-                        className={cn(
-                          "text-[10px] font-bold",
-                          status === "active"
-                            ? "bg-emerald-500 text-white"
-                            : "bg-amber-500 text-white"
-                        )}
-                      >
-                        {status === "active" ? "Active" : "Expired"}
-                      </Badge>
+                      <div className="flex items-center gap-2">
+                        <Badge
+                          className={cn(
+                            "text-[10px] font-bold",
+                            isInactive
+                              ? "bg-slate-500 text-white"
+                              : status === "active"
+                                ? "bg-emerald-500 text-white"
+                                : "bg-amber-500 text-white"
+                          )}
+                        >
+                          {isInactive ? "Inactive" : status === "active" ? "Active" : "Expired"}
+                        </Badge>
+                      </div>
                     </div>
+
+                    {isInactive && (
+                      <div className="text-xs text-muted-foreground bg-background/50 p-2 rounded border border-border/50">
+                        ⚠️ This shift is inactive. Showing historical booking data.
+                      </div>
+                    )}
 
                     <div className="space-y-2">
                       <div className="flex items-center gap-2 bg-background p-2 rounded-lg border border-border/50 text-xs">
@@ -238,9 +249,11 @@ export function SeatDetails({ selectedSeat, onClose, selectedShift, activeShifts
                         <div
                           className={cn(
                             "flex items-center gap-2 p-2 rounded-lg text-xs font-medium border",
-                            status === "active"
-                              ? "bg-emerald-500/10 text-emerald-700 border-emerald-500/20"
-                              : "bg-amber-500/10 text-amber-700 border-amber-500/20"
+                            isInactive
+                              ? "bg-slate-500/10 text-slate-700 border-slate-500/20"
+                              : status === "active"
+                                ? "bg-emerald-500/10 text-emerald-700 border-emerald-500/20"
+                                : "bg-amber-500/10 text-amber-700 border-amber-500/20"
                           )}
                         >
                           <Timer size={14} />
@@ -255,7 +268,7 @@ export function SeatDetails({ selectedSeat, onClose, selectedShift, activeShifts
                         </div>
                       )}
 
-                      {shiftData.subscriptionId && (
+                      {shiftData.subscriptionId && !isInactive && (
                         <div className="flex gap-1.5 pt-2 border-t border-border/30">
                           <Button
                             size="sm"
@@ -285,26 +298,48 @@ export function SeatDetails({ selectedSeat, onClose, selectedShift, activeShifts
               return (
                 <div
                   key={shiftName}
-                  className="p-4 rounded-xl border border-gray-400/20 bg-gray-400/5 shadow-sm space-y-3"
+                  className={cn(
+                    "p-4 rounded-xl border shadow-sm space-y-3",
+                    isInactive
+                      ? "bg-gray-400/5 border-gray-400/20 opacity-60"
+                      : "bg-gray-400/5 border-gray-400/20"
+                  )}
                 >
                   <div className="flex justify-between items-center">
                     <span className="text-sm font-semibold text-foreground">
                       {formatShiftName(shiftName)}
                     </span>
-                    <Badge variant="outline" className="text-gray-600 text-[10px]">
-                      Vacant
+                    <Badge
+                      variant="outline"
+                      className={cn(
+                        "text-[10px]",
+                        isInactive ? "text-gray-600" : "text-gray-600"
+                      )}
+                    >
+                      {isInactive ? "Vacant (Inactive)" : "Vacant"}
                     </Badge>
                   </div>
+                  {isInactive && (
+                    <div className="text-xs text-amber-700 bg-amber-500/10 p-2 rounded border border-amber-500/20">
+                      ⚠️ This shift is inactive. New bookings are not allowed.
+                    </div>
+                  )}
                   <Button
                     size="sm"
-                    className="w-full h-9 text-xs bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm"
+                    className={cn(
+                      "w-full h-9 text-xs text-white shadow-sm",
+                      isInactive
+                        ? "bg-gray-400 cursor-not-allowed opacity-50"
+                        : "bg-emerald-600 hover:bg-emerald-700"
+                    )}
+                    disabled={isInactive}
                     onClick={() =>
                       router.push(
                         `/booking?seatId=${data.id}&shift=${shiftName}&date=${new Date().toISOString().split("T")[0]}`
                       )
                     }
                   >
-                    Book {formatShiftName(shiftName)}
+                    {isInactive ? "Cannot Book" : `Book ${formatShiftName(shiftName)}`}
                   </Button>
                 </div>
               );
@@ -315,6 +350,8 @@ export function SeatDetails({ selectedSeat, onClose, selectedShift, activeShifts
         <div className="space-y-6 mt-4">
           {(() => {
             const shiftData = data.shifts[selectedShift];
+            const shiftInfo = allShifts.find(s => s.name === selectedShift);
+            const isInactive = shiftInfo && !shiftInfo.isActive;
 
             if (shiftData) {
               const status = getSubscriptionStatus(shiftData.expiry);
@@ -325,17 +362,26 @@ export function SeatDetails({ selectedSeat, onClose, selectedShift, activeShifts
                   <Badge
                     className={cn(
                       "text-sm font-bold",
-                      status === "active"
-                        ? "bg-emerald-500 text-white"
-                        : "bg-amber-500 text-white"
+                      isInactive
+                        ? "bg-slate-500 text-white"
+                        : status === "active"
+                          ? "bg-emerald-500 text-white"
+                          : "bg-amber-500 text-white"
                     )}
                   >
-                    {status === "active" ? "Active" : "Expired"} • {formatShiftName(selectedShift)}
+                    {isInactive ? "Inactive" : status === "active" ? "Active" : "Expired"} • {formatShiftName(selectedShift)}
                   </Badge>
+
+                  {isInactive && (
+                    <div className="text-xs text-amber-700 bg-amber-500/10 p-3 rounded border border-amber-500/20 flex items-start gap-2">
+                      <AlertCircle size={14} className="mt-0.5 shrink-0" />
+                      <span>This shift is inactive. Showing historical booking data.</span>
+                    </div>
+                  )}
 
                   <div className="space-y-3">
                     {/* Student Info Card */}
-                    <div className="p-4 bg-muted/30 rounded-xl border border-border/50 space-y-3">
+                    <div className={cn("p-4 rounded-xl border space-y-3", isInactive ? "bg-muted/10 border-border/30" : "bg-muted/30 border-border/50")}>
                       <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wide flex items-center gap-1.5 mb-2">
                         <User size={14} /> Student Info
                       </p>
@@ -363,29 +409,43 @@ export function SeatDetails({ selectedSeat, onClose, selectedShift, activeShifts
                       <div
                         className={cn(
                           "flex items-start gap-3 p-4 rounded-xl border",
-                          status === "active"
-                            ? "bg-emerald-500/10 border-emerald-500/30"
-                            : "bg-amber-500/10 border-amber-500/30"
+                          isInactive
+                            ? "bg-slate-500/10 border-slate-500/30"
+                            : status === "active"
+                              ? "bg-emerald-500/10 border-emerald-500/30"
+                              : "bg-amber-500/10 border-amber-500/30"
                         )}
                       >
                         <Timer
                           size={18}
                           className={cn(
                             "mt-0.5 shrink-0",
-                            status === "active" ? "text-emerald-600" : "text-amber-600"
+                            isInactive
+                              ? "text-slate-600"
+                              : status === "active"
+                                ? "text-emerald-600"
+                                : "text-amber-600"
                           )}
                         />
                         <div>
                           <p className={cn(
                             "text-sm font-semibold",
-                            status === "active" ? "text-emerald-700" : "text-amber-700"
+                            isInactive
+                              ? "text-slate-700"
+                              : status === "active"
+                                ? "text-emerald-700"
+                                : "text-amber-700"
                           )}>
                             {daysInfo?.text}
                           </p>
                           {daysInfo?.days !== undefined && (
                             <p className={cn(
                               "text-xs mt-1",
-                              status === "active" ? "text-emerald-600" : "text-amber-600"
+                              isInactive
+                                ? "text-slate-600"
+                                : status === "active"
+                                  ? "text-emerald-600"
+                                  : "text-amber-600"
                             )}>
                               {daysInfo.days} days to expiry
                             </p>
@@ -465,32 +525,43 @@ export function SeatDetails({ selectedSeat, onClose, selectedShift, activeShifts
             }
 
             return (
-              <div className="py-8 text-center space-y-4 border border-emerald-500/20 bg-emerald-500/5 rounded-xl">
-                <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-emerald-500/10 text-emerald-600">
-                  <Search size={24} />
+              <div className={cn(
+                "py-8 text-center space-y-4 rounded-xl border",
+                isInactive
+                  ? "bg-gray-400/5 border-gray-400/20"
+                  : "border-emerald-500/20 bg-emerald-500/5"
+              )}>
+                <div className={cn(
+                  "inline-flex items-center justify-center w-14 h-14 rounded-full",
+                  isInactive
+                    ? "bg-gray-400/10 text-gray-600"
+                    : "bg-emerald-500/10 text-emerald-600"
+                )}>
+                  {isInactive ? <AlertCircle size={24} /> : <Search size={24} />}
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-foreground mb-1">
-                    Seat Available
+                    {isInactive ? "Shift Inactive" : "Seat Available"}
                   </h3>
                   <p className="text-sm text-muted-foreground">
-                    Ready to book for the{" "}
-                    <strong className="text-foreground font-medium">
-                      {formatShiftName(selectedShift)}
-                    </strong>{" "}
-                    shift.
+                    {isInactive
+                      ? "This shift is no longer active. New bookings cannot be made."
+                      : `Ready to book for the ${formatShiftName(selectedShift)} shift.`
+                    }
                   </p>
                 </div>
-                <Button
-                  className="w-full h-11 bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm mt-2"
-                  onClick={() =>
-                    router.push(
-                      `/booking?seatId=${data.id}&shift=${selectedShift}&date=${new Date().toISOString().split("T")[0]}`
-                    )
-                  }
-                >
-                  Book Seat {seatNo}
-                </Button>
+                {!isInactive && (
+                  <Button
+                    className="w-full h-11 bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm mt-2"
+                    onClick={() =>
+                      router.push(
+                        `/booking?seatId=${data.id}&shift=${selectedShift}&date=${new Date().toISOString().split("T")[0]}`
+                      )
+                    }
+                  >
+                    Book Seat {seatNo}
+                  </Button>
+                )}
               </div>
             );
           })()}

@@ -23,11 +23,16 @@ export async function GET() {
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    // 1. Parallel Fetch: Get Library Info and Active Shifts simultaneously
-    const [library, activeShifts] = await Promise.all([
+    // 1. Parallel Fetch: Get Library Info and All Shifts (active and inactive)
+    const [library, allShifts, activeShifts] = await Promise.all([
       prisma.library.findUnique({
         where: { userId: session.user.id },
         select: { id: true }
+      }),
+      prisma.shift.findMany({
+        where: { library: { userId: session.user.id } },
+        select: { id: true, name: true, price: true, isActive: true },
+        orderBy: { startTime: 'asc' }
       }),
       prisma.shift.findMany({
         where: { library: { userId: session.user.id }, isActive: true },
@@ -82,15 +87,15 @@ export async function GET() {
       for (const seat of floor.seats) {
         const shiftsObj: Record<string, ShiftData | null> = {};
 
-        // Initialize all active shifts as null (Vacant)
-        for (const s of activeShifts) {
+        // Initialize all shifts (both active and inactive) as null (Vacant)
+        for (const s of allShifts) {
           shiftsObj[s.name] = null;
         }
 
         // Fill in the assignments
         for (const asg of seat.assignments) {
           // Find which shift name this assignment belongs to
-          const shiftInfo = activeShifts.find(s => s.id === asg.shiftId);
+          const shiftInfo = allShifts.find(s => s.id === asg.shiftId);
           if (!shiftInfo) continue;
 
           const sub = asg.student.subscriptions[0];
@@ -116,6 +121,7 @@ export async function GET() {
 
     return NextResponse.json({
       activeShifts: activeShifts.map(s => s.name),
+      allShifts: allShifts.map(s => ({ name: s.name, isActive: s.isActive })),
       seatMap
     });
 
