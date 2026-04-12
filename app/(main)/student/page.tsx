@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import StudentTable from "@/components/students/StudentTable";
-import { Home } from "lucide-react";
+import { Home, Users } from "lucide-react";
 import Link from "next/link";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 
@@ -14,7 +14,7 @@ export default function StudentsPage() {
     <div className="min-h-screen w-full bg-background">
       <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <div className="mt-24 mb-8">
+        <div className="mt-24 mb-6">
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
@@ -27,14 +27,16 @@ export default function StudentsPage() {
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 <BreadcrumbPage className="text-primary flex items-center gap-2">
-                  Students
+                  <Users className="w-4 h-4" />
+                  Students Management
                 </BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
         </div>
 
-        <div className="bg-card rounded-2xl shadow-xl shadow-foreground/5 border border-border overflow-hidden">
+        {/* Main Content */}
+        <div className="bg-card rounded-2xl shadow-lg shadow-foreground/5 border border-border overflow-hidden">
           <StudentTable />
         </div>
       </div>

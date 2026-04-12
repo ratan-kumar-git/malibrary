@@ -3,12 +3,12 @@ import ProfileClient from "./ProfileClient";
 
 export const metadata: Metadata = {
   title: "Profile | MaLibrary",
-  description: "Manage your profile, password, and active sessions",
+  description: "Manage your administrator profile, password, and active sessions",
 };
 
 export default function ProfilePage() {
   return (
-    <div className="min-h-screen bg-[#fafafa]">
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-background">
       <ProfileClient />
     </div>
   );

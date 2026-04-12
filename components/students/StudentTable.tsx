@@ -15,6 +15,10 @@ import {
   AlertTriangle,
   LucideIcon,
   Plus,
+  TrendingUp,
+  Clock,
+  CheckCircle2,
+  AlertCircle,
 } from "lucide-react";
 import {
   Table,
@@ -61,6 +65,7 @@ interface Student {
 export default function StudentTable() {
   const [students, setStudents] = useState<Student[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"all" | "active" | "expired" | "none">("all");
   const [loading, setLoading] = useState(true);
 
   // Action States
@@ -91,16 +96,31 @@ export default function StudentTable() {
   const filteredStudents = useMemo(() => {
     return students.filter((s) => {
       const searchLower = searchTerm.toLowerCase();
-      return (
+      const matchesSearch =
         s.name.toLowerCase().includes(searchLower) ||
         s.phoneNumber.includes(searchTerm) ||
         (s.memberId && s.memberId.toLowerCase().includes(searchLower)) ||
-        (s.lockerNumber && s.lockerNumber.toString() === searchTerm)
-      );
-    });
-  }, [students, searchTerm]);
+        (s.lockerNumber && s.lockerNumber.toString() === searchTerm);
 
-  // Expiry Calculation Helper
+      if (!matchesSearch) return false;
+
+      // Apply status filter
+      if (statusFilter === "all") return true;
+
+      const latestSub = s.subscriptions[0];
+      if (!latestSub) return statusFilter === "none";
+
+      const daysLeft = differenceInDays(new Date(latestSub.endDate), new Date());
+      const isExpired = latestSub.status !== "ACTIVE" || daysLeft < 0;
+
+      if (statusFilter === "active") return !isExpired;
+      if (statusFilter === "expired") return isExpired;
+      if (statusFilter === "none") return false;
+
+      return true;
+    });
+  }, [students, searchTerm, statusFilter]);
+
   const getSubStatus = (subs: Subscription[]) => {
     if (!subs || subs.length === 0)
       return {
@@ -131,6 +151,25 @@ export default function StudentTable() {
       color: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20",
     };
   };
+
+  // Calculate stats
+  const stats = useMemo(() => {
+    const total = students.length;
+    const active = students.filter((s) => {
+      const sub = s.subscriptions[0];
+      if (!sub) return false;
+      const daysLeft = differenceInDays(new Date(sub.endDate), new Date());
+      return sub.status === "ACTIVE" && daysLeft >= 0;
+    }).length;
+    const expired = students.filter((s) => {
+      const sub = s.subscriptions[0];
+      if (!sub) return false;
+      const daysLeft = differenceInDays(new Date(sub.endDate), new Date());
+      return sub.status !== "ACTIVE" || daysLeft < 0;
+    }).length;
+    const noSub = total - active - expired;
+    return { total, active, expired, noSub };
+  }, [students]);
 
   const confirmDelete = async () => {
     if (!studentToDelete) return;
@@ -163,29 +202,59 @@ export default function StudentTable() {
 
   return (
     <div className="flex flex-col h-full bg-card">
-      {/* Sleek Toolbar */}
-      <div className="p-6 border-b border-border flex justify-between items-center gap-4 bg-muted/10">
-        <div className="relative flex-1 max-w-sm group">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
-          <Input
-            placeholder="Search by name, ID, phone, or locker..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10 h-11 bg-background border-border rounded-xl focus-visible:ring-primary focus-visible:border-transparent transition-all w-full"
-          />
+      {/* Stats Section */}
+      <div className="p-6 border-b border-border bg-gradient-to-r from-muted/30 to-transparent">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <StatCard icon={TrendingUp} label="Total Students" value={stats.total} color="bg-blue-500" />
+          <StatCard icon={CheckCircle2} label="Active" value={stats.active} color="bg-emerald-500" />
+          <StatCard icon={AlertCircle} label="Expired" value={stats.expired} color="bg-destructive" />
+          <StatCard icon={Clock} label="No Subscription" value={stats.noSub} color="bg-amber-500" />
         </div>
-        <div className="flex items-center gap-4">
-          <div className="text-sm font-medium text-muted-foreground">
-            Total Students:{" "}
-            <span className="text-foreground">{filteredStudents.length}</span>
+      </div>
+
+      {/* Search & Filters */}
+      <div className="p-6 border-b border-border space-y-4 bg-muted/10">
+        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+          <div className="relative flex-1 max-w-sm group w-full">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            <input
+              placeholder="Search by name, ID, phone, or locker..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 h-11 w-full bg-background border border-border rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-transparent transition-all"
+            />
           </div>
           <Button
             onClick={() => setShowAddDialog(true)}
-            className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl"
+            className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl w-full sm:w-auto"
           >
             <Plus className="size-4 mr-2" />
             Add Student
           </Button>
+        </div>
+
+        {/* Status Filter Tabs */}
+        <div className="flex gap-2 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none']">
+          {[
+            { id: "all", label: "All", icon: null },
+            { id: "active", label: "Active", icon: CheckCircle2 },
+            { id: "expired", label: "Expired", icon: AlertTriangle },
+            { id: "none", label: "No Subscription", icon: Clock },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setStatusFilter(tab.id as any)}
+              className={cn(
+                "px-4 py-2 rounded-lg whitespace-nowrap transition-all border font-medium flex items-center gap-2",
+                statusFilter === tab.id
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "bg-background border-border text-muted-foreground hover:bg-muted hover:text-foreground"
+              )}
+            >
+              {tab.icon && <tab.icon className="size-4" />}
+              {tab.label}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -436,5 +505,26 @@ function ActionBtn({ icon: Icon, color, onClick, title }: ActionBtnProps) {
     >
       <Icon size={16} />
     </button>
+  );
+}
+
+interface StatCardProps {
+  icon: LucideIcon;
+  label: string;
+  value: number;
+  color: string;
+}
+
+function StatCard({ icon: Icon, label, value, color }: StatCardProps) {
+  return (
+    <div className="flex items-center gap-3 p-4 rounded-xl border border-border bg-background hover:bg-muted/30 transition-colors">
+      <div className={cn("p-2.5 rounded-lg text-white", color)}>
+        <Icon className="size-5" />
+      </div>
+      <div className="flex-1">
+        <p className="text-xs font-medium text-muted-foreground">{label}</p>
+        <p className="text-2xl font-bold text-foreground">{value}</p>
+      </div>
+    </div>
   );
 }

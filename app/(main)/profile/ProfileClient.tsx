@@ -84,87 +84,105 @@ export default function ProfileClient() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 py-12 space-y-8 pt-24 lg:pt-30">
-
-      {/* Profile Card */}
+      {/* Profile Hero Section */}
       <ProfileHeroCard
-        name={data.user.name || "Admin"}
+        name={data.user.name || "Administrator"}
         email={data.user.email}
         emailVerified={data.user.emailVerified}
-        role="Administrator" 
+        role="Library Administrator" 
         createdAt={new Date(data.user.createdAt)}
         image={data.user.image}
       />
 
-      {/* Password & Security */}
-      <Card className="rounded-3xl bg-white inset-ring-1 inset-ring-gray-200/60 shadow-sm border-0 overflow-hidden">
-        
-        <div className="flex items-center gap-3 px-6 py-5 bg-gray-50/50 border-b border-gray-100">
-          <div className="size-8 rounded-lg bg-orange-500/10 flex items-center justify-center text-orange-600">
-            <Key className="size-4" />
-          </div>
-          <div>
-            <h3 className="text-lg font-bold text-gray-950">Password & Security</h3>
-            <p className="text-sm text-gray-500">
-              Changing your password will revoke all other active sessions.
-            </p>
-          </div>
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Left Column - Active Sessions */}
+        <div className="lg:col-span-1">
+          <ActiveSessionsCard currentSessionId={data.session.id} />
         </div>
 
-        <form onSubmit={handlePasswordChange}>
-          <CardContent className="px-6 py-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-gray-700 font-semibold">Current Password</Label>
-              <Input
-                type="password"
-                placeholder="••••••••"
-                className="h-12 rounded-xl bg-gray-50/50 inset-ring-1 inset-ring-gray-200 focus-visible:bg-white"
-                value={passwordData.current}
-                onChange={(e) =>
-                  setPasswordData({ ...passwordData, current: e.target.value })
-                }
-              />
+        {/* Right Column - Security Settings */}
+        <div className="lg:col-span-2">
+          <Card className="rounded-2xl bg-gradient-to-br from-card to-muted/20 border border-border/60 shadow-lg overflow-hidden">
+            <div className="flex items-center gap-4 px-6 py-5 bg-gradient-to-r from-orange-500/10 to-transparent border-b border-border/40">
+              <div className="size-10 rounded-lg bg-orange-500/20 flex items-center justify-center text-orange-600">
+                <Key className="size-6" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-foreground">Password & Security</h3>
+                <p className="text-sm text-muted-foreground">
+                  Secure your account and manage active sessions
+                </p>
+              </div>
             </div>
 
-            <div className="space-y-2">
-              <Label className="text-gray-700 font-semibold">New Password</Label>
-              <Input
-                type="password"
-                placeholder="••••••••"
-                minLength={8}
-                className="h-12 rounded-xl bg-gray-50/50 inset-ring-1 inset-ring-gray-200 focus-visible:bg-white"
-                value={passwordData.new}
-                onChange={(e) =>
-                  setPasswordData({ ...passwordData, new: e.target.value })
-                }
-              />
-              <p className="text-xs font-medium text-gray-500 pt-1">
-                Minimum 8 characters required.
-              </p>
-            </div>
-          </CardContent>
+            <form onSubmit={handlePasswordChange}>
+              <CardContent className="px-6 py-8">
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-3">
+                      <Label className="text-foreground font-semibold text-base">Current Password</Label>
+                      <Input
+                        type="password"
+                        placeholder="••••••••"
+                        className="h-12 rounded-xl bg-muted/30 border-border/60 focus-visible:ring-2 focus-visible:ring-orange-500/30 focus-visible:bg-background transition-colors"
+                        value={passwordData.current}
+                        onChange={(e) =>
+                          setPasswordData({ ...passwordData, current: e.target.value })
+                        }
+                      />
+                    </div>
 
-          <CardFooter className="border-t border-gray-100 bg-gray-50/30 px-6 py-4 flex justify-end">
-            <Button 
-              type="submit" 
-              disabled={isUpdatingPassword}
-              className="h-11 rounded-xl px-6 shadow-sm"
-            >
-              {isUpdatingPassword ? (
-                <>
-                  <Loader2 className="mr-2 size-4 animate-spin" />
-                  Updating...
-                </>
-              ) : (
-                "Update Password"
-              )}
-            </Button>
-          </CardFooter>
-        </form>
-      </Card>
+                    <div className="space-y-3">
+                      <Label className="text-foreground font-semibold text-base">New Password</Label>
+                      <Input
+                        type="password"
+                        placeholder="••••••••"
+                        minLength={8}
+                        className="h-12 rounded-xl bg-muted/30 border-border/60 focus-visible:ring-2 focus-visible:ring-orange-500/30 focus-visible:bg-background transition-colors"
+                        value={passwordData.new}
+                        onChange={(e) =>
+                          setPasswordData({ ...passwordData, new: e.target.value })
+                        }
+                      />
+                      <p className="text-xs font-medium text-muted-foreground">
+                        Minimum 8 characters required for security.
+                      </p>
+                    </div>
+                  </div>
 
-      {/* Active Sessions */}
-      <ActiveSessionsCard currentSessionId={data.session.id} />
-      
+                  <div className="bg-blue-50/50 border border-blue-200/50 rounded-lg p-4">
+                    <p className="text-sm font-medium text-blue-900">
+                      💡 Changing your password will revoke all other active sessions for security purposes.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+
+              <CardFooter className="border-t border-border/40 bg-muted/30 px-6 py-4 flex justify-end">
+                <Button
+                  type="submit"
+                  disabled={isUpdatingPassword}
+                  size="lg"
+                  className="rounded-xl bg-orange-600 hover:bg-orange-700 text-white gap-2"
+                >
+                  {isUpdatingPassword ? (
+                    <>
+                      <Loader2 className="mr-2 size-4 animate-spin" />
+                      Updating...
+                    </>
+                  ) : (
+                    <>
+                      <Key className="size-4" />
+                      Update Password
+                    </>
+                  )}
+                </Button>
+              </CardFooter>
+            </form>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 }

@@ -7,10 +7,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Calendar, MapPin, Phone, User, Armchair, Clock, AlertCircle, Home, Trash2, Edit2, ArrowLeft, CheckCircle2, XCircle } from 'lucide-react';
+import { Calendar, MapPin, Phone, User, Armchair, Clock, AlertCircle, Home, Trash2, Edit2, ArrowLeft, CheckCircle2, XCircle, RefreshCw, TrendingUp, KeyRound } from 'lucide-react';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { toast } from 'sonner';
 import EditStudentDialog from '@/components/students/EditStudentDialog';
+import { cn } from '@/lib/utils';
 
 interface StudentData {
   id: string;
@@ -230,79 +231,96 @@ export default function StudentProfilePage() {
         </div>
 
         {/* Header with Actions */}
-        <div className="flex items-start justify-between mb-8">
-          <div className="flex-1">
-            <div className="flex items-center gap-3 mb-2">
-              <h1 className="text-3xl font-bold text-foreground">{student.name}</h1>
-              <Badge variant="outline" className="text-base">
-                ID: {student.memberId || 'N/A'}
-              </Badge>
+        <div className="mb-6 bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/10 rounded-xl p-4">
+          <div className="flex items-start justify-between gap-3 mb-3">
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-1 flex-wrap">
+                <h1 className="text-2xl font-bold text-foreground">{student.name}</h1>
+                <Badge variant="outline" className="text-xs px-2 py-0.5">
+                  ID: {student.memberId || 'Pending'}
+                </Badge>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                {currentSubscription ? (
+                  <span className="flex items-center gap-1">
+                    <CheckCircle2 className="size-4 text-emerald-600" />
+                    Active Member • Seat #{currentSubscription.seatNo} • {currentSubscription.floorName}
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-1">
+                    <AlertCircle className="size-4 text-amber-600" />
+                    No Active Subscription
+                  </span>
+                )}
+              </p>
             </div>
-            <p className="text-muted-foreground">
-              {currentSubscription ? 'Active Member' : 'No Active Subscription'}
-            </p>
-          </div>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="lg"
-              onClick={() => setShowEditDialog(true)}
-              className="gap-2"
-            >
-              <Edit2 className="size-4" />
-              Edit
-            </Button>
-            <Button
-              variant="destructive"
-              size="lg"
-              onClick={handleDelete}
-              disabled={deleting}
-              className="gap-2"
-            >
-              <Trash2 className="size-4" />
-              {deleting ? 'Deleting...' : 'Delete'}
-            </Button>
+            <div className="flex gap-1.5 flex-col sm:flex-row">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowEditDialog(true)}
+                className="gap-1.5"
+              >
+                <Edit2 className="size-3.5" />
+                Edit
+              </Button>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={handleDelete}
+                disabled={deleting}
+                className="gap-1.5"
+              >
+                <Trash2 className="size-3.5" />
+                {deleting ? 'Deleting...' : 'Delete'}
+              </Button>
+            </div>
           </div>
         </div>
 
         {/* Main Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Left Column - Student Details */}
-          <div className="md:col-span-1 space-y-6">
+          <div className="md:col-span-1 space-y-4">
             {/* Personal Info */}
-            <Card className="border border-border shadow-sm">
-              <CardHeader>
-                <CardTitle className="text-lg flex items-center gap-2">
+            <Card className="border border-border shadow-sm overflow-hidden">
+              <CardHeader className="bg-muted/30 border-b border-border px-4 py-3">
+                <CardTitle className="text-base flex items-center gap-1.5">
                   <User className="size-4" />
-                  Personal Information
+                  Personal Info
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Gender</p>
-                  <p className="text-sm font-medium text-foreground capitalize mt-1">{student.gender}</p>
+              <CardContent className="p-4 space-y-3">
+                <div className="pb-2.5 border-b border-border">
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Name</p>
+                  <p className="text-sm font-bold text-foreground mt-1 capitalize">{student.name}</p>
                 </div>
-                <div>
+                <div className="pb-2.5 border-b border-border">
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Gender</p>
+                  <p className="text-sm font-semibold text-foreground mt-1 capitalize">{student.gender}</p>
+                </div>
+                <div className="pb-2.5 border-b border-border">
                   <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide flex items-center gap-1">
                     <Phone className="size-3" />
-                    Phone Number
+                    Phone
                   </p>
-                  <p className="text-sm font-medium text-foreground mt-1">{student.phoneNumber}</p>
+                  <p className="text-sm font-mono text-foreground mt-1">{student.phoneNumber}</p>
                 </div>
                 {student.address && (
-                  <div>
+                  <div className="pb-2.5 border-b border-border">
                     <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide flex items-center gap-1">
                       <MapPin className="size-3" />
                       Address
                     </p>
-                    <p className="text-sm font-medium text-foreground mt-1">{student.address}</p>
+                    <p className="text-xs text-foreground mt-1 line-clamp-2">{student.address}</p>
                   </div>
                 )}
                 {student.lockerNumber && (
-                  <div>
-                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Locker Number</p>
-                    <div className="flex items-center gap-2 mt-1 w-max px-2.5 py-1 rounded-md border border-border bg-muted">
-                      <span className="text-sm font-bold text-foreground">#{student.lockerNumber}</span>
+                  <div className="pb-2.5 border-b border-border">
+                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Locker</p>
+                    <div className="flex items-center gap-1.5 mt-1 w-max px-2 py-1.5 rounded-lg border border-primary/30 bg-primary/5">
+                      <KeyRound className="size-3 text-primary" />
+                      <span className="text-sm font-bold text-primary">#{student.lockerNumber}</span>
                     </div>
                   </div>
                 )}
@@ -311,7 +329,7 @@ export default function StudentProfilePage() {
                     <Calendar className="size-3" />
                     Joined
                   </p>
-                  <p className="text-sm font-medium text-foreground mt-1">
+                  <p className="text-sm font-semibold text-foreground mt-1">
                     {new Date(student.createdAt).toLocaleDateString('en-IN', {
                       year: 'numeric',
                       month: 'long',
@@ -323,24 +341,27 @@ export default function StudentProfilePage() {
             </Card>
 
             {/* Quick Stats */}
-            <Card className="border border-border shadow-sm">
-              <CardHeader>
-                <CardTitle className="text-lg">Statistics</CardTitle>
+            <Card className="border border-border shadow-sm overflow-hidden">
+              <CardHeader className="bg-muted/30 border-b border-border px-4 py-3">
+                <CardTitle className="text-base flex items-center gap-1.5">
+                  <TrendingUp className="size-4" />
+                  Stats
+                </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                  <span className="text-sm font-medium text-muted-foreground">Total Subscriptions</span>
-                  <span className="text-2xl font-bold text-primary">{student.subscriptions.length}</span>
+              <CardContent className="p-4 space-y-2">
+                <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg border border-border hover:bg-muted/50 transition-colors">
+                  <span className="text-xs font-semibold text-muted-foreground">Total</span>
+                  <span className="text-lg font-bold text-primary">{student.subscriptions.length}</span>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-emerald-500/10 rounded-lg">
-                  <span className="text-sm font-medium text-emerald-700">Active</span>
-                  <span className="text-2xl font-bold text-emerald-600">
+                <div className="flex items-center justify-between p-3 bg-emerald-50 rounded-lg border border-emerald-200/50 hover:bg-emerald-100/30 transition-colors">
+                  <span className="text-xs font-semibold text-emerald-700">Active</span>
+                  <span className="text-lg font-bold text-emerald-600">
                     {student.subscriptions.filter((s) => s.status === 'ACTIVE').length}
                   </span>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-destructive/10 rounded-lg">
-                  <span className="text-sm font-medium text-destructive">Expired</span>
-                  <span className="text-2xl font-bold text-destructive">
+                <div className="flex items-center justify-between p-3 bg-destructive/5 rounded-lg border border-destructive/20 hover:bg-destructive/10 transition-colors">
+                  <span className="text-xs font-semibold text-destructive">Expired</span>
+                  <span className="text-lg font-bold text-destructive">
                     {student.subscriptions.filter((s) => s.status === 'EXPIRED').length}
                   </span>
                 </div>
@@ -349,67 +370,77 @@ export default function StudentProfilePage() {
           </div>
 
           {/* Right Column - Subscription Details */}
-          <div className="md:col-span-2 space-y-6">
+          <div className="md:col-span-2 space-y-4">
             {/* Current Subscription */}
             {currentSubscription ? (
-              <Card className="border-2 border-emerald-500/30 bg-emerald-50/50 shadow-sm">
-                <CardHeader>
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <CheckCircle2 className="size-5 text-emerald-600" />
+              <Card className="border-2 border-emerald-500/30 bg-gradient-to-br from-emerald-50/50 to-emerald-50/20 shadow-sm overflow-hidden">
+                <CardHeader className="bg-emerald-50/50 border-b border-emerald-200/50 px-4 py-3">
+                  <CardTitle className="text-base flex items-center gap-1.5">
+                    <CheckCircle2 className="size-4 text-emerald-600" />
                     Current Subscription
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pb-4 border-b border-border">
-                    <div>
-                      <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Seat Number</p>
-                      <p className="text-xl font-bold text-foreground mt-1">#{currentSubscription.seatNo}</p>
+                <CardContent className="p-4 space-y-4">
+                  {/* Main Details */}
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3 pb-4 border-b border-emerald-200/50">
+                    <div className="bg-white/50 p-3 rounded-lg border border-emerald-200/30">
+                      <p className="text-xs font-bold text-muted-foreground uppercase">Seat</p>
+                      <p className="text-lg font-bold text-foreground mt-1">#{currentSubscription.seatNo}</p>
                     </div>
-                    <div>
-                      <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Floor</p>
-                      <p className="text-lg font-semibold text-foreground mt-1">{currentSubscription.floorName}</p>
+                    <div className="bg-white/50 p-3 rounded-lg border border-emerald-200/30">
+                      <p className="text-xs font-bold text-muted-foreground uppercase">Floor</p>
+                      <p className="text-lg font-bold text-foreground mt-1">{currentSubscription.floorName}</p>
                     </div>
-                    <div>
-                      <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Status</p>
-                      <Badge className="mt-1 bg-emerald-500 text-white">Active</Badge>
+                    <div className="bg-white/50 p-3 rounded-lg border border-emerald-200/30">
+                      <p className="text-xs font-bold text-muted-foreground uppercase">Status</p>
+                      <Badge className="mt-1 bg-emerald-600 text-white text-[10px] px-2 py-0.5">Active</Badge>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 pb-4 border-b border-border">
+                  {/* Dates */}
+                  <div className="grid grid-cols-2 gap-3 pb-4 border-b border-emerald-200/50">
                     <div>
-                      <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Start Date</p>
-                      <p className="text-sm font-medium text-foreground mt-1">
-                        {new Date(currentSubscription.startDate).toLocaleDateString('en-IN')}
+                      <p className="text-xs font-bold text-muted-foreground uppercase mb-1">Start</p>
+                      <p className="text-sm font-semibold text-foreground">
+                        {new Date(currentSubscription.startDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide">End Date</p>
-                      <p className="text-sm font-medium text-foreground mt-1">
-                        {new Date(currentSubscription.endDate).toLocaleDateString('en-IN')}
+                      <p className="text-xs font-bold text-muted-foreground uppercase mb-1">End</p>
+                      <p className="text-sm font-semibold text-emerald-600">
+                        {new Date(currentSubscription.endDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                       </p>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 pb-4 border-b border-border">
-                    <div>
-                      <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Total Amount</p>
-                      <p className="text-lg font-bold text-foreground mt-1">₹{currentSubscription.totalAmount}</p>
+                  {/* Payment Details */}
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center p-2.5 bg-white/50 rounded-lg border border-emerald-200/30">
+                      <span className="text-xs font-medium text-muted-foreground">Total</span>
+                      <span className="text-sm font-bold text-foreground">₹{currentSubscription.totalAmount}</span>
                     </div>
-                    <div>
-                      <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Amount Paid</p>
-                      <p className="text-lg font-semibold text-emerald-600 mt-1">₹{currentSubscription.amountPaid}</p>
+                    <div className="flex justify-between items-center p-2.5 bg-emerald-50 rounded-lg border border-emerald-200/50">
+                      <span className="text-xs font-medium text-emerald-700">Paid</span>
+                      <span className="text-sm font-bold text-emerald-600">₹{currentSubscription.amountPaid}</span>
                     </div>
+                    {currentSubscription.totalAmount > currentSubscription.amountPaid && (
+                      <div className="flex justify-between items-center p-2.5 bg-amber-50 rounded-lg border border-amber-200/50">
+                        <span className="text-xs font-medium text-amber-700">Outstanding</span>
+                        <span className="text-sm font-bold text-amber-600">₹{currentSubscription.totalAmount - currentSubscription.amountPaid}</span>
+                      </div>
+                    )}
                   </div>
 
+                  {/* Shifts */}
                   {currentSubscription.shiftName.length > 0 && (
-                    <div className="pb-4 border-b border-border">
-                      <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-2 flex items-center gap-1">
+                    <div className="pb-4 border-t border-emerald-200/50 pt-4">
+                      <p className="text-xs font-bold text-muted-foreground uppercase mb-2 flex items-center gap-1">
                         <Clock className="size-3" />
-                        Assigned Shifts
+                        Shifts
                       </p>
                       <div className="flex flex-wrap gap-2">
                         {currentSubscription.shiftName.map((shift, idx) => (
-                          <Badge key={idx} variant="secondary" className="capitalize">
+                          <Badge key={idx} className="bg-emerald-100 text-emerald-700 border border-emerald-300 capitalize">
                             {shift}
                           </Badge>
                         ))}
@@ -417,28 +448,30 @@ export default function StudentProfilePage() {
                     </div>
                   )}
 
-                  <div className="flex gap-2 pt-2">
-                    <Button className="flex-1" size="sm">
-                      Renew Subscription
+                  {/* Action Buttons */}
+                  <div className="flex gap-2 pt-3 border-t border-emerald-200/50">
+                    <Button className="flex-1 bg-emerald-600 hover:bg-emerald-700 gap-1.5 h-9 text-sm">
+                      <RefreshCw className="size-3.5" />
+                      Renew
                     </Button>
-                    <Button variant="outline" size="sm" className="flex-1">
-                      View Details
+                    <Button variant="outline" className="flex-1 gap-1.5 h-9 text-sm">
+                      Details
                     </Button>
                   </div>
                 </CardContent>
               </Card>
             ) : (
-              <Card className="border-2 border-amber-200 bg-amber-50/50 shadow-sm">
-                <CardContent className="pt-6">
-                  <div className="flex items-start gap-3">
-                    <XCircle className="size-5 text-amber-600 mt-0.5 shrink-0" />
+              <Card className="border-2 border-amber-200 bg-amber-50/50 shadow-sm overflow-hidden">
+                <CardContent className="p-4">
+                  <div className="flex items-start gap-2">
+                    <XCircle className="size-4 text-amber-600 mt-0.5 shrink-0" />
                     <div>
-                      <p className="font-semibold text-amber-900">No Active Subscription</p>
-                      <p className="text-sm text-amber-800 mt-1">
-                        This student can purchase a new subscription to access library facilities.
+                      <p className="font-semibold text-sm text-amber-900">No Active Subscription</p>
+                      <p className="text-xs text-amber-800 mt-0.5">
+                        Purchase a new subscription to access library facilities.
                       </p>
-                      <Button size="sm" className="mt-3">
-                        Create Subscription
+                      <Button size="xs" className="mt-2 h-8 text-xs">
+                        Create
                       </Button>
                     </div>
                   </div>
@@ -447,25 +480,37 @@ export default function StudentProfilePage() {
             )}
 
             {/* Subscription History */}
-            <Card className="border border-border shadow-sm">
-              <CardHeader>
-                <CardTitle className="text-lg">Subscription History ({student.subscriptions.length})</CardTitle>
+            <Card className="border border-border shadow-sm overflow-hidden">
+              <CardHeader className="bg-muted/30 border-b border-border px-4 py-3">
+                <CardTitle className="text-base flex items-center justify-between">
+                  <span className="flex items-center gap-1.5">
+                    <Clock className="size-4" />
+                    History
+                  </span>
+                  <Badge variant="outline" className="text-xs">{student.subscriptions.length}</Badge>
+                </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-4">
                 {student.subscriptions.length === 0 ? (
-                  <p className="text-sm text-muted-foreground text-center py-8">
-                    No subscription history
-                  </p>
+                  <div className="text-center py-6">
+                    <AlertCircle className="size-8 text-muted-foreground/30 mx-auto mb-2" />
+                    <p className="text-xs text-muted-foreground font-medium">No history</p>
+                  </div>
                 ) : (
-                  <div className="space-y-3 max-h-96 overflow-y-auto">
-                    {student.subscriptions.map((sub, idx) => (
+                  <div className="space-y-2 max-h-80 overflow-y-auto">
+                    {student.subscriptions.map((sub) => (
                       <div
                         key={sub.id}
-                        className="p-4 border border-border rounded-lg hover:bg-muted/50 transition-colors"
+                        className={cn(
+                          "p-3 border rounded-lg transition-all hover:shadow-md",
+                          sub.status === 'ACTIVE' 
+                            ? "border-emerald-200/50 bg-emerald-50/30 hover:bg-emerald-50" 
+                            : "border-border bg-muted/20 hover:bg-muted/30"
+                        )}
                       >
                         <div className="flex items-start justify-between mb-2">
-                          <div className="flex items-center gap-2">
-                            <p className="font-semibold text-foreground">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <p className="font-semibold text-sm text-foreground">
                               Seat #{sub.seatNo} • {sub.floorName}
                             </p>
                             <Badge
@@ -476,29 +521,32 @@ export default function StudentProfilePage() {
                                     ? 'secondary'
                                     : 'outline'
                               }
-                              className="text-xs"
+                              className={cn(
+                                "text-[10px] px-1.5 py-0.5",
+                                sub.status === 'ACTIVE' && "bg-emerald-600"
+                              )}
                             >
                               {sub.status}
                             </Badge>
                           </div>
                           <p className="text-sm font-bold text-foreground">₹{sub.totalAmount}</p>
                         </div>
-                        <p className="text-xs text-muted-foreground mb-2">
-                          {new Date(sub.startDate).toLocaleDateString('en-IN')} → {new Date(sub.endDate).toLocaleDateString('en-IN')}
+                        <p className="text-xs text-muted-foreground mb-2 font-medium">
+                          {new Date(sub.startDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: '2-digit' })} → {new Date(sub.endDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: '2-digit' })}
                         </p>
                         {sub.shiftName.length > 0 && (
                           <div className="flex gap-1 flex-wrap mb-2">
                             {sub.shiftName.map((shift, idx) => (
-                              <Badge key={idx} variant="outline" className="text-xs capitalize">
+                              <Badge key={idx} variant="outline" className="text-[10px] px-1.5 py-0.5 capitalize font-semibold">
                                 {shift}
                               </Badge>
                             ))}
                           </div>
                         )}
-                        <div className="flex justify-between text-xs">
+                        <div className="flex justify-between items-center text-[11px] font-semibold pt-2 border-t border-border/50">
                           <span className="text-muted-foreground">Paid: ₹{sub.amountPaid}</span>
-                          <span className={sub.amountPaid === sub.totalAmount ? 'text-emerald-600 font-semibold' : 'text-amber-600 font-semibold'}>
-                            {sub.amountPaid === sub.totalAmount ? 'Fully Paid' : `Due: ₹${sub.totalAmount - sub.amountPaid}`}
+                          <span className={sub.amountPaid === sub.totalAmount ? 'text-emerald-600' : 'text-amber-600'}>
+                            {sub.amountPaid === sub.totalAmount ? '✓ Paid' : `Due: ₹${sub.totalAmount - sub.amountPaid}`}
                           </span>
                         </div>
                       </div>
