@@ -73,7 +73,7 @@ export default function SeatMapPage() {
         allShifts={allShifts}
       />
 
-      <div className="flex flex-col xl:flex-row gap-8 items-start">
+      <div className="flex flex-col xl:flex-row gap-8 items-start space-y-10">
         <SeatGrid
           currentFloorSeats={currentFloorSeats}
           selectedSeat={selectedSeat}
@@ -84,7 +84,7 @@ export default function SeatMapPage() {
           allShifts={allShifts}
         />
 
-        <div className="w-full xl:w-105 shrink-0">
+        <div className="w-full xl:w-105 shrink-0 pb-10">
           <div className="sticky top-8">
             <SeatDetails
               selectedSeat={selectedSeat}

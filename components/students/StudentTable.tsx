@@ -44,6 +44,97 @@ import EditStudentDialog from "./EditStudentDialog";
 import AddStudentDialog from "./AddStudentDialog";
 import { formatMemberId } from "@/lib/helper";
 import { useRouter } from "next/navigation";
+import { sendWhatsAppMessage } from "@/lib/sendMsg";
+import { WhatsappIcon } from "../icons/SocialIcons";
+
+interface ReceiptData {
+  studentName: string;
+  memberId: string | null;
+  daysLeft: number;
+  dues: number;
+  totalAmount: number;
+  amountPaid: number;
+  startDateStr: string;
+  endDateStr: string;
+}
+
+type SubscriptionStatus = "EXPIRED" | "EXPIRING_SOON" | "ACTIVE";
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+const formatIndianDate = (dateString: string): string =>
+  new Date(dateString).toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+
+const getSubscriptionStatus = (daysLeft: number): SubscriptionStatus => {
+  if (daysLeft < 0) return "EXPIRED";
+  if (daysLeft <= 3) return "EXPIRING_SOON";
+  return "ACTIVE";
+};
+
+const STATUS_DISPLAY: Record<SubscriptionStatus, string> = {
+  EXPIRED: "EXPIRED",
+  EXPIRING_SOON: "EXPIRING SOON",
+  ACTIVE: "ACTIVE",
+};
+
+const DIVIDER = "─────────────────────────────";
+
+const buildAlert = (dues: number, daysLeft: number): string => {
+  if (dues > 0)
+    return `Note: A due balance of Rs. ${dues} is pending. Kindly clear it at the earliest to avoid any service interruption.`;
+  if (daysLeft >= 0 && daysLeft <= 3)
+    return `Notice: Your subscription is expiring within ${daysLeft} day(s). Please renew promptly to retain your allocated seat.`;
+  if (daysLeft < 0)
+    return `Notice: Your subscription has expired. Please renew immediately to continue availing library facilities.`;
+  return "";
+};
+
+const generateWhatsAppReceipt = ({
+  studentName,
+  memberId,
+  daysLeft,
+  dues,
+  totalAmount,
+  amountPaid,
+  startDateStr,
+  endDateStr,
+}: ReceiptData): string => {
+  const startDate = formatIndianDate(startDateStr);
+  const endDate = formatIndianDate(endDateStr);
+  const memberIdText = memberId ?? "Pending";
+  const status = getSubscriptionStatus(daysLeft);
+  const statusText = STATUS_DISPLAY[status];
+  const daysDisplay = Math.max(0, daysLeft);
+  const alert = buildAlert(dues, daysLeft);
+
+  const lines: string[] = [
+    `MAA LIBRARY`,
+    `Official Subscription Receipt`,
+    DIVIDER,
+    `Name           : ${studentName}`,
+    `Member ID      : ${memberIdText}`,
+    `Status         : ${statusText}`,
+    `Start Date     : ${startDate}`,
+    `End Date       : ${endDate}`,
+    `Days Remaining : ${daysDisplay} days`,
+    DIVIDER,
+    `PAYMENT SUMMARY`,
+    `Total Fee      : Rs. ${totalAmount}`,
+    `Amount Paid    : Rs. ${amountPaid}`,
+    `Outstanding    : Rs. ${dues}`,
+    DIVIDER,
+    ...(alert ? [alert, DIVIDER] : []),
+    `Thank you for choosing Maa Library.`,
+    ``,
+    `Authorized By  : Yogendra Kumar (Owner)`,
+  ];
+
+  return lines.join("\n");
+};
 
 // Define the type based on your Prisma Schema
 interface Subscription {
@@ -427,6 +518,43 @@ export default function StudentTable() {
 
                     <TableCell className="pr-6 text-right">
                       <div className="flex items-center justify-end gap-1">
+                        {/* WhatsApp Message Button */}
+                        <Button
+                          type="button"
+                          title="Send WhatsApp Message"
+                          className="p-2 rounded-lg transition-colors bg-background border shadow-sm hover:border-transparent text-emerald-500 hover:bg-emerald-500/10 border-emerald-500/20"
+                          onClick={() => {
+                            const latestSub = student.subscriptions[0];
+                            if (latestSub) {
+                              const daysLeft = differenceInDays(
+                                new Date(latestSub.endDate),
+                                new Date(),
+                              );
+                              const dues =
+                                latestSub.totalAmount - latestSub.amountPaid;
+
+                              const message = generateWhatsAppReceipt({
+                                studentName: student.name,
+                                memberId: student.memberId,
+                                daysLeft,
+                                dues,
+                                totalAmount: latestSub.totalAmount, // Added total amount
+                                amountPaid: latestSub.amountPaid, // Added amount paid
+                                startDateStr: latestSub.startDate, // Added start date
+                                endDateStr: latestSub.endDate,
+                              });
+
+                              sendWhatsAppMessage(student.phoneNumber, message);
+                            } else {
+                              toast.error(
+                                "No subscription found for this student",
+                              );
+                            }
+                          }}
+                        >
+                          <WhatsappIcon />
+                        </Button>
+
                         {/* Renew Subscription Button */}
                         <ActionBtn
                           icon={RefreshCw}

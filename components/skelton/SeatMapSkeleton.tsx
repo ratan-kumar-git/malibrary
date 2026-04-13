@@ -52,8 +52,8 @@ export function SeatMapSkeleton() {
           </div>
 
           {/* --- SIDEBAR SKELETON --- */}
-          <div className="w-full xl:w-105 shrink-0">
-            <div className="bg-background rounded-2xl p-6 border border-border shadow-sm h-150">
+          <div className="w-full xl:w-105 shrink-0 overflow-hidden">
+            <div className="bg-background rounded-2xl p-6 border border-border shadow-sm h-auto">
               
               {/* Sidebar Header */}
               <div className="flex items-start gap-3 mb-6">
@@ -70,8 +70,8 @@ export function SeatMapSkeleton() {
               {/* Sidebar Shift Cards */}
               <div className="space-y-4 mt-6">
                 <div className="w-24 h-4 bg-muted rounded-md mb-4" />
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="w-full h-35 bg-muted/40 rounded-xl border border-muted" />
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="w-full h-27 bg-muted/40 rounded-xl border border-muted" />
                 ))}
               </div>
 
