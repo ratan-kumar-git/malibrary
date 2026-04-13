@@ -2,7 +2,7 @@ import SeatMap from "@/components/seat-map/SeatMap";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Seat Map | MA Library",
+  title: "Seat Map",
   description: "View available seats and book your study spot at MA Library",
 };
 
