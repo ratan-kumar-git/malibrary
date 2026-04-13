@@ -1,9 +1,6 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import {
   CheckCircle2,
 } from "lucide-react";
-import { ShiftsSection } from "@/components/shifts/ShiftsSection";
 
 export default function AboutPage() {
   return (
@@ -30,7 +27,7 @@ export default function AboutPage() {
             <div>
               <h2 className="text-4xl font-bold text-gray-950 mb-4">Our Story</h2>
               <p className="text-gray-600 text-lg leading-relaxed">
-                Established in 2015, our library was founded on a simple but powerful mission: to provide students with a dedicated, comfortable, and technology-enabled space for focused learning and intellectual growth.
+                Established in 2025, our library was founded on a simple but powerful mission: to provide students with a dedicated, comfortable, and technology-enabled space for focused learning and intellectual growth.
               </p>
             </div>
 
@@ -90,35 +87,6 @@ export default function AboutPage() {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* SHIFT TIMINGS */}
-      <ShiftsSection
-        title="Operational Hours"
-        subtitle="Choose your preferred shift timing"
-        variant="about"
-      />
-
-      {/* CTA SECTION */}
-      <section className="py-24 px-6 relative overflow-hidden m-4 md:m-8 rounded-4xl bg-gray-950 text-white inset-ring-1 inset-ring-white/10 shadow-2xl">
-        <div className="absolute inset-0 bg-linear-to-br from-primary/20 via-transparent to-transparent opacity-50 pointer-events-none" />
-
-        <div className="relative z-10 max-w-3xl mx-auto text-center space-y-8">
-          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-balance">
-            Experience Excellence in Learning
-          </h2>
-          <p className="text-gray-400 text-lg md:text-xl text-balance">
-            Join thousands of students who have found their ideal study environment with us. Your success is our success.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 pt-6">
-            <Button asChild size="lg" className="h-14 px-8 rounded-full text-base w-full sm:w-auto hover:scale-105 transition-transform bg-primary text-primary-foreground hover:bg-primary/90">
-              <Link href="/signup">Register Today</Link>
-            </Button>
-            <Button asChild variant="outline" size="lg" className="h-14 px-8 rounded-full text-base w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white border-white/30">
-              <Link href="/contact-us">Get in Touch</Link>
-            </Button>
           </div>
         </div>
       </section>

@@ -10,15 +10,16 @@ import {
   LayoutDashboard,
   ChevronRight,
   Home,
-  MessageCircleDashed,
   Settings,
   BookMarkedIcon,
   Bell,
   MessageSquare,
   GraduationCap,
-  Phone,
   FileSpreadsheetIcon,
   HistoryIcon,
+  Clock,
+  Zap,
+  MessageCircle,
 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
@@ -70,9 +71,11 @@ export default function Navbar() {
       ]
     : [
         { name: "Home", href: "/", icon: Home },
-        { name: "Inquiry", href: "/inquiry", icon: MessageCircleDashed },
-        { name: "About", href: "/about", icon: User },
-        { name: "Contact Us", href: "/contact-us", icon: Phone },
+        { name: "Shifts", href: "#shifts", icon: Clock },
+        { name: "Facilities", href: "#facilities", icon: Zap },
+        // { name: "Inquiry", href: "/inquiry", icon: MessageCircleDashed },
+        // { name: "About", href: "/about", icon: User },
+        { name: "FAQs", href: "#faq", icon: MessageCircle },
       ];
 
   const handleLogout = async () => {
@@ -163,7 +166,7 @@ export default function Navbar() {
                       Menu
                     </p>
                     {navLinks.map((link) => {
-                      const Icon = link.icon
+                      const Icon = link.icon;
                       return (
                         <Link
                           key={link.href}
@@ -243,24 +246,12 @@ export default function Navbar() {
                       </div>
                     ) : (
                       <div className="flex flex-col gap-2">
-                        <Button
-                          variant="outline"
-                          className="w-full rounded-xl"
-                          asChild
-                        >
-                          <Link
-                            href="/login"
-                            onClick={() => setMobileOpen(false)}
-                          >
-                            Log in
-                          </Link>
-                        </Button>
                         <Button className="w-full rounded-xl" asChild>
                           <Link
-                            href="/signup"
+                            href="/inquiry"
                             onClick={() => setMobileOpen(false)}
                           >
-                            Sign up
+                            Pre-Booking
                           </Link>
                         </Button>
                       </div>
@@ -349,16 +340,8 @@ export default function Navbar() {
               </DropdownMenu>
             ) : (
               <div className="flex items-center gap-3">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="rounded-full hover:bg-gray-100"
-                  asChild
-                >
-                  <Link href="/login">Log in</Link>
-                </Button>
-                <Button size="sm" className="rounded-full shadow-md" asChild>
-                  <Link href="/signup">Sign up</Link>
+                <Button className="rounded-full shadow-md" asChild>
+                  <Link href="/inquiry">Pre-Booking</Link>
                 </Button>
               </div>
             )}
