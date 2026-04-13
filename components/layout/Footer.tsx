@@ -1,5 +1,4 @@
 import {
-  BookMarkedIcon,
   Home,
   Info,
   CalendarCheck,
@@ -8,6 +7,7 @@ import {
   Clock,
   MessageCircle,
   CircleQuestionMark,
+  GalleryHorizontal,
 } from "lucide-react";
 import Link from "next/link";
 import {
@@ -16,6 +16,7 @@ import {
   InstagramIcon,
   YoutubeIcon,
 } from "@/components/icons/SocialIcons";
+import Image from "next/image";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -30,7 +31,12 @@ const Footer = () => {
   const libraryLinks = [
     { href: "#shifts", label: "Shift timings", icon: Clock },
     { href: "#facilities", label: "Facilities", icon: Zap },
-    { href: "#how-preBooking-work", label: "How preBooking Work?", icon: CircleQuestionMark },
+    {
+      href: "#how-preBooking-work",
+      label: "How preBooking Work?",
+      icon: CircleQuestionMark,
+    },
+    { href: "#gallery", label: "Gallery", icon: GalleryHorizontal },
     { href: "#faq", label: "FAQs", icon: MessageCircle },
   ];
 
@@ -66,12 +72,15 @@ const Footer = () => {
           <div className="col-span-2 md:col-span-1 flex flex-col gap-5">
             <Link
               href="/"
-              className="inline-flex items-center gap-2.5 font-bold text-white text-lg w-fit"
+              className="flex items-center py-0.5 gap-2.5 font-bold tracking-tight transition-transform hover:scale-102"
             >
-              <div className="size-9 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shrink-0">
-                <BookMarkedIcon className="size-4" />
-              </div>
-              MaLibrary
+              <Image
+                src="/MALibrary/maLibraryLogo.png"
+                alt="MaLibrary Logo"
+                width={90}
+                height={20}
+                className="rounded-full"
+              />
             </Link>
 
             <p className="text-sm text-gray-500 leading-relaxed">

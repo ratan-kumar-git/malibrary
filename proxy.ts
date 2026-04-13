@@ -14,15 +14,16 @@ export default async function proxy(req: NextRequest) {
   const publicRoutes = ["/login", "/signup"];
 
   const privateRoutePrefixes = [
-    "/setup",
-    "/settings",
-    "/profile",
+    "/booking",
     "/dashboard",
-    "/register",
-    "/seat-map",
     "/history",
-    "/student",
     "/inquiry-request",
+    "/profile",
+    "/renew",
+    "/seat-map",
+    "/settings",
+    "/student",
+    "/setup",
   ];
 
   const isPrivateRoute = privateRoutePrefixes.some((route) =>

@@ -1,7 +1,7 @@
 import SignUpForm from "@/components/auth/signup-form";
 
 export const metadata = {
-  title: "Sign Up | MaLibrary",
+  title: "Sign Up",
   description: "Create an account to manage student records and seat.",
 };
 

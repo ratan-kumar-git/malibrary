@@ -20,6 +20,7 @@ import {
   Clock,
   Zap,
   MessageCircle,
+  GalleryHorizontal,
 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
@@ -42,6 +43,7 @@ import {
 } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
+import Image from "next/image";
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -73,8 +75,7 @@ export default function Navbar() {
         { name: "Home", href: "/", icon: Home },
         { name: "Shifts", href: "#shifts", icon: Clock },
         { name: "Facilities", href: "#facilities", icon: Zap },
-        // { name: "Inquiry", href: "/inquiry", icon: MessageCircleDashed },
-        // { name: "About", href: "/about", icon: User },
+        { name: "Gallery", href: "#gallery", icon: GalleryHorizontal },
         { name: "FAQs", href: "#faq", icon: MessageCircle },
       ];
 
@@ -99,12 +100,9 @@ export default function Navbar() {
         {/* --- LEFT: LOGO --- */}
         <Link
           href="/"
-          className="flex items-center gap-2.5 font-bold tracking-tight transition-transform hover:scale-105"
+          className="flex items-center py-0.5 gap-2.5 font-bold tracking-tight transition-transform hover:scale-102"
         >
-          <div className="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-md">
-            <BookMarkedIcon className="size-5" />
-          </div>
-          <span className="text-xl md:text-2xl text-gray-950">MaLibrary</span>
+          <Image src="/MALibrary/maLibraryLogo.png" alt="MaLibrary Logo" width={90} height={20} className="rounded-full" />
         </Link>
 
         {/* --- MIDDLE: DESKTOP NAVIGATION --- */}

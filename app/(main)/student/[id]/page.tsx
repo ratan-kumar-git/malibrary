@@ -584,7 +584,7 @@ export default function StudentProfilePage() {
 // Loading Skeleton
 function StudentProfileSkeleton() {
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background p-6 pt-24">
       <div className="max-w-6xl mx-auto space-y-8">
         <div className="flex items-start justify-between">
           <div>

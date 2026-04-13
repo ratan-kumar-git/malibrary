@@ -4,7 +4,7 @@ import * as React from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { Loader2, Mail, Lock, User, Eye, EyeOff, BookMarkedIcon } from "lucide-react"
+import { Loader2, Mail, Lock, User, Eye, EyeOff } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { authClient } from "@/lib/auth-client"
 
@@ -28,6 +28,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import Image from "next/image"
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -77,18 +78,11 @@ export default function SignUpForm() {
       <CardHeader className="space-y-6 text-center pt-10 pb-4">
         <div className="flex justify-center">
           <Link
-            href="/"
-            className="flex items-center gap-3 group transition-transform hover:scale-105"
-          >
-            <div className="flex size-12 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg">
-              <BookMarkedIcon className="size-6" />
-            </div>
-            <div className="text-left leading-tight">
-              <span className="text-2xl font-extrabold tracking-tight text-gray-950">
-                MaLibrary
-              </span>
-            </div>
-          </Link>
+          href="/"
+          className="flex items-center py-0.5 gap-2.5 font-bold tracking-tight transition-transform hover:scale-102"
+        >
+          <Image src="/MALibrary/maLibraryLogo.png" alt="MaLibrary Logo" width={150} height={20} className="rounded-full" />
+        </Link>
         </div>
 
         <div className="space-y-1.5">

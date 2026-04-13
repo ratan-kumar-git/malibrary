@@ -22,6 +22,13 @@ import Image from "next/image";
 import { ShiftsSection } from "@/components/shifts/ShiftsSection";
 import { PreBookingTimeline } from "@/components/home/PreBookingTimeline";
 import { FaqSection } from "@/components/home/Faqsection";
+import { GallerySection } from "@/components/home/Gallerysection";
+
+export const metadata = {
+  title: "Home",
+  description:
+    "Discover the perfect study environment at MALibrary. Book your seat today and experience world-class facilities designed for focused study and intellectual growth.",
+};
 
 export default function Home() {
   const facilities = [
@@ -218,6 +225,9 @@ export default function Home() {
       </section>
 
       <PreBookingTimeline />
+
+      <GallerySection />
+
       <FaqSection />
     </div>
   );

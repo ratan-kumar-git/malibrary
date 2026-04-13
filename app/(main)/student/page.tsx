@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/breadcrumb";
 
 export const metadata: Metadata = {
-  title: "Students | Admin",
+  title: "Students",
   description: "Manage library students and subscriptions",
 };
 

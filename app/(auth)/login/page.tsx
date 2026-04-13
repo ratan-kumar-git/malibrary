@@ -1,7 +1,7 @@
 import LoginForm from "@/components/auth/login-form";
 
 export const metadata = {
-  title: "Login | MaLibrary",
+  title: "Login",
   description: "Login to securely manage student records.",
 };
 
