@@ -8,11 +8,11 @@ export async function GET(request: Request) {
   }
 
   try {
-    const today = new Date();
+    const now = new Date();
     const expired = await prisma.subscription.updateMany({
       where: {
         status: 'ACTIVE',
-        endDate: { lt: today },
+        endDate: { lt: now },
       },
       data: { 
         status: 'EXPIRED' 
