@@ -439,7 +439,7 @@ export default function InquiryClient() {
                     )}
                   </Label>
                   <div
-                    className={`grid grid-cols-4 gap-2 ${
+                    className={`grid grid-cols-2 md:grid-cols-4 gap-2 ${
                       selectedShifts.length === 0
                         ? "p-2 rounded-lg border border-red-300 bg-red-50/30"
                         : ""
@@ -547,7 +547,7 @@ export default function InquiryClient() {
                 <h4 className="font-semibold text-gray-950 self-center">Address</h4>
               </div>
               <p className="text-gray-600 text-sm leading-relaxed">
-                Shivsthan, Mahaddi Ganj, Sararam
+                Shivsthan, Mohaddiganj, Sasaram, Rohtas, Bihar - 821115
               </p>
             </div>
 
@@ -567,7 +567,7 @@ export default function InquiryClient() {
                   +91 70113 07600
                 </a>
               </p>
-              <p className="text-gray-500 text-xs mt-2">6 AM - 10 PM</p>
+              <p className="text-gray-500 text-xs mt-2">10 AM - 10 PM</p>
             </div>
           </div>
         </div>

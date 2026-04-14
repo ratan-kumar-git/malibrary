@@ -11,7 +11,6 @@ import {
   ChevronRight,
   Home,
   Settings,
-  BookMarkedIcon,
   Bell,
   MessageSquare,
   GraduationCap,
@@ -102,7 +101,13 @@ export default function Navbar() {
           href="/"
           className="flex items-center py-0.5 gap-2.5 font-bold tracking-tight transition-transform hover:scale-102"
         >
-          <Image src="/MALibrary/maLibraryLogo.png" alt="MaLibrary Logo" width={90} height={20} className="rounded-full" />
+          <Image
+            src="/MALibrary/maLibraryLogo.png"
+            alt="MaLibrary Logo"
+            width={90}
+            height={20}
+            className="rounded-full"
+          />
         </Link>
 
         {/* --- MIDDLE: DESKTOP NAVIGATION --- */}
@@ -145,12 +150,20 @@ export default function Navbar() {
                 className="w-[85vw] sm:w-80 flex flex-col p-0 border-r-0 rounded-r-3xl overflow-hidden bg-gray-50/95 backdrop-blur-2xl"
               >
                 {/* Mobile Header */}
-                <SheetHeader className="p-6 bg-white border-b border-gray-100">
+                <SheetHeader className="bg-white border-b border-gray-100">
                   <SheetTitle className="flex items-center gap-3 text-xl font-bold text-gray-950">
-                    <div className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
-                      <BookMarkedIcon className="size-4" />
-                    </div>
-                    MaLibrary
+                    <Link
+                      href="/"
+                      className="flex items-center font-bold tracking-tight transition-transform hover:scale-102"
+                    >
+                      <Image
+                        src="/MALibrary/maLibraryLogo.png"
+                        alt="MaLibrary Logo"
+                        width={70}
+                        height={20}
+                        className="rounded-full"
+                      />
+                    </Link>
                   </SheetTitle>
                   <SheetDescription className="sr-only">
                     Navigation menu and user settings
@@ -158,7 +171,7 @@ export default function Navbar() {
                 </SheetHeader>
 
                 {/* Mobile Nav Links */}
-                <div className="flex-1 overflow-y-auto px-4 py-6">
+                <div className="flex-1 overflow-y-auto px-4">
                   <nav className="flex flex-col gap-2">
                     <p className="px-2 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
                       Menu

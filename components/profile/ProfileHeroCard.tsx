@@ -1,9 +1,8 @@
 "use client";
 
-import { CheckCircle2, Camera, UserPen, Mail } from "lucide-react";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { CheckCircle2, Mail } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
 interface ProfileHeroCardProps {
@@ -35,7 +34,7 @@ export default function ProfileHeroCard({
       <div className="relative z-10 flex justify-center -mt-16 sm:-mt-20">
         <div className="rounded-full p-1.5 bg-white shadow-xl inset-ring-1 inset-ring-gray-100">
           <Avatar className="size-32 sm:size-36 bg-gray-50">
-            <AvatarImage src={image ?? undefined} alt={name} className="object-cover" />
+            <AvatarImage src={image ?? "/MALibrary/owner2.jpeg"} alt={name} className="object-cover" />
             <AvatarFallback className="flex items-center justify-center text-4xl font-bold text-primary bg-primary/5">
               {name.charAt(0).toUpperCase()}
             </AvatarFallback>
@@ -76,22 +75,6 @@ export default function ProfileHeroCard({
           </Badge>
         </div>
       </CardContent>
-
-      {/* Actions */}
-      <CardFooter className="flex flex-col sm:flex-row justify-center gap-3 px-4 pb-8 pt-4">
-        <Button className="gap-2 w-full sm:w-auto rounded-xl h-11 px-6 shadow-sm">
-          <UserPen className="size-4" />
-          Edit Profile
-        </Button>
-
-        <Button
-          variant="secondary"
-          className="gap-2 w-full sm:w-auto bg-gray-50 text-gray-700 hover:bg-gray-100 inset-ring-1 inset-ring-gray-200 border-0 rounded-xl h-11 px-6 shadow-none"
-        >
-          <Camera className="size-4" />
-          Change Image
-        </Button>
-      </CardFooter>
     </Card>
   );
 }

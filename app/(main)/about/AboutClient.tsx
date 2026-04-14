@@ -93,7 +93,7 @@ export default function AboutClient() {
               <div className="space-y-8">
                 <div className="text-center">
                   <div className="text-5xl font-bold text-primary mb-2">
-                    60+
+                    250+
                   </div>
                   <p className="text-gray-600 font-medium">
                     Study Seats Across 1 Floors
@@ -112,7 +112,7 @@ export default function AboutClient() {
                 <div className="border-t border-gray-200 pt-8">
                   <div className="text-center">
                     <div className="text-4xl font-bold text-primary mb-2">
-                      50+
+                      250+
                     </div>
                     <p className="text-gray-600 font-medium">Active Students</p>
                   </div>
@@ -167,7 +167,7 @@ export default function AboutClient() {
                       Address
                     </h4>
                     <p className="text-gray-600 text-sm leading-relaxed">
-                      Shivsthan, Mahaddi Ganj, Sararam
+                      Shivsthan, Mohaddiganj, Sasaram, Rohtas, Bihar - 821115
                     </p>
                   </div>
                 </div>
