@@ -292,7 +292,7 @@ export default function DashboardClient() {
                 <Button
                   variant="outline"
                   className="gap-2 h-10"
-                  onClick={() => router.push('/students')}
+                  onClick={() => router.push('/student')}
                 >
                   <Users size={16} />
                   View Students
