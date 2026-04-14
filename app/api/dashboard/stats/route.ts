@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import prisma from '@/lib/prisma';
 import { headers } from 'next/headers';
-import { startOfMonth, endOfMonth, differenceInDays, startOfDay } from 'date-fns';
+import { startOfMonth, endOfMonth, startOfDay } from 'date-fns';
 
 export async function GET() {
   try {
@@ -41,7 +41,6 @@ export async function GET() {
       totalStudents,
       activeSubscriptions,
       allSubscriptions,
-      totalSeats,
       activeSeats,
     ] = await Promise.all([
       // Total students

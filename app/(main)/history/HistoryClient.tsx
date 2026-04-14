@@ -369,213 +369,210 @@ export default function HistoryClient() {
 
   // ── Render ────────────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-background">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-6">
-        <div className="flex items-center justify-between">
-          {/* Breadcrumb */}
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link href="/">
-                    <Home className="w-4 h-4" />
-                  </Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage className="text-primary">
-                  {monthLabel} History
-                </BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+    <>
+      <div className="flex items-center justify-between mt-24 mb-6">
+        {/* Breadcrumb */}
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href="/">
+                  <Home className="w-4 h-4" />
+                </Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage className="text-primary">
+                {monthLabel} History
+              </BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
 
-          {/* Month Picker */}
-          <MonthPicker
-            value={selectedMonth}
-            onChange={(v) => {
-              setSelectedMonth(v);
+        {/* Month Picker */}
+        <MonthPicker
+          value={selectedMonth}
+          onChange={(v) => {
+            setSelectedMonth(v);
+            setPage(1);
+          }}
+        />
+      </div>
+
+      {/* Table card */}
+      <div className="bg-card rounded-2xl border overflow-hidden">
+        {/* Toolbar */}
+        <div className="px-5 py-4 border-b flex flex-col xl:flex-row items-center gap-3">
+          <div className="relative w-full xl:w-72">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4 pointer-events-none" />
+            <Input
+              placeholder="Search name, phone, floor…"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9 pr-9 bg-muted/40"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
+
+          <Select
+            value={statusFilter}
+            onValueChange={(v) => {
+              setStatusFilter(v);
               setPage(1);
             }}
-          />
+          >
+            <SelectTrigger className="w-full xl:w-37.5 bg-muted/40">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="ALL">All Status</SelectItem>
+              <SelectItem value="ACTIVE">Active</SelectItem>
+              <SelectItem value="EXPIRED">Expired</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <div className="xl:ml-auto flex items-center gap-2 flex-wrap">
+            {statusFilter !== "ALL" && (
+              <span className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
+                {statusFilter}
+                <button onClick={() => setStatusFilter("ALL")}>
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+            {debouncedSearch && (
+              <span className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
+                &quot;{debouncedSearch}&quot;
+                <button onClick={() => setSearchQuery("")}>
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+            <Button onClick={handleExportPDF} className="gap-2">
+              <FileText size={15} /> Export PDF
+            </Button>
+          </div>
         </div>
 
-        {/* Table card */}
-        <div className="bg-card rounded-2xl border overflow-hidden">
-          {/* Toolbar */}
-          <div className="px-5 py-4 border-b flex flex-col xl:flex-row items-center gap-3">
-            <div className="relative w-full xl:w-72">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4 pointer-events-none" />
-              <Input
-                placeholder="Search name, phone, floor…"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 pr-9 bg-muted/40"
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              )}
-            </div>
-
-            <Select
-              value={statusFilter}
-              onValueChange={(v) => {
-                setStatusFilter(v);
-                setPage(1);
-              }}
-            >
-              <SelectTrigger className="w-full xl:w-37.5 bg-muted/40">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ALL">All Status</SelectItem>
-                <SelectItem value="ACTIVE">Active</SelectItem>
-                <SelectItem value="EXPIRED">Expired</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <div className="xl:ml-auto flex items-center gap-2 flex-wrap">
-              {statusFilter !== "ALL" && (
-                <span className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
-                  {statusFilter}
-                  <button onClick={() => setStatusFilter("ALL")}>
-                    <X className="w-3 h-3" />
-                  </button>
-                </span>
-              )}
-              {debouncedSearch && (
-                <span className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
-                  &quot;{debouncedSearch}&quot;
-                  <button onClick={() => setSearchQuery("")}>
-                    <X className="w-3 h-3" />
-                  </button>
-                </span>
-              )}
-              <Button onClick={handleExportPDF} className="gap-2">
-                <FileText size={15} /> Export PDF
-              </Button>
-            </div>
-          </div>
-
-          {/* Table */}
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-muted/30 hover:bg-muted/30">
-                  {table.getHeaderGroups().map((hg) =>
-                    hg.headers.map((header) => (
-                      <TableHead
-                        key={header.id}
-                        className="text-xs font-semibold uppercase tracking-wider text-muted-foreground py-3 whitespace-nowrap"
-                      >
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
-                      </TableHead>
-                    )),
-                  )}
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {isLoading ? (
-                  Array.from({ length: 6 }).map((_, i) => (
-                    <TableRow key={i} className="border-b">
-                      {columns.map((_, ci) => (
-                        <TableCell key={ci} className="py-4">
-                          <Skeleton className="h-8 w-full rounded-lg" />
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))
-                ) : table.getRowModel().rows?.length ? (
-                  table.getRowModel().rows.map((row) => (
-                    <TableRow
-                      key={row.id}
-                      className="border-b hover:bg-muted/40 transition-colors"
+        {/* Table */}
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-muted/30 hover:bg-muted/30">
+                {table.getHeaderGroups().map((hg) =>
+                  hg.headers.map((header) => (
+                    <TableHead
+                      key={header.id}
+                      className="text-xs font-semibold uppercase tracking-wider text-muted-foreground py-3 whitespace-nowrap"
                     >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id} className="py-3.5">
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
                           )}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={columns.length}
-                      className="h-64 text-center"
-                    >
-                      <div className="flex flex-col items-center justify-center gap-3">
-                        <div className="w-14 h-14 rounded-2xl bg-muted flex items-center justify-center">
-                          <History className="w-6 h-6 text-muted-foreground" />
-                        </div>
-                        <div>
-                          <p className="font-semibold text-base">
-                            No records found
-                          </p>
-                          <p className="text-sm text-muted-foreground mt-1">
-                            Try adjusting your search or filters for{" "}
-                            {monthLabel}.
-                          </p>
-                        </div>
-                      </div>
-                    </TableCell>
-                  </TableRow>
+                    </TableHead>
+                  )),
                 )}
-              </TableBody>
-            </Table>
-          </div>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {isLoading ? (
+                Array.from({ length: 6 }).map((_, i) => (
+                  <TableRow key={i} className="border-b">
+                    {columns.map((_, ci) => (
+                      <TableCell key={ci} className="py-4">
+                        <Skeleton className="h-8 w-full rounded-lg" />
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    className="border-b hover:bg-muted/40 transition-colors"
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id} className="py-3.5">
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-64 text-center"
+                  >
+                    <div className="flex flex-col items-center justify-center gap-3">
+                      <div className="w-14 h-14 rounded-2xl bg-muted flex items-center justify-center">
+                        <History className="w-6 h-6 text-muted-foreground" />
+                      </div>
+                      <div>
+                        <p className="font-semibold text-base">
+                          No records found
+                        </p>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          Try adjusting your search or filters for {monthLabel}.
+                        </p>
+                      </div>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
 
-          {/* Pagination */}
-          <div className="flex items-center justify-between px-5 py-4 border-t bg-muted/20">
-            <p className="text-sm text-muted-foreground">
-              Showing{" "}
-              <span className="font-semibold text-foreground">
-                {records.length}
-              </span>{" "}
-              of{" "}
-              <span className="font-semibold text-foreground">
-                {totalRecords}
-              </span>{" "}
-              records
-            </p>
-            <div className="flex items-center gap-2">
-              <Button
-                size="sm"
-                variant="outline"
-                disabled={page === 1 || isLoading}
-                onClick={() => setPage((p) => p - 1)}
-              >
-                Previous
-              </Button>
-              <span className="text-sm font-semibold px-3 py-1.5 bg-muted rounded-lg border min-w-20 text-center">
-                {page} / {Math.max(1, totalPages)}
-              </span>
-              <Button
-                size="sm"
-                variant="outline"
-                disabled={page >= totalPages || isLoading}
-                onClick={() => setPage((p) => p + 1)}
-              >
-                Next
-              </Button>
-            </div>
+        {/* Pagination */}
+        <div className="flex items-center justify-between px-5 py-4 border-t bg-muted/20">
+          <p className="text-sm text-muted-foreground">
+            Showing{" "}
+            <span className="font-semibold text-foreground">
+              {records.length}
+            </span>{" "}
+            of{" "}
+            <span className="font-semibold text-foreground">
+              {totalRecords}
+            </span>{" "}
+            records
+          </p>
+          <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={page === 1 || isLoading}
+              onClick={() => setPage((p) => p - 1)}
+            >
+              Previous
+            </Button>
+            <span className="text-sm font-semibold px-3 py-1.5 bg-muted rounded-lg border min-w-20 text-center">
+              {page} / {Math.max(1, totalPages)}
+            </span>
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={page >= totalPages || isLoading}
+              onClick={() => setPage((p) => p + 1)}
+            >
+              Next
+            </Button>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

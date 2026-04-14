@@ -194,10 +194,12 @@ export default function StudentTable() {
   const filteredStudents = useMemo(() => {
     return students.filter((s) => {
       const searchLower = searchTerm.toLowerCase();
+      
+      // FIXED: Added .toString() to s.memberId before calling .toLowerCase()
       const matchesSearch =
         s.name.toLowerCase().includes(searchLower) ||
         s.phoneNumber.includes(searchTerm) ||
-        (s.memberId && s.memberId.toLowerCase().includes(searchLower)) ||
+        (s.memberId && s.memberId.toString().toLowerCase().includes(searchLower)) ||
         (s.lockerNumber && s.lockerNumber.toString() === searchTerm);
 
       if (!matchesSearch) return false;

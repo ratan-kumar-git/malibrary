@@ -15,7 +15,6 @@ import {
   ArrowUp,
   ArrowDown,
   Plus,
-  Eye,
   Home
 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -180,14 +179,6 @@ export default function DashboardClient() {
         </BreadcrumbList>
       </Breadcrumb>
 
-      {/* Header */}
-      <div className="space-y-2">
-        <h1 className="text-4xl font-bold text-foreground">Dashboard</h1>
-        <p className="text-muted-foreground">
-          Welcome back! Check your library status for today.
-        </p>
-      </div>
-
       {/* Key Metrics */}
       {stats && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -243,7 +234,7 @@ export default function DashboardClient() {
                           size="sm"
                           variant="ghost"
                           className="mt-3 h-8 text-amber-600 hover:bg-amber-600/10"
-                          onClick={() => router.push('/students')}
+                          onClick={() => router.push('/history')}
                         >
                           View Members
                         </Button>
@@ -293,7 +284,7 @@ export default function DashboardClient() {
                 <Button
                   variant="outline"
                   className="gap-2 h-10"
-                  onClick={() => router.push('/booking')}
+                  onClick={() => router.push('/seat-map')}
                 >
                   <Plus size={16} />
                   New Booking
@@ -305,22 +296,6 @@ export default function DashboardClient() {
                 >
                   <Users size={16} />
                   View Students
-                </Button>
-                <Button
-                  variant="outline"
-                  className="gap-2 h-10"
-                  onClick={() => router.push('/seat-map')}
-                >
-                  <Eye size={16} />
-                  Seat Map
-                </Button>
-                <Button
-                  variant="outline"
-                  className="gap-2 h-10"
-                  onClick={() => router.push('/settings')}
-                >
-                  <BarChart3 size={16} />
-                  Settings
                 </Button>
               </div>
             </CardContent>
