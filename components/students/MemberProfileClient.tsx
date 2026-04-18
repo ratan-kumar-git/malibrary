@@ -31,6 +31,7 @@ type Subscription = {
   startDate: Date;
   endDate: Date;
   totalAmount: number;
+  discount: number;
   amountPaid: number;
   status: string;
   seat: Seat;
@@ -295,12 +296,12 @@ export default function MemberProfileClient({ student }: MemberProfileProps) {
                               ₹{sub.amountPaid}
                             </span>
                             <span className="text-xs font-medium text-muted-foreground mb-1">
-                              / ₹{sub.totalAmount}
+                              / ₹{sub.totalAmount - (sub.discount || 0)}
                             </span>
                           </div>
-                          {sub.amountPaid < sub.totalAmount && (
+                          {sub.amountPaid < (sub.totalAmount - (sub.discount || 0)) && (
                             <p className="text-xs font-bold text-destructive mt-1">
-                              Due: ₹{sub.totalAmount - sub.amountPaid}
+                              Due: ₹{(sub.totalAmount - (sub.discount || 0)) - sub.amountPaid}
                             </p>
                           )}
                         </div>

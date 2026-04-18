@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { seatId, studentId, newStudent, shiftIds, startDate, endDate, totalAmount, amountPaid = 0 } = body;
+    const { seatId, studentId, newStudent, shiftIds, startDate, endDate, totalAmount, discount = 0, amountPaid = 0 } = body;
 
     if (!seatId || !shiftIds?.length || !startDate || !endDate) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
@@ -129,8 +129,12 @@ export async function POST(request: NextRequest) {
 
     const start = new Date(startDate);
     const end = new Date(endDate);
-    start.setUTCHours(0, 0, 0, 0);
+
+    start.setUTCHours(0, 0, 0, 0); 
+    start.setMinutes(start.getMinutes() - 330); // Subtract 330 mins (5h 30m) to align UTC with IST start-of-day
+
     end.setUTCHours(23, 59, 59, 999);
+    end.setMinutes(end.getMinutes() - 330); // Subtract 330 mins to align UTC with IST end-of-day
 
     // Create Subscription (financial snapshot) + SeatAssignments (physical occupancy)
     // Done in a transaction so either both succeed or neither does
@@ -149,7 +153,8 @@ export async function POST(request: NextRequest) {
           startDate: start,
           endDate: end,
           totalAmount: Math.round(totalAmount) || 0,
-          amountPaid: Math.round(amountPaid) || 0, // ✅ FIXED: was always 0 before
+          discount: Math.round(discount) || 0,
+          amountPaid: Math.round(amountPaid) || 0,
           status: 'ACTIVE',
         },
       });
@@ -178,6 +183,7 @@ export async function POST(request: NextRequest) {
         startDate: result.startDate,
         endDate: result.endDate,
         totalAmount: result.totalAmount,
+        discount: result.discount,
         amountPaid: result.amountPaid,
         shifts: shifts.map((s) => ({ id: s.id, name: s.name, price: s.price })),
       },

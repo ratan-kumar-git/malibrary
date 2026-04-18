@@ -72,6 +72,7 @@ export async function GET(request: NextRequest) {
         startDate: true,
         endDate: true,
         totalAmount: true,
+        discount: true,
         amountPaid: true,
         status: true,
         createdAt: true,
@@ -100,6 +101,7 @@ export async function GET(request: NextRequest) {
       startDate: sub.startDate.toISOString(),
       endDate: sub.endDate.toISOString(),
       totalAmount: sub.totalAmount,
+      discount: sub.discount,
       amountPaid: sub.amountPaid,
       status: sub.status,
       createdAt: sub.createdAt.toISOString(),
@@ -138,24 +140,31 @@ export async function GET(request: NextRequest) {
 function convertToCSV(records: any[]): string {
   const headers = [
     'Member ID', 'Student Name', 'Gender', 'Phone', 'Floor', 'Seat', 
-    'Shifts', 'Total Amount', 'Amount Paid', 'Status', 'Start Date', 'End Date', 'Created At'
+    'Shifts', 'Total Amount', 'Discount', 'Final Amount', 'Amount Paid', 'Due', 'Status', 'Start Date', 'End Date', 'Created At'
   ];
 
-  const rows = records.map((record) => [
-    record.memberIdFormatted,
-    record.studentName,
-    record.studentGender,
-    record.studentPhone,
-    record.floorName,
-    record.seatNo,
-    record.shiftName.join(' | '),
-    record.totalAmount,
-    record.amountPaid,
-    record.status,
-    new Date(record.startDate).toLocaleDateString(),
-    new Date(record.endDate).toLocaleDateString(),
-    new Date(record.createdAt).toLocaleDateString(),
-  ]);
+  const rows = records.map((record) => {
+    const finalAmount = record.totalAmount - (record.discount || 0);
+    const due = Math.max(0, finalAmount - record.amountPaid);
+    return [
+      record.memberIdFormatted,
+      record.studentName,
+      record.studentGender,
+      record.studentPhone,
+      record.floorName,
+      record.seatNo,
+      record.shiftName.join(' | '),
+      record.totalAmount,
+      record.discount || 0,
+      finalAmount,
+      record.amountPaid,
+      due,
+      record.status,
+      new Date(record.startDate).toLocaleDateString(),
+      new Date(record.endDate).toLocaleDateString(),
+      new Date(record.createdAt).toLocaleDateString(),
+    ];
+  });
 
   return [
     headers.join(','),

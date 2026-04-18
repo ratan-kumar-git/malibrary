@@ -118,8 +118,7 @@ export default function BookingClient() {
     : "";
   const urlShift = searchParams.get("shift") || ""; // e.g. "AFTERNOON"
   const initialDate =
-    searchParams.get("date") || new Date().toISOString().split("T")[0];
-
+    searchParams.get("date") ?? new Date().toLocaleDateString("en-CA");
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -141,6 +140,7 @@ export default function BookingClient() {
     isNewStudent: false,
     newStudent: { name: "", phoneNumber: "", gender: "MALE", address: "" },
     amountPaid: 0,
+    discount: 0,
   });
 
   // ── Fetch seat availability on mount ────────────────────────────────────────
@@ -265,7 +265,8 @@ export default function BookingClient() {
           startDate: bookingData.startDate,
           endDate: getEndDate().toISOString().split("T")[0],
           totalAmount,
-          amountPaid: bookingData.amountPaid, // ✅ FIXED
+          discount: bookingData.discount,
+          amountPaid: bookingData.amountPaid,
         }),
       });
 
@@ -1069,39 +1070,75 @@ export default function BookingClient() {
                 <CardTitle>Payment</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div>
-                  <Label className="text-xs font-semibold uppercase">
-                    Amount Paid Now (₹)
-                  </Label>
-                  <Input
-                    type="number"
-                    min="0"
-                    max={totalAmount}
-                    className="mt-1.5"
-                    placeholder="0"
-                    value={bookingData.amountPaid || ""}
-                    onChange={(e) =>
-                      setBookingData((p) => ({
-                        ...p,
-                        amountPaid: Math.max(
-                          0,
-                          parseFloat(e.target.value) || 0,
-                        ),
-                      }))
-                    }
-                  />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-xs font-semibold uppercase">
+                      Discount (₹)
+                    </Label>
+                    <Input
+                      type="number"
+                      min="0"
+                      max={totalAmount}
+                      className="mt-1.5"
+                      placeholder="0"
+                      value={bookingData.discount || ""}
+                      onChange={(e) =>
+                        setBookingData((p) => ({
+                          ...p,
+                          discount: Math.max(
+                            0,
+                            Math.min(
+                              parseFloat(e.target.value) || 0,
+                              totalAmount,
+                            ),
+                          ),
+                        }))
+                      }
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-xs font-semibold uppercase">
+                      Amount Paid Now (₹)
+                    </Label>
+                    <Input
+                      type="number"
+                      min="0"
+                      max={totalAmount - bookingData.discount}
+                      className="mt-1.5"
+                      placeholder="0"
+                      value={bookingData.amountPaid || ""}
+                      onChange={(e) =>
+                        setBookingData((p) => ({
+                          ...p,
+                          amountPaid: Math.max(
+                            0,
+                            parseFloat(e.target.value) || 0,
+                          ),
+                        }))
+                      }
+                    />
+                  </div>
                 </div>
-                <div className="grid grid-cols-2 gap-3 text-sm">
+                <div className="grid grid-cols-3 gap-3 text-sm">
                   <div className="p-3 rounded-lg bg-muted/40 border">
                     <p className="text-xs text-muted-foreground mb-1">
                       Total Amount
                     </p>
                     <p className="font-bold text-lg">₹{totalAmount}</p>
                   </div>
+                  <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20">
+                    <p className="text-xs text-muted-foreground mb-1">
+                      Discount
+                    </p>
+                    <p className="font-bold text-lg text-red-700">
+                      -₹{bookingData.discount}
+                    </p>
+                  </div>
                   <div
                     className={cn(
                       "p-3 rounded-lg border",
-                      bookingData.amountPaid >= totalAmount
+                      bookingData.amountPaid >=
+                        totalAmount - bookingData.discount
                         ? "bg-emerald-500/10 border-emerald-500/20"
                         : "bg-amber-500/10 border-amber-500/20",
                     )}
@@ -1112,12 +1149,19 @@ export default function BookingClient() {
                     <p
                       className={cn(
                         "font-bold text-lg",
-                        bookingData.amountPaid >= totalAmount
+                        bookingData.amountPaid >=
+                          totalAmount - bookingData.discount
                           ? "text-emerald-700"
                           : "text-amber-700",
                       )}
                     >
-                      ₹{Math.max(0, totalAmount - bookingData.amountPaid)}
+                      ₹
+                      {Math.max(
+                        0,
+                        totalAmount -
+                          bookingData.discount -
+                          bookingData.amountPaid,
+                      )}
                     </p>
                   </div>
                 </div>
@@ -1147,13 +1191,29 @@ export default function BookingClient() {
                     <span className="text-primary">₹{totalAmount}</span>
                   </div>
                   <div className="flex justify-between text-muted-foreground">
+                    <span>Discount</span>
+                    <span>-₹{bookingData.discount}</span>
+                  </div>
+                  <div className="flex justify-between font-bold text-base border-t border-primary/20 pt-2">
+                    <span>Final Total</span>
+                    <span className="text-primary">
+                      ₹{totalAmount - bookingData.discount}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-muted-foreground">
                     <span>Paid now</span>
                     <span>₹{bookingData.amountPaid}</span>
                   </div>
                   <div className="flex justify-between font-medium">
                     <span>Remaining</span>
                     <span>
-                      ₹{Math.max(0, totalAmount - bookingData.amountPaid)}
+                      ₹
+                      {Math.max(
+                        0,
+                        totalAmount -
+                          bookingData.discount -
+                          bookingData.amountPaid,
+                      )}
                     </span>
                   </div>
                 </div>

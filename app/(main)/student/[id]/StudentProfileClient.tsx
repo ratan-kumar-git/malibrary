@@ -76,6 +76,7 @@ interface SubscriptionData {
   startDate: string;
   endDate: string;
   totalAmount: number;
+  discount: number;
   amountPaid: number;
   status: 'ACTIVE' | 'EXPIRED' | 'UPCOMING';
   floorName: string;
@@ -104,7 +105,8 @@ function UpdateDuesDialog({
   studentId,
   onSuccess,
 }: UpdateDuesDialogProps) {
-  const dues = subscription.totalAmount - subscription.amountPaid;
+  const finalAmount = subscription.totalAmount - (subscription.discount || 0);
+  const dues = finalAmount - subscription.amountPaid;
   const [amount, setAmount] = useState<string>('');
   const [loading, setLoading] = useState(false);
 
@@ -168,7 +170,7 @@ function UpdateDuesDialog({
                 Total
               </p>
               <p className="text-base font-bold text-foreground">
-                ₹{subscription.totalAmount}
+                ₹{finalAmount}
               </p>
             </div>
             <div className="bg-emerald-50 rounded-lg p-3 text-center border border-emerald-200/50">
@@ -379,7 +381,7 @@ export default function StudentProfileClient() {
     0
   );
   const totalDues = student.subscriptions.reduce(
-    (a, s) => a + (s.totalAmount - s.amountPaid),
+    (a, s) => a + ((s.totalAmount - (s.discount || 0)) - s.amountPaid),
     0
   );
 
@@ -684,7 +686,8 @@ export default function StudentProfileClient() {
                 ) : (
                   <div className="space-y-2.5 max-h-96 overflow-y-auto pr-0.5">
                     {student.subscriptions.map((sub) => {
-                      const due = sub.totalAmount - sub.amountPaid;
+                      const finalAmount = sub.totalAmount - (sub.discount || 0);
+                      const due = finalAmount - sub.amountPaid;
                       const daysLeft = getDaysLeft(sub.endDate);
                       return (
                         <div
@@ -716,11 +719,14 @@ export default function StudentProfileClient() {
                               </div>
                             </div>
                             <div className="text-right">
-                              <p className="text-sm font-bold text-foreground">
-                                ₹{sub.totalAmount}
-                              </p>
+                              <div className="flex flex-col items-end gap-0.5">
+                                <p className="text-[11px] text-muted-foreground font-medium">₹{sub.totalAmount}</p>
+                                {sub.discount > 0 && (
+                                  <p className="text-[11px] text-destructive font-semibold">-₹{sub.discount}</p>
+                                )}
+                              </div>
                               <p className={cn(
-                                'text-[11px] font-semibold mt-0.5',
+                                'text-sm font-bold mt-1',
                                 due === 0 ? 'text-emerald-600' : 'text-amber-600'
                               )}>
                                 {due === 0 ? '✓ Cleared' : `₹${due} due`}
@@ -819,9 +825,10 @@ function ActiveSubscriptionCard({
   sub: SubscriptionData;
   onUpdateDues: () => void;
 }) {
-  const dues = sub.totalAmount - sub.amountPaid;
+  const finalAmount = sub.totalAmount - (sub.discount || 0);
+  const dues = finalAmount - sub.amountPaid;
   const daysLeft = getDaysLeft(sub.endDate);
-  const progress = Math.round((sub.amountPaid / sub.totalAmount) * 100);
+  const progress = Math.round((sub.amountPaid / finalAmount) * 100);
 
   return (
     <Card className="border-2 border-emerald-300/60 shadow-sm overflow-hidden bg-linear-to-br from-emerald-50/60 to-white">
@@ -922,6 +929,29 @@ function ActiveSubscriptionCard({
           <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
             Payment Summary
           </p>
+          
+          {/* Price Breakdown */}
+          <div className="bg-muted/30 rounded-lg p-2.5 space-y-1.5 text-sm">
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">Original Total</span>
+              <span className="font-semibold">₹{sub.totalAmount}</span>
+            </div>
+            {sub.discount > 0 && (
+              <div className="flex justify-between border-t border-border pt-1.5">
+                <span className="text-destructive font-medium">Discount</span>
+                <span className="font-bold text-destructive">-₹{sub.discount}</span>
+              </div>
+            )}
+            <div className={cn(
+              'flex justify-between border-t pt-1.5 font-bold',
+              sub.discount > 0 && 'border-border'
+            )}>
+              <span className="text-primary">Final Amount</span>
+              <span className="text-primary">₹{finalAmount}</span>
+            </div>
+          </div>
+          
+          {/* Progress Bar */}
           <div className="space-y-1.5">
             <div className="flex justify-between text-xs font-semibold text-muted-foreground">
               <span>₹{sub.amountPaid} paid</span>
@@ -938,21 +968,33 @@ function ActiveSubscriptionCard({
             </div>
             <div className="flex justify-between text-[11px] text-muted-foreground">
               <span>₹0</span>
-              <span>₹{sub.totalAmount}</span>
+              <span>₹{finalAmount}</span>
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-2 pt-1">
-            <div className="text-center">
-              <p className="text-[10px] text-muted-foreground font-semibold">Total</p>
-              <p className="text-sm font-bold text-foreground">₹{sub.totalAmount}</p>
+          
+          {/* Stats Grid */}
+          <div className="grid grid-cols-3 gap-2 pt-2">
+            <div className="rounded-lg border border-border bg-slate-50 p-2 text-center">
+              <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wide mb-1">Amount</p>
+              <p className="text-sm font-bold text-foreground">₹{finalAmount}</p>
             </div>
-            <div className="text-center">
-              <p className="text-[10px] text-emerald-600 font-semibold">Paid</p>
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-2 text-center">
+              <p className="text-[10px] text-emerald-700 font-bold uppercase tracking-wide mb-1">Paid</p>
               <p className="text-sm font-bold text-emerald-600">₹{sub.amountPaid}</p>
             </div>
-            <div className="text-center">
-              <p className="text-[10px] text-amber-600 font-semibold">Due</p>
-              <p className="text-sm font-bold text-amber-600">₹{dues}</p>
+            <div className="rounded-lg border border-amber-200 bg-amber-50 p-2 text-center">
+              <p className={cn(
+                'text-[10px] font-bold uppercase tracking-wide mb-1',
+                dues === 0 ? 'text-emerald-700' : 'text-amber-700'
+              )}>
+                {dues === 0 ? 'Status' : 'Due'}
+              </p>
+              <p className={cn(
+                'text-sm font-bold',
+                dues === 0 ? 'text-emerald-600' : 'text-amber-600'
+              )}>
+                {dues === 0 ? '✓ Cleared' : `₹${dues}`}
+              </p>
             </div>
           </div>
         </div>

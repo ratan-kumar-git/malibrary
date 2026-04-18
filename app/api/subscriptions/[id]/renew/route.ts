@@ -32,6 +32,7 @@ export async function GET(
         startDate: true,
         endDate: true,
         totalAmount: true,
+        discount: true,
         amountPaid: true,
         status: true,
         library: {
@@ -109,11 +110,18 @@ export async function POST(
 
     const body = await req.json();
     const months = parseInt(body?.months);
+    const discount = parseInt(body?.discount ?? "0");
     const amountPaid = parseInt(body?.amountPaid ?? "0");
 
     if (!months || months < 1 || months > 12)
       return NextResponse.json(
         { error: "months must be between 1 and 12" },
+        { status: 400 },
+      );
+
+    if (isNaN(discount) || discount < 0)
+      return NextResponse.json(
+        { error: "Invalid discount" },
         { status: 400 },
       );
 
@@ -181,9 +189,17 @@ export async function POST(
         ? shifts.reduce((sum, s) => sum + s.price, 0) * months
         : 0;
 
-    if (amountPaid > totalAmount)
+    if (discount > totalAmount)
       return NextResponse.json(
-        { error: "amountPaid cannot exceed totalAmount" },
+        { error: "discount cannot exceed totalAmount" },
+        { status: 400 },
+      );
+
+    const finalAmount = totalAmount - discount;
+
+    if (amountPaid > finalAmount)
+      return NextResponse.json(
+        { error: "amountPaid cannot exceed final amount" },
         { status: 400 },
       );
 
@@ -215,6 +231,7 @@ export async function POST(
           startDate: newStartDate,
           endDate: newEndDate,
           totalAmount,
+          discount,
           amountPaid,
           status: "ACTIVE",
         },
@@ -251,6 +268,9 @@ export async function POST(
       startDate: newStartDate,
       endDate: newEndDate,
       totalAmount,
+      discount,
+      finalAmount,
+      amountPaid,
     });
   } catch (error) {
     console.error("[RENEW POST]", error);

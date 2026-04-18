@@ -53,6 +53,7 @@ interface ReceiptData {
   daysLeft: number;
   dues: number;
   totalAmount: number;
+  discount: number;
   amountPaid: number;
   startDateStr: string;
   endDateStr: string;
@@ -99,6 +100,7 @@ const generateWhatsAppReceipt = ({
   daysLeft,
   dues,
   totalAmount,
+  discount,
   amountPaid,
   startDateStr,
   endDateStr,
@@ -109,6 +111,7 @@ const generateWhatsAppReceipt = ({
   const status = getSubscriptionStatus(daysLeft);
   const statusText = STATUS_DISPLAY[status];
   const daysDisplay = Math.max(0, daysLeft);
+  const finalAmount = totalAmount - discount;
   const alert = buildAlert(dues, daysLeft);
 
   const lines: string[] = [
@@ -124,6 +127,8 @@ const generateWhatsAppReceipt = ({
     DIVIDER,
     `PAYMENT SUMMARY`,
     `Total Fee      : Rs. ${totalAmount}`,
+    ...(discount > 0 ? [`Discount       : Rs. -${discount}`] : []),
+    `Final Amount   : Rs. ${finalAmount}`,
     `Amount Paid    : Rs. ${amountPaid}`,
     `Outstanding    : Rs. ${dues}`,
     DIVIDER,
@@ -140,6 +145,7 @@ const generateWhatsAppReceipt = ({
 interface Subscription {
   id: string;
   totalAmount: number;
+  discount: number;
   amountPaid: number;
   startDate: string;
   endDate: string;
@@ -514,7 +520,7 @@ export default function StudentTable() {
 
                     <TableCell className="text-center">
                       {student.subscriptions[0]
-                        ? `Rs. ${student.subscriptions[0].totalAmount - student.subscriptions[0].amountPaid}`
+                        ? `Rs. ${(student.subscriptions[0].totalAmount - (student.subscriptions[0].discount || 0)) - student.subscriptions[0].amountPaid}`
                         : "-"}
                     </TableCell>
 
@@ -532,17 +538,18 @@ export default function StudentTable() {
                                 new Date(latestSub.endDate),
                                 new Date(),
                               );
-                              const dues =
-                                latestSub.totalAmount - latestSub.amountPaid;
+                              const finalAmount = latestSub.totalAmount - (latestSub.discount || 0);
+                              const dues = finalAmount - latestSub.amountPaid;
 
                               const message = generateWhatsAppReceipt({
                                 studentName: student.name,
                                 memberId: student.memberId,
                                 daysLeft,
                                 dues,
-                                totalAmount: latestSub.totalAmount, // Added total amount
-                                amountPaid: latestSub.amountPaid, // Added amount paid
-                                startDateStr: latestSub.startDate, // Added start date
+                                totalAmount: latestSub.totalAmount,
+                                discount: latestSub.discount || 0,
+                                amountPaid: latestSub.amountPaid,
+                                startDateStr: latestSub.startDate,
                                 endDateStr: latestSub.endDate,
                               });
 

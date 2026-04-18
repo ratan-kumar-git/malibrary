@@ -61,6 +61,7 @@ export default function RenewClient() {
   const [error, setError] = useState<string | null>(null);
 
   const [months, setMonths] = useState(1);
+  const [discount, setDiscount] = useState(0);
   const [amountPaid, setAmountPaid] = useState(0);
   const [submitting, setSubmitting] = useState(false);
 
@@ -81,14 +82,19 @@ export default function RenewClient() {
 
   // Computed values
   const totalAmount = data ? data.pricePerMonth * months : 0;
+  const finalAmount = totalAmount - discount;
   const newStartDate = data ? new Date(data.newStartDate) : new Date();
   const newEndDate = addMonths(newStartDate, months);
-  const isDue = amountPaid < totalAmount;
+  const isDue = amountPaid < finalAmount;
 
   const handleSubmit = async () => {
     if (!data) return;
-    if (amountPaid > totalAmount) {
-      setError("Amount paid cannot exceed total amount.");
+    if (discount > totalAmount) {
+      setError("Discount cannot exceed total amount.");
+      return;
+    }
+    if (amountPaid > finalAmount) {
+      setError("Amount paid cannot exceed final amount.");
       return;
     }
     setSubmitting(true);
@@ -97,7 +103,7 @@ export default function RenewClient() {
       const res = await fetch(`/api/subscriptions/${id}/renew`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ months, amountPaid }),
+        body: JSON.stringify({ months, discount, amountPaid }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "Failed to renew");
@@ -293,9 +299,19 @@ export default function RenewClient() {
                   <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Per month</span>
                   <span className="text-sm font-semibold text-foreground">₹{data.pricePerMonth.toLocaleString("en-IN")}</span>
                 </div>
-                <div className="flex justify-between items-center gap-2 bg-primary/10 rounded-lg px-4 py-3 mt-2">
-                  <span className="text-xs font-bold text-primary uppercase tracking-widest">Total</span>
-                  <span className="text-xl font-bold text-primary">₹{totalAmount.toLocaleString("en-IN")}</span>
+                <div className="flex justify-between items-center gap-2 bg-background rounded-lg px-4 py-3">
+                  <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Total</span>
+                  <span className="text-lg font-bold text-foreground">₹{totalAmount.toLocaleString("en-IN")}</span>
+                </div>
+                {discount > 0 && (
+                  <div className="flex justify-between items-center gap-2 bg-red-500/10 rounded-lg px-4 py-3 border border-red-500/20">
+                    <span className="text-xs font-bold text-red-700 uppercase tracking-widest">Discount</span>
+                    <span className="text-lg font-bold text-red-700">-₹{discount.toLocaleString("en-IN")}</span>
+                  </div>
+                )}
+                <div className="flex justify-between items-center gap-2 bg-primary/10 rounded-lg px-4 py-3 border border-primary/20 mt-2">
+                  <span className="text-xs font-bold text-primary uppercase tracking-widest">Final Total</span>
+                  <span className="text-xl font-bold text-primary">₹{finalAmount.toLocaleString("en-IN")}</span>
                 </div>
               </div>
 
@@ -359,7 +375,7 @@ export default function RenewClient() {
               {/* Amount Collected */}
               <div className="space-y-3">
                 <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
-                  Amount Collected (₹)
+                  Discount (₹)
                 </label>
                 <div className="relative">
                   <IndianRupee
@@ -370,10 +386,34 @@ export default function RenewClient() {
                     type="number"
                     min={0}
                     max={totalAmount}
+                    value={discount}
+                    onChange={(e) => {
+                      const val = parseInt(e.target.value) || 0;
+                      setDiscount(Math.min(val, totalAmount));
+                    }}
+                    className="w-full pl-8 pr-3 py-2.5 border border-primary/20 bg-primary/5 rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+                  />
+                </div>
+              </div>
+
+              {/* Amount Collected */}
+              <div className="space-y-3">
+                <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
+                  Amount Collected (₹)
+                </label>
+                <div className="relative">
+                  <IndianRupee
+                    size={14}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                  />
+                  <input
+                    type="number"
+                    min={0}
+                    max={finalAmount}
                     value={amountPaid}
                     onChange={(e) => {
                       const val = parseInt(e.target.value) || 0;
-                      setAmountPaid(Math.min(val, totalAmount));
+                      setAmountPaid(Math.min(val, finalAmount));
                     }}
                     className="w-full pl-8 pr-3 py-2.5 border border-primary/20 bg-primary/5 rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
                   />
@@ -384,7 +424,7 @@ export default function RenewClient() {
                   <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-2">
                     <AlertCircle size={16} className="text-amber-700 shrink-0 mt-0.5" />
                     <span className="text-xs text-amber-800">
-                      <span className="font-bold">₹{(totalAmount - amountPaid).toLocaleString("en-IN")}</span> pending
+                      <span className="font-bold">₹{(finalAmount - amountPaid).toLocaleString("en-IN")}</span> pending
                     </span>
                   </div>
                 ) : (

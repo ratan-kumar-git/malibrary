@@ -55,6 +55,7 @@ interface HistoryRecord {
   startDate: string;
   endDate: string;
   totalAmount: number;
+  discount: number;
   amountPaid: number;
   status: string;
   createdAt: string;
@@ -251,19 +252,47 @@ export default function HistoryClient() {
         ),
       }),
       columnHelper.accessor("totalAmount", {
-        header: "Financials",
+        header: "Price",
         cell: (info) => {
           const total = info.getValue();
-          const paid = info.row.original.amountPaid;
-          const due = total - paid;
-          const pct = Math.min(100, Math.round((paid / total) * 100));
-          const full = paid >= total;
+          const discount = info.row.original.discount || 0;
+          const finalAmount = total - discount;
+          return (
+            <div className="flex flex-col gap-1.5 min-w-32">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-muted-foreground">Total:</span>
+                <span className="text-sm font-semibold">₹{total.toLocaleString()}</span>
+              </div>
+              {discount > 0 && (
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-destructive">Discount:</span>
+                  <span className="text-sm font-semibold text-destructive">-₹{discount.toLocaleString()}</span>
+                </div>
+              )}
+              <div className="pt-1 border-t flex items-center justify-between">
+                <span className="text-xs font-semibold">Final:</span>
+                <span className="text-sm font-bold text-primary">₹{finalAmount.toLocaleString()}</span>
+              </div>
+            </div>
+          );
+        },
+      }),
+      columnHelper.accessor("amountPaid", {
+        header: "Financials",
+        cell: (info) => {
+          const paid = info.getValue();
+          const total = info.row.original.totalAmount;
+          const discount = info.row.original.discount || 0;
+          const finalAmount = total - discount;
+          const due = finalAmount - paid;
+          const pct = Math.min(100, Math.round((paid / finalAmount) * 100));
+          const full = paid >= finalAmount;
           return (
             <div className="flex flex-col gap-1.5 min-w-27.5">
               <div className="flex justify-between text-xs">
                 <span className="font-semibold">₹{paid.toLocaleString()}</span>
                 <span className="text-muted-foreground">
-                  / ₹{total.toLocaleString()}
+                  / ₹{finalAmount.toLocaleString()}
                 </span>
               </div>
               <div className="h-1.5 rounded-full bg-muted overflow-hidden">
