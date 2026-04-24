@@ -38,7 +38,6 @@ interface Props {
   allShifts?: { name: string; isActive: boolean }[];
 }
 
-
 // ── Dissociate confirmation toggle ────────────────────────────────────────────
 function DissociateConfirm({
   loading,
@@ -52,10 +51,7 @@ function DissociateConfirm({
   return (
     <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-4 space-y-3 animate-in fade-in slide-in-from-top-1 duration-200">
       <div className="flex items-start gap-2.5">
-        <AlertTriangle
-          size={16}
-          className="text-destructive shrink-0 mt-0.5"
-        />
+        <AlertTriangle size={16} className="text-destructive shrink-0 mt-0.5" />
         <div>
           <p className="text-sm font-semibold text-foreground">
             Dissociate this seat?
@@ -96,7 +92,6 @@ function DissociateConfirm({
   );
 }
 
-
 // ── Single shift card ─────────────────────────────────────────────────────────
 function ShiftCard({
   shiftName,
@@ -129,7 +124,7 @@ function ShiftCard({
     try {
       const res = await fetch(
         `/api/subscriptions/${shiftData.subscriptionId}/dissociate`,
-        { method: "DELETE" }
+        { method: "DELETE" },
       );
       if (!res.ok) {
         const err = await res.json();
@@ -156,8 +151,8 @@ function ShiftCard({
         isInactive
           ? "bg-slate-500/5 border-slate-400/20 opacity-70"
           : status === "active"
-          ? "bg-emerald-500/8 border-emerald-500/25"
-          : "bg-amber-500/8 border-amber-500/25"
+            ? "bg-emerald-500/8 border-emerald-500/25"
+            : "bg-amber-500/8 border-amber-500/25",
       )}
     >
       {/* Shift name + status badge */}
@@ -171,8 +166,8 @@ function ShiftCard({
             isInactive
               ? "bg-slate-500 text-white"
               : status === "active"
-              ? "bg-emerald-500 text-white"
-              : "bg-amber-500 text-white"
+                ? "bg-emerald-500 text-white"
+                : "bg-amber-500 text-white",
           )}
         >
           {isInactive ? "Inactive" : status === "active" ? "Active" : "Expired"}
@@ -276,7 +271,7 @@ function ShiftCard({
                 "w-7 h-7 rounded-md flex items-center justify-center shrink-0",
                 status === "active"
                   ? "bg-emerald-500/10 text-emerald-600"
-                  : "bg-amber-500/10 text-amber-600"
+                  : "bg-amber-500/10 text-amber-600",
               )}
             >
               <Timer size={13} />
@@ -288,7 +283,7 @@ function ShiftCard({
               <p
                 className={cn(
                   "text-sm font-semibold",
-                  status === "active" ? "text-emerald-700" : "text-amber-700"
+                  status === "active" ? "text-emerald-700" : "text-amber-700",
                 )}
               >
                 {format(new Date(shiftData.expiry), "dd MMM yyyy")}
@@ -325,7 +320,7 @@ function ShiftCard({
             "px-3 py-2 rounded-lg text-xs font-medium border",
             actionMsg.ok
               ? "bg-emerald-500/10 text-emerald-700 border-emerald-500/20"
-              : "bg-red-500/10 text-red-700 border-red-500/20"
+              : "bg-red-500/10 text-red-700 border-red-500/20",
           )}
         >
           {actionMsg.text}
@@ -342,28 +337,26 @@ function ShiftCard({
       )}
 
       {/* Action buttons */}
-      {shiftData.subscriptionId && !isInactive && !showDissociate && (
-        <div className="flex gap-2 pt-1">
-          <Button
-            size="sm"
-            variant="outline"
-            className="flex-1 h-8 text-xs gap-1.5 text-destructive border-destructive/25 hover:bg-destructive/8 hover:border-destructive/40"
-            onClick={() => setShowDissociate(true)}
-          >
-            <Trash2 size={11} />
-            Dissociate
-          </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            className="flex-1 h-8 text-xs gap-1.5 text-emerald-600 border-emerald-500/25 hover:bg-emerald-500/8 hover:border-emerald-500/40"
-            onClick={() => router.push(`/renew/${shiftData.subscriptionId}`)}
-          >
-            <RotateCcw size={11} />
-            Renew
-          </Button>
-        </div>
-      )}
+      <div className="flex gap-2 pt-1">
+        <Button
+          size="sm"
+          variant="outline"
+          className="flex-1 h-8 text-xs gap-1.5 text-destructive border-destructive/25 hover:bg-destructive/8 hover:border-destructive/40"
+          onClick={() => setShowDissociate(true)}
+        >
+          <Trash2 size={11} />
+          Remove
+        </Button>
+        <Button
+          size="sm"
+          variant="outline"
+          className="flex-1 h-8 text-xs gap-1.5 text-emerald-600 border-emerald-500/25 hover:bg-emerald-500/8 hover:border-emerald-500/40"
+          onClick={() => router.push(`/renew/${shiftData.subscriptionId}`)}
+        >
+          <RotateCcw size={11} />
+          Renew
+        </Button>
+      </div>
     </div>
   );
 }
@@ -390,7 +383,7 @@ function VacantShiftCard({
         "rounded-xl border p-3 flex items-center justify-between gap-3",
         isInactive
           ? "bg-muted/20 border-border/30 opacity-50"
-          : "bg-muted/10 border-border/40"
+          : "bg-muted/10 border-border/40",
       )}
     >
       <div className="flex items-center gap-2.5">
@@ -408,7 +401,7 @@ function VacantShiftCard({
           className="h-7 text-xs bg-emerald-600 hover:bg-emerald-700 text-white shrink-0"
           onClick={() =>
             router.push(
-              `/booking?seatId=${seatId}&seatNo=${seatNo}&floorName=${encodeURIComponent(floorName)}`
+              `/booking?seatId=${seatId}&seatNo=${seatNo}&floorName=${encodeURIComponent(floorName)}`,
             )
           }
         >
@@ -488,9 +481,7 @@ export function SeatDetails({
   }
 
   const shiftsToDisplay =
-    allShifts.length > 0
-      ? allShifts.map((s) => s.name)
-      : activeShifts;
+    allShifts.length > 0 ? allShifts.map((s) => s.name) : activeShifts;
 
   return (
     <div className="bg-background rounded-2xl p-5 border border-border shadow-sm animate-in fade-in duration-200">
@@ -581,7 +572,7 @@ export function SeatDetails({
                 "py-8 text-center space-y-4 rounded-xl border",
                 isInactive
                   ? "bg-muted/10 border-border/30"
-                  : "bg-emerald-500/5 border-emerald-500/20"
+                  : "bg-emerald-500/5 border-emerald-500/20",
               )}
             >
               <div
@@ -589,7 +580,7 @@ export function SeatDetails({
                   "inline-flex items-center justify-center w-12 h-12 rounded-full",
                   isInactive
                     ? "bg-muted/30 text-muted-foreground"
-                    : "bg-emerald-500/10 text-emerald-600"
+                    : "bg-emerald-500/10 text-emerald-600",
                 )}
               >
                 {isInactive ? <AlertCircle size={22} /> : <Search size={22} />}
@@ -609,7 +600,7 @@ export function SeatDetails({
                   className="bg-emerald-600 hover:bg-emerald-700 text-white"
                   onClick={() =>
                     router.push(
-                      `/booking?seatId=${data.id}&shift=${selectedShift}`
+                      `/booking?seatId=${data.id}&shift=${selectedShift}`,
                     )
                   }
                 >
