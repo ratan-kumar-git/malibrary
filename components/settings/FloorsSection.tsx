@@ -51,7 +51,7 @@ export const FloorsSection = ({
   const currentFloors = useWatch({ control, name: 'floors' }) || [];
 
   const handleEditStart = () => {
-    setIsEditing(true);
+    setIsEditing(false);
     reset({ floors: floors.length > 0 ? floors : [] });
   };
 
@@ -79,8 +79,8 @@ export const FloorsSection = ({
     if (editingFloorId) setEditingFloorId(null);
 
     try {
-      await onSyncFloors(data.floors); 
-      
+      // await onSyncFloors(data.floors); 
+      console.log("Syncing floors with data:", data.floors);
       setIsEditing(false);
       setEditingFloorId(null);
       setNewFloor({ name: '', totalSeats: '' });

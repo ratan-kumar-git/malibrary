@@ -24,10 +24,12 @@ interface SeatInfo {
 export async function GET() {
   try {
     const session = await auth.api.getSession({ headers: await headers() });
-    if (!session?.user?.id)
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const [library, allShifts, activeShifts] = await Promise.all([
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const [library, allShifts] = await Promise.all([
       prisma.library.findUnique({
         where: { userId: session.user.id },
         select: { id: true },
@@ -37,20 +39,20 @@ export async function GET() {
         select: { id: true, name: true, isActive: true },
         orderBy: { startTime: "asc" },
       }),
-      prisma.shift.findMany({
-        where: { library: { userId: session.user.id }, isActive: true },
-        select: { id: true, name: true },
-        orderBy: { startTime: "asc" },
-      }),
     ]);
 
-    if (!library)
-      return NextResponse.json({ error: "Library not found" }, { status: 404 });
+    if (!library) {
+      return NextResponse.json(
+        { error: "Library not found" },
+        { status: 404 }
+      );
+    }
+
+    const shiftMap = new Map(allShifts.map((s) => [s.id, s]));
 
     const floors = await prisma.floor.findMany({
       where: { libraryId: library.id },
       select: {
-        id: true,
         name: true,
         seats: {
           select: {
@@ -58,7 +60,8 @@ export async function GET() {
             seatNo: true,
             isActive: true,
             assignments: {
-              include: {
+              select: {
+                shiftId: true,
                 student: {
                   select: {
                     id: true,
@@ -67,15 +70,13 @@ export async function GET() {
                     phoneNumber: true,
                     gender: true,
                     subscriptions: {
-                      where: { status: "ACTIVE" },
-                      orderBy: { createdAt: "desc" },
-                      take: 1,
                       select: {
                         id: true,
                         startDate: true,
                         endDate: true,
                         totalAmount: true,
                         amountPaid: true,
+                        shiftName: true,
                       },
                     },
                   },
@@ -86,7 +87,6 @@ export async function GET() {
           orderBy: { seatNo: "asc" },
         },
       },
-      orderBy: { name: "asc" },
     });
 
     const seatMap: Record<string, Record<number, SeatInfo>> = {};
@@ -97,15 +97,18 @@ export async function GET() {
       for (const seat of floor.seats) {
         const shiftsObj: Record<string, ShiftData | null> = {};
 
-        for (const s of allShifts) {
-          shiftsObj[s.name] = null;
+        // initialize all shifts
+        for (const shift of allShifts) {
+          shiftsObj[shift.name] = null;
         }
 
         for (const asg of seat.assignments) {
-          const shiftInfo = allShifts.find((s) => s.id === asg.shiftId);
+          const shiftInfo = shiftMap.get(asg.shiftId);
           if (!shiftInfo) continue;
 
-          const sub = asg.student.subscriptions[0];
+          const sub = asg.student.subscriptions.find((s) =>
+            s.shiftName.includes(shiftInfo.name as any)
+          );
 
           shiftsObj[shiftInfo.name] = {
             studentName: asg.student.name,
@@ -126,16 +129,23 @@ export async function GET() {
           shifts: shiftsObj,
         };
       }
+
       seatMap[floor.name] = floorData;
     }
 
     return NextResponse.json({
-      activeShifts: activeShifts.map((s) => s.name),
-      allShifts: allShifts.map((s) => ({ name: s.name, isActive: s.isActive })),
+      allShifts: allShifts.map((s) => ({
+        name: s.name,
+        isActive: s.isActive,
+      })),
+      activeShifts: allShifts
+        .filter((s) => s.isActive)
+        .map((s) => s.name),
       seatMap,
     });
   } catch (error) {
     console.error("SeatMap Error:", error);
+
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }
