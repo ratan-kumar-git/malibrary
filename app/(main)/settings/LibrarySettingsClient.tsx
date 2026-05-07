@@ -16,6 +16,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Home } from "lucide-react";
+import RegistrationLinkGenerator from "@/components/publicStudent/RegistrationLinkGenerator";
 
 export default function LibrarySettingsClient(){
   const router = useRouter();
@@ -100,6 +101,11 @@ export default function LibrarySettingsClient(){
             shifts={data.shifts || []}
             onSyncShifts={(shifts) => syncShifts(data.id, shifts)}
             isLoading={isLoading}
+          />
+
+          {/* Student Registration Link */}
+          <RegistrationLinkGenerator 
+            libraryId={data.id} 
           />
         </div>
       </div>
